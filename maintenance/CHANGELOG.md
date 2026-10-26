@@ -13,6 +13,26 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.16] - 2026-10-21
+
+**Security.** The updater never offers a downgrade. (Found while installing from a clone for real, after 0.10.15.)
+
+- The problem: an install made from a clone records `channel = branch` and the clone's commit. If that commit was never
+  pushed, GitHub answers 404 to the compare call, and `_check_branch` ignored that and offered the branch's newest
+  commit as an update, whatever it contained. Demonstrated with real data: your repository's `main` is `575b4a3`, which
+  is still upstream's untouched 0.10.6 (with the old, upstream-pointing updater). The previous updater, installed from
+  an unpushed 0.10.15 tree, offered "update to 0.10.6" and a one-click install of that archive.
+- The fix, in `src/decompnet/app/updates.py`: a branch commit is only an update if its `pyproject.toml` version can be
+  read and is not older than the installed one. Commits at the same version still count (normal work between bumps),
+  newer versions still count. Same demonstration on the fixed code: not offered.
+- Tests: 5 added to `maintenance/tests/test_maint_updater.py` (3 failed before: unpushed install with older branch,
+  older version with a known commit, unreadable version). `tests/test_updates.py::test_branch_update` stubbed the branch
+  version as `0.10.0`, which is older than any version of this fork and so encoded the old behavior; its stub is now
+  `99.0.0` and it still covers the update flow. 31 updater tests pass.
+- Cost of the safe choice: a branch whose version line can't be fetched is never offered, until the fetch works.
+- **Push this work to `main` before relying on it:** the app compares against your repository, and until its `main`
+  holds this code, any installed copy is rightly told it is ahead.
+
 ## [0.10.15] - 2026-10-21
 
 **Security.** The installers install this fork's code or nothing; the README no longer tells anyone to run upstream's.

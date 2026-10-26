@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import urllib.error
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -191,3 +192,50 @@ def test_the_hostile_version_pattern_still_accepts_every_real_version_we_could_s
     """The validation must not reject our own releases: plain X.Y.Z, and the usual pre/post-release spellings."""
     for good in ("0.10.9", "0.11.0", "1.0.0", "0.11.0rc1", "0.11.0.post1", "0.11.0-fork.1"):
         assert re.fullmatch(updates.VERSION_OK, good), good
+
+
+# ---- a branch update must never be a downgrade -----------------------------------------------------------------------
+# Found by installing from a clone for real: the installer records channel=branch and the clone's commit. If that commit
+# was never pushed (the maintainer has not pushed yet), GitHub answers 404 to the compare call and the old code offered
+# the branch's newest commit, however old: here, an untouched upstream 0.10.6 that still has the upstream-pointing updater.
+
+
+def _branch_world(monkeypatch, remote_version: str, *, known_commit: bool):
+    have, head = "1" * 40, "2" * 40
+    updates.record("branch", "main", have)
+
+    def j(url):
+        if "/compare/" in url:
+            if known_commit:
+                return {"status": "ahead", "commits": [{"commit": {"message": "newer work"}}]}
+            raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
+        return {"sha": head, "commit": {"message": "the branch's newest", "committer": {"date": "2026-10-21"}}}
+
+    monkeypatch.setattr(updates, "_json", j)
+    monkeypatch.setattr(updates, "_branch_version", lambda repo, sha: remote_version)
+
+
+def test_an_unpushed_install_is_not_offered_the_branchs_older_code(monkeypatch):
+    _branch_world(monkeypatch, "0.10.6", known_commit=False)  # upstream's version, still on the fork's main
+    found = updates.check()
+    assert found["available"] is False and found["latest"]["version"] == __version__
+
+
+def test_a_newer_version_on_the_branch_is_still_offered_even_when_the_installed_commit_is_unknown(monkeypatch):
+    _branch_world(monkeypatch, _newer(), known_commit=False)
+    assert updates.check()["available"] is True
+
+
+def test_new_commits_with_the_same_version_are_offered(monkeypatch):
+    _branch_world(monkeypatch, __version__, known_commit=True)  # work between version bumps is a normal update
+    assert updates.check()["available"] is True
+
+
+def test_an_older_version_is_not_offered_even_when_the_commit_is_known(monkeypatch):
+    _branch_world(monkeypatch, "0.10.6", known_commit=True)
+    assert updates.check()["available"] is False
+
+
+def test_a_branch_whose_version_cannot_be_read_is_not_offered(monkeypatch):
+    _branch_world(monkeypatch, "", known_commit=False)  # raw.githubusercontent.com failed, or no version line
+    assert updates.check()["available"] is False

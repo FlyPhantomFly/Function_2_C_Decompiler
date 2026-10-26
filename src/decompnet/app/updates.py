@@ -137,8 +137,14 @@ def _check_branch(cur: dict) -> dict:
             pass
     if available and not notes:
         notes = [_first_line(head["commit"]["message"])]
+    version = _branch_version(repo, sha) if available else cur["version"]
+    if available and (not version or version_key(version) < version_key(cur["version"])):
+        # Never a downgrade. When the installed commit was never pushed GitHub can't say which is newer, and the branch
+        # may hold older code (a fork's main that hasn't had this work pushed to it yet), so an unreadable or older
+        # version is not an update. Same-version commits are: that is normal work between version bumps.
+        available, version, notes = False, cur["version"], []
     return {"available": available,
-            "latest": {"version": _branch_version(repo, sha) if available else cur["version"], "commit": sha,
+            "latest": {"version": version, "commit": sha,
                        "date": (head.get("commit") or {}).get("committer", {}).get("date")},
             "notes": [n for n in notes if n], "link": f"https://github.com/{repo}/commits/{branch}",
             "spec": f"decompnet @ https://github.com/{repo}/archive/{sha}.tar.gz"}

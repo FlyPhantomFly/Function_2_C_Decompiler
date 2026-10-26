@@ -64,7 +64,7 @@ def test_branch_update(monkeypatch):
                                                                    {"commit": {"message": "Newest\n\nbody"}}]},
     }
     monkeypatch.setattr(updates, "_json", lambda url: next(v for k, v in answers.items() if url.endswith(k)))
-    monkeypatch.setattr(updates, "_branch_version", lambda repo, sha: "0.10.0")
+    monkeypatch.setattr(updates, "_branch_version", lambda repo, sha: "99.0.0")  # a branch ahead of this build: a real update, not a downgrade
     found = updates.check()
     assert found["available"] and found["latest"]["commit"] == head and found["notes"] == ["Newest", "Older one"]
     assert found["spec"] == f"decompnet @ https://github.com/{updates.REPO}/archive/{head}.tar.gz"
