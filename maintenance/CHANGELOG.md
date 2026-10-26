@@ -13,6 +13,17 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.44] - 2026-10-22
+
+**Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.
+
+- **Run K** in `maintenance/baseline/`: the maintained code at 0.10.43, measured the same way: **575 passed, 0 failed, 53 skipped
+  (628 items)** with every free tool and `bwrap`. Test by test, nothing that passed in upstream's run C or in run J fails; against J, 27 items are
+  new (the backup tests, all pass) and none is gone. The bare-machine CI commands: 475 passed, 153 skipped, 0 failed; `actionlint` on the workflow: clean.
+- `MAINTENANCE_PLAN.md`: status as of this version. Phase 3 item 6 says what is done (backup and restore) and what is not (resume after a crash; the headless run mode).
+- `maintenance/patches/`: regenerated, 38 patches (0.10.7 to 0.10.44).
+- Nothing for users to do.
+
 ## [0.10.43] - 2026-10-22
 
 **Feature.** `decomp backup` and `decomp restore`: a safe way to keep a copy of your project work. (Plan Phase 3, item 6, the backup half.) New `app/backup.py`, two
