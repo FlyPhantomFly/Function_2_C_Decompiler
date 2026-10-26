@@ -1,10 +1,10 @@
 # Phase 0 baseline (upstream 0.10.6 code, measured for the 0.10.7 release)
 
 Runs A to C below were made against the untouched upstream tree (git tag `upstream-0.10.6`), so they say what the code
-did *before* any change by us. Runs D (0.10.18), E (0.10.22) and F (0.10.29) are the maintained code, for comparison. The raw pytest output and
+did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29) and G (0.10.31) are the maintained code, for comparison. The raw pytest output and
 JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
 
-## The six runs
+## The seven runs
 
 | Run | State of the machine | Result (269 test items) | Summary |
 | --- | --- | --- | --- |
@@ -14,6 +14,7 @@ JUnit XML for each run are in `raw/` exactly as captured (they contain the sandb
 | **D** | The maintained code at 0.10.18 (no code change in 0.10.19), everything C had plus `bwrap` | **310 passed, 0 failed, 55 skipped** (365 items) | [summary-D.md](summary-D.md) |
 | **E** | The maintained code at 0.10.22, same machine as D | **377 passed, 0 failed, 52 skipped** (429 items) | [summary-E.md](summary-E.md) |
 | **F** | The maintained code at 0.10.29, same machine | **429 passed, 0 failed, 52 skipped** (481 items) | [summary-F.md](summary-F.md) |
+| **G** | The maintained code at 0.10.31, same machine | **453 passed, 0 failed, 52 skipped** (505 items) | [summary-G.md](summary-G.md) |
 
 Test machine: Ubuntu 24.04 container, Python 3.12.3, uv 0.11.7, gcc 13.3, bubblewrap 0.9.0 (it does create a sandbox
 in that container), lld and llvm 18.1.3. Toolchains installed through the project's own installer
@@ -73,6 +74,11 @@ The bare-machine CI commands on the same code: 284 passed, 145 skipped, 0 failed
 481 items against 429: 58 new (all pass), 6 gone: exactly the six tests of the hosted-network layer deleted in 0.10.25
 (two in `test_http.py`, four in `test_phase23.py`). **Nothing that passed in E, or in upstream's run C, fails in F.** The bare-machine
 CI commands on the same code: 335 passed, 146 skipped, 0 failed.
+
+## Run G against run F
+
+505 items against 481: 24 new (the schema tests; all pass), none gone. **Nothing that passed in F, or in upstream's run C, fails in G.** The bare-machine
+CI commands on the same code: 359 passed, 146 skipped, 0 failed.
 
 ## What the 50 skips in run C need
 

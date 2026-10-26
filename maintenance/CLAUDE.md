@@ -73,6 +73,8 @@ updater or the installers fetch.
 - Add a download to `toolchains.toml` without an https URL and a sha256 (a test fails), or install one unpinned.
 - Add a broad `except Exception` that neither re-raises, reports nor logs: `maintenance/tests/test_maint_exception_policy.py` fails,
   and the judging code (`scoring`, `network`, `compiler`, `project`, `rom/match*`) must have none at all.
+- Change the database format (`store.py`) without raising `SCHEMA_VERSION` and adding a test that opens a database from the version
+  before (`test_maint_schema.py`; the 0.10.6 fixture was made by upstream's own code).
 - Add a module nothing reaches: `test_maint_legacy_removed.py` fails unless it is imported from `app/` or listed as a script.
 - Bypass a sha256 pin to make a download work. A pin that fails means the file is not the one that was reviewed.
 - Rename `.decomp.wtf.json` or other on-disk names as part of a branding change; they are file formats, and renaming

@@ -13,6 +13,19 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.32] - 2026-10-21
+
+**Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.
+
+- **Run G** in `maintenance/baseline/`: the maintained code at 0.10.31, measured the same way: **453 passed, 0 failed, 52 skipped
+  (505 items)** with every free tool and `bwrap`. Test by test, nothing that passed in upstream's run C or in run F fails; against F,
+  24 items are new (the schema tests, all pass) and none is gone. The bare-machine CI commands: 359 passed, 146 skipped, 0 failed in 15 s.
+- `MAINTENANCE_PLAN.md`: status as of this version. Phase 2 now also includes the schema versioning; what is left is refactors (only with
+  coverage, and only if you want them) and your decision on the hash-only mode. `CLAUDE.md`: do not change the database format without
+  raising `SCHEMA_VERSION` and a test from the version before.
+- `maintenance/patches/`: regenerated, 26 patches (0.10.7 to 0.10.32).
+- Nothing for users to do.
+
 ## [0.10.31] - 2026-10-21
 
 **Fix, Test.** The database format is versioned, an old database is backed up before its first migration, and a database from a
