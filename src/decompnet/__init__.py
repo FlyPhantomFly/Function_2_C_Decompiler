@@ -2,7 +2,12 @@
 
 import sys
 
-__version__ = "0.10.25"
+__version__ = "0.10.26"
+
+# Where this build of decomp.wtf comes from and is installed from, and the project it is a maintained fork of. What the app
+# writes into other people's projects (READMEs, build scripts) links the first; the second is a credit.
+HOME_URL = "https://github.com/FlyPhantomFly/Function_2_C_Decompiler"
+UPSTREAM_URL = "https://github.com/i12bp8/decomp.wtf"
 
 
 def utf8_output() -> None:

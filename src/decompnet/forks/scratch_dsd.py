@@ -22,7 +22,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .. import toolchains
+from .. import HOME_URL, toolchains
 from .project import ForkError, ForkProject
 
 DS_DEFAULT = "2.0/sp1p5"
@@ -242,7 +242,7 @@ def create(root: Path, game: Path, *, compiler: str | None = None, log=print) ->
                                      ".ninja_*\nobjdiff.json\n__pycache__/\n.decomp-wtf/\n", encoding="utf-8")
     (root / "README.md").write_text(f"""# {info['title']} ({info['id']}) decompilation
 
-Started from scratch with [decomp.wtf](https://decomp.wtf) on [ds-decomp](https://github.com/AetiasHax/ds-decomp),
+Started from scratch with [decomp.wtf]({HOME_URL}) on [ds-decomp](https://github.com/AetiasHax/ds-decomp),
 the toolkit DS decomps use. Every build rebuilds the ROM and checks it against your copy, byte for byte.
 
 1. Put your own copy of the game here as `extract/baserom.nds` (never commit it).

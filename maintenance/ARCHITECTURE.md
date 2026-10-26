@@ -124,7 +124,7 @@ needs a reason. A tool the app starts (`uv`, `git`, an agent CLI) makes its own 
   tunnel; members connect to the host's address. Nothing else is sent anywhere.
 - Other hosts that appear in the source are install hints (`nodejs.org`, `git-scm.com`, `adoptium.net`), documentation or product
   links, or identifiers inside text (`www.apple.com` in a plist DOCTYPE, `www.apache.org` in a licence header). Generated export
-  files still link to `decomp.wtf` as text (changed in a later version).
+  READMEs and build scripts link this fork's repository (0.10.26).
 
 ## 10. Findings that matter for maintainers
 

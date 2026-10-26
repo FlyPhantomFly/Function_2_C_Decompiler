@@ -28,7 +28,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from .. import toolchains
+from .. import HOME_URL, toolchains
 from ..limits import capped
 from .project import ForkError, ForkProject
 
@@ -722,7 +722,7 @@ write_asm: true
         f.write("\n# decomp.wtf\n.decomp-wtf/\n")
     (root / "README.md").write_text(f"""# {info['title']} ({gid}) decompilation
 
-Started from scratch with [decomp.wtf](https://decomp.wtf) on [dtk-template](https://github.com/encounter/dtk-template),
+Started from scratch with [decomp.wtf]({HOME_URL}) on [dtk-template](https://github.com/encounter/dtk-template),
 the layout GameCube and Wii decomps use. Every build rebuilds `main.dol` and checks it against your copy, byte for byte.
 
 1. Put your own copy of the game in `orig/{gid}/` (never commit it).

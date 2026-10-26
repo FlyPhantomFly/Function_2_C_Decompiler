@@ -13,6 +13,33 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.26] - 2026-10-21
+
+**Security.** What the app writes into other people's projects points at this fork, not at upstream's website. Closes the
+last item the 0.10.17 and 0.10.25 entries listed as not done.
+
+- The problem: an exported decompilation is handed to strangers, and its generated `build.py` says, when decomp.wtf is missing,
+  **"install decomp.wtf first (https://decomp.wtf)"**, an instruction that sends the reader to the website of a different project,
+  which serves upstream's installer. The exported READMEs said "started with decomp.wtf" with the same link and "needs decomp.wtf
+  installed" with no source at all. Nine lines in six generator files.
+- The fix: `decompnet.HOME_URL` (this fork's repository) and `decompnet.UPSTREAM_URL` (the original, as a credit) in
+  `src/decompnet/__init__.py`. The exported READMEs (`rom/export.py`, `rom/export_gba.py`) and the fork-mode scratch READMEs
+  (`forks/scratch_dtk.py`, `scratch_dsd.py`) use the constant, and now say *where* to get the tool ("needs decomp.wtf installed
+  from <this fork's URL>"). The two build scripts (`rom/export_build.py`, `export_gba_build.py`) are copied into a project and
+  run where `decompnet` cannot be imported, which is exactly when their message appears, so the URL is spelled out there; a
+  test fails if the literal and the constant ever differ.
+- Tests: 10 in `maintenance/tests/test_maint_generated_links.py` (all failed before). They cover the constants; a scan that no
+  shipped source file contains `https://decomp.wtf`; both generated READMEs; the fork-mode READMEs; and **the build scripts run for
+  real** under a system Python that does not have this package, in a folder laid out like an export (a `build.json` beside the
+  script, which the script reads before it checks for the tool: my first version of the test skipped that and failed for the
+  wrong reason, which is why it was rewritten).
+- Verified: the real messages, from a faithful project folder, now read "install decomp.wtf first
+  (https://github.com/FlyPhantomFly/Function_2_C_Decompiler)" (they read the old address before); the upstream tests that run real
+  exports, builds and scratch projects pass (36 passed, 21 skipped for compilers and platforms this sandbox lacks).
+- Not changed: the *name* "decomp.wtf" in commit messages and generated text ("Edited by X with decomp.wtf"). That is the staged
+  rebrand (plan item 1.1): a name, not a link or an instruction.
+- Nothing for users to do. Projects exported earlier keep upstream's text in their own `build.py` and README.
+
 ## [0.10.25] - 2026-10-21
 
 **Removal.** The retired hosted-network layer is deleted. The owner decided to delete it (plan Phase 2, option (a)). 54 files

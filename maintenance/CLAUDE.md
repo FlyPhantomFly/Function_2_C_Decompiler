@@ -54,7 +54,8 @@ Windows tests need compilers or platforms that may not be installed. Compare a r
 8. Agent-written C only ever compiles inside the sandbox, unless `DECOMP_UNSAFE_NO_SANDBOX=1` is set or this is
    upstream's own marked Linux or a container. `trusted=True` never changes that: it only skips the source filter.
    (True since 0.10.11.)
-9. The installers, the README's instructions, the app's links and the plugin's agent skill send people and agents to this
+9. The installers, the README's instructions, the app's links, the plugin's agent skill and the files the app writes into
+   other projects (exported READMEs and build scripts) send people and agents to this
    fork's repository and nowhere else, and nothing tells an agent to pipe a download into a shell. (True since 0.10.15
    and 0.10.17; `maintenance/tests/test_maint_installers.py` and `test_maint_links.py` guard it. The hosted-network
    layer that used to print upstream's invitation line was deleted in 0.10.25.)
