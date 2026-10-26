@@ -13,6 +13,21 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.30] - 2026-10-21
+
+**Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.
+
+- **Run F** in `maintenance/baseline/`: the maintained code at 0.10.29, measured the same way: **429 passed, 0 failed, 52 skipped
+  (481 items)** with every free tool and `bwrap`. Test by test, nothing that passed in upstream's run C or in run E fails;
+  against E, 58 items are new (all pass) and 6 are gone, exactly the six legacy tests deleted in 0.10.25. The bare-machine CI
+  commands: 335 passed, 146 skipped, 0 failed in 13 s; `actionlint` on the workflow: clean.
+- `MAINTENANCE_PLAN.md`: status as of this version (Phase 2 now includes the matching-integrity tests, the legacy-layer deletion,
+  the luvdis guard and the exception audit; still open: schema migrations, refactors, and your decision on the now client-less
+  hash-only mode). `CLAUDE.md`: two more things not to do (a silent broad `except`, an unreachable module), each with the test
+  that fails.
+- `maintenance/patches/`: regenerated, 24 patches (0.10.7 to 0.10.30).
+- Nothing for users to do.
+
 ## [0.10.29] - 2026-10-21
 
 **Fix, Test.** No broad `except` can make a bug invisible any more. The audit of the inherited `except Exception` sites (plan
