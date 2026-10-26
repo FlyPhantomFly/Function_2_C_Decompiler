@@ -1,7 +1,7 @@
 ## About this fork
 
 This is a maintained fork of [decomp.wtf](https://github.com/i12bp8/decomp.wtf) (MIT, by Sam Wolfs), maintained by
-PhantomThreads. In this fork the project is called **Function_2_C_Decompiler**; that is the name in the app and in these docs. The
+[PhantomThreads](https://t.me/Fly_Dragon_Fly). In this fork the project is called **Function_2_C_Decompiler**; that is the name in the app and in these docs. The
 Python package is still `decompnet` and the command is still `decomp`, and the on-disk names that existing projects depend on
 (`.decomp.wtf.json`, the `decomp-wtf` git branch and Docker and WSL names) are unchanged, so nothing you have breaks.
 It is not affiliated with upstream, and its installers and updater fetch nothing from upstream's website
