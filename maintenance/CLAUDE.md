@@ -42,7 +42,8 @@ Windows tests need compilers or platforms that may not be installed. Compare a r
 
 ## Invariants (a change that breaks one is wrong, whatever else it does)
 
-1. Score 0 is the only way a function becomes matched.
+1. Score 0 is the only way a function becomes matched. (Guarded since 0.10.20 by `maintenance/tests/test_maint_scoring.py` and
+   `test_maint_match_integrity.py`. Decide a match with `FunctionObj.same_as`, never by fingerprint equality alone.)
 2. Agents cannot run their own compiler for anything that counts.
 3. A shared-header edit that breaks any earlier match is rejected.
 4. A fork-mode edit that breaks an earlier match is rolled back; agents never write build files or assembly.

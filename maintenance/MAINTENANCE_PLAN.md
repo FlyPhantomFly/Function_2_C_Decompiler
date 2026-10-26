@@ -4,7 +4,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.10.19
+## Status as of 0.10.23
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 | 1.5 `mcp` bound, lock in CI | done | 0.10.12, .13 | |
 | 1.6 CI | **written, not yet run on GitHub** | 0.10.13, .18 | Push, enable Actions, read the first runs. The `sandbox` and `toolchain-urls` jobs are `continue-on-error` until then. The plan's "green badge" is not met yet; ruff covers serious errors only (428 style findings remain). |
 | 1.7 toolchain URL check | done | 0.10.18 | Run it where the four blocked hosts resolve. Does not cover `m2c` (git revision). |
-| Phase 2 | **not started**, except the stated invariants | | Legacy layer decision, `luvdis_run.py`, the `except Exception` audit, **scoring property tests (the heart of "everything is correct"; recommended next)**, schema migrations, refactors. Invariants 7 and 8 and the installer/plugin rules have tests; invariants 1 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
+| Phase 2 | **started** | 0.10.20 to .22 | Done: the matching-integrity tests (invariant 1 is now guarded), which found and fixed two real defects in the core (a hash that was not an identity, an x86 crash). **Open:** the legacy layer decision, `luvdis_run.py`, the `except Exception` audit, schema migrations, refactors. Invariants 2 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
 | Phases 3 and 4 | not started | | |
 
 **Your next steps:** (1) push this work to `main` (the updater compares against that branch; until then the app is rightly
@@ -51,7 +51,7 @@ Nothing else is trustworthy until this is green.
 - **Decide on the legacy layer** (`decompnet/server.py`, `registration.py`, `jobs.py`, `public.py`, `upstream.py`, `local.py`, `cli.py`, `site/`, `site-redirect/`). Options: (a) delete it and keep only `app/` plus `network.py`, (b) move it to `legacy/` behind an extra. I recommend (a) after confirming with the import graph that `app/` does not need it. Remove `api.decomp.online` defaults either way. **Done when:** tests pass without it and the package imports cleanly.
 - **Harden `luvdis_run.py`:** pin the luvdis version in `toolchains.toml`, assert the expected string exists before patching, and fail with a clear message otherwise. Better: upstream the fix or vendor a patched copy.
 - **Exceptions:** audit the ~26 `except Exception` sites. Log with context, and re-raise anything that hides a bad match or a corrupted DB.
-- **Matching-integrity tests (the heart of "everything is correct").** Add property tests for `scoring.py`:
+- **Matching-integrity tests (the heart of "everything is correct").** *(Done in 0.10.20 to 0.10.22; see the changelog.)* Add property tests for `scoring.py`:
   - identical objects score 0,
   - one-register-swap scores greater than 0 and less than a reorder,
   - relocation normalization never turns a real mismatch into 0.

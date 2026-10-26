@@ -13,6 +13,20 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.23] - 2026-10-21
+
+**Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.
+
+- **Run E** in `maintenance/baseline/`: the maintained code at 0.10.22, measured the same way as the upstream baseline: **377
+  passed, 0 failed, 52 skipped (429 items)** with every free tool and `bwrap`. Test by test, nothing that passed in
+  upstream's run C or in run D fails, 64 items are new and pass, and nothing is xfailed. The bare-machine CI commands:
+  284 passed, 145 skipped, 0 failed in 16 s.
+- `MAINTENANCE_PLAN.md`: Phase 2 is marked started, with what is done (the matching-integrity tests, which found and fixed
+  two defects in the core) and what is open (the legacy layer decision, `luvdis_run.py`, the `except Exception` audit,
+  schema migrations, refactors). `CLAUDE.md`: invariant 1 notes its guard and the rule to decide a match with `same_as`.
+- `maintenance/patches/`: regenerated, 17 patches (0.10.7 to 0.10.23).
+- Nothing for users to do.
+
 ## [0.10.22] - 2026-10-21
 
 **Fix.** A relocation inside bytes capstone cannot decode no longer crashes scoring on x86 and x86-64. Fixes defect 2 from

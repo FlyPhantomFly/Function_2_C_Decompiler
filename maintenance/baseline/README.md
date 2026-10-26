@@ -1,10 +1,10 @@
 # Phase 0 baseline (upstream 0.10.6 code, measured for the 0.10.7 release)
 
 Runs A to C below were made against the untouched upstream tree (git tag `upstream-0.10.6`), so they say what the code
-did *before* any change by us. Run D, added at 0.10.19, is the maintained code, for comparison. The raw pytest output and
+did *before* any change by us. Runs D (0.10.18) and E (0.10.22) are the maintained code, for comparison. The raw pytest output and
 JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
 
-## The four runs
+## The five runs
 
 | Run | State of the machine | Result (269 test items) | Summary |
 | --- | --- | --- | --- |
@@ -12,6 +12,7 @@ JUnit XML for each run are in `raw/` exactly as captured (they contain the sandb
 | **B** | A, plus an empty `projects/demo/target/` directory | 128 passed, 1 failed, 1 error, 139 skipped | [summary-B.md](summary-B.md) |
 | **C** | B, plus every free tool the tests use (below) | **218 passed, 1 failed, 50 skipped** | [summary-C.md](summary-C.md) |
 | **D** | The maintained code at 0.10.18 (no code change in 0.10.19), everything C had plus `bwrap` | **310 passed, 0 failed, 55 skipped** (365 items) | [summary-D.md](summary-D.md) |
+| **E** | The maintained code at 0.10.22, same machine as D | **377 passed, 0 failed, 52 skipped** (429 items) | [summary-E.md](summary-E.md) |
 
 Test machine: Ubuntu 24.04 container, Python 3.12.3, uv 0.11.7, gcc 13.3, bubblewrap 0.9.0 (it does create a sandbox
 in that container), lld and llvm 18.1.3. Toolchains installed through the project's own installer
@@ -59,6 +60,12 @@ first run in a clean tree gives 53 skips instead of 50. This is a property of up
 they pass on the next run (the order dependence described above). On a bare machine (no toolchains, no `bwrap`, `lld` or
 `llvm-objcopy`, no zlib source) the same code gives 220 passed, 145 skipped, 0 failed, which is what CI's `checks` job
 runs.
+
+## Run E against run D
+
+429 items against 365: 64 new (all pass), none dropped. **Nothing that passed in D, or in upstream's run C, fails in E**, and nothing
+is marked xfail any more: the two defects the new matching-integrity tests found (0.10.20) were fixed in 0.10.21 and 0.10.22.
+The bare-machine CI commands on the same code: 284 passed, 145 skipped, 0 failed.
 
 ## What the 50 skips in run C need
 
