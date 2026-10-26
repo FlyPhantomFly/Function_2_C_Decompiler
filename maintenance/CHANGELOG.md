@@ -13,6 +13,34 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.12.0] - 2026-10-26
+
+**0.12.0 lets N64 code grow (experimental), installs without a clone, and lets installed apps be told about releases.** It collects 0.11.1 to 0.11.6, which are the history below.
+
+**New, experimental: N64 projects whose code can grow.** Everything here is verified on the demo ROM only, and the README says so.
+- `decomp shift-audit PROJECT` reads an exported N64 project and reports what is pinned to an absolute address, so that growing code would break it: address loads and calls that are symbols against numbers, jump tables, and what each number points at. It changes nothing.
+- `decomp shift-prep PROJECT` makes the jump tables and function pointers symbolic without changing what the project builds (a preview unless you give `--apply`; it writes `shift-prep.json` listing every change). On the demo: 39 labels inserted, 39 table entries rewritten, and the project still rebuilds byte for byte, and C functions still match.
+- `decomp shift-prep PROJECT --layout` switches the build to a layout in which code can grow, and recomputes the ROM's header checksums (the 6102 family only; it checks that against the original and writes nothing for a boot chip it cannot verify). An unchanged project still rebuilds the identical ROM; growing the first function by 16 bytes grows the ROM by exactly 16, and an independent check accounts
+  for all 8,108 instructions (the 96 functions and the start-up stub) and every data word after the code.
+- It refuses, with the reason, a game with a global pointer, symbols pinned inside the program, or C functions that keep their own data. **Not verified: any real game.** The demo has no padding, no pointers into data or bss, no overlays and no compression, so Super Mario 64, GoldenEye and Perfect Dark may well fail; pointers into data and bss are not handled yet. Try it on a copy, and a project you have changed cannot be compared with the original,
+  so the build can say what moved but not that it is right.
+
+**New: install without cloning, and updates that follow releases.** `curl -fsSL https://raw.githubusercontent.com/FlyPhantomFly/Function_2_C_Decompiler/main/site/public/install.sh | bash` installs the latest published release, and an app installed that way (or from any release) is told about newer ones and updates itself on request (`decomp update`). Until 0.11.6 the installer refused
+without a clone and no app could be told about a release at all. It installs the tag's source archive; it does not check a checksum while installing, and releases are not signed.
+
+**Smaller.** The README's animated demo has the product's name in its title bar, and its caption says it is a scripted simulation from upstream rather than a recording of a real run. Upstream's discontinuation notice is no longer in the README (the credit and links to the original project are); the test that guards the original author's words now only requires
+that they are never rewritten.
+
+**Upgrading from 0.11.0:** nothing to do, and no database changes (the schema is still 3).
+
+**Still not verified, so you know what to try first**
+- Any real N64 game with the shifting tools (above).
+- **`decomp run` with a real agent matching functions.** There was no agent or API key where it was built. Start small: `decomp run PROJECT --agent claude --until 5%`.
+- The eval harness against a real provider. PlayStation 2, GBA, DS, GameCube and Windows are unmeasured.
+- Releases are not signed: the checksums beside them detect a damaged file, not who made it.
+
+**Checked:** this version, with the CI checks job's own commands and the optional tools hidden as on a bare runner: **733 passed, 170 skipped, 0 failed**, the wheel builds and checks clean, `actionlint` clean. CI has run green on GitHub since 0.11.4, and the Release workflow built and published 0.11.0 on its first run; its files verify against their checksums and install into a clean home.
+
 ## [0.11.6] - 2026-10-26
 
 **Fix, Feature.** The update channel is connected to the published release: the installer works without a clone, and installed apps can now be told about a release. Found while deciding whether to cut another one.
