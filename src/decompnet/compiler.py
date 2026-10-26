@@ -2,6 +2,13 @@
 
 Agents never get to run their own compiler for anything that counts: every score and
 every match is produced here, on the coordinator, with the project's pinned toolchain.
+
+The compiler is a 1990s program fed text an AI wrote, so it only ever runs inside the sandbox (bubblewrap, Docker or
+WSL). Without one, compiling is refused and the user is told how to fix it: it does NOT fall back to running the
+compiler as the user. The ways around that are all explicit: DECOMP_UNSAFE_NO_SANDBOX=1, or running in the dedicated
+Linux that decomp.wtf's own installers build (a WSL distro or Docker image marked in /etc/decomp-wtf-runtime) or in any
+container, where the VM is the boundary. `trusted` does not change this: it only skips the source filter (exports pass
+it for matched code), and that code is still agent-written.
 """
 
 from __future__ import annotations
@@ -39,6 +46,13 @@ class SourceRejected(ValueError):
     pass
 
 
+class SandboxUnavailable(RuntimeError):
+    """Agent-written C may not be compiled here: there is no sandbox to compile it in."""
+
+
+UNSAFE_ENV = "DECOMP_UNSAFE_NO_SANDBOX"
+
+
 def check_source(source: str) -> None:
     if len(source.encode()) > MAX_SOURCE_BYTES:
         raise SourceRejected(f"source too large (max {MAX_SOURCE_BYTES} bytes)")
@@ -70,12 +84,44 @@ class CompileResult:
     log: str
 
 
+def _unsandboxed_allowed() -> bool:
+    """Someone said so (the environment variable), or this is decomp.wtf's own Linux or a container: there the virtual
+    machine is the boundary, as upstream designed it. A user's own general-purpose WSL distro is not: hostenv.runtime()
+    says "wsl" for any Linux that can see Windows, so only the marker upstream's linux-base.sh writes counts."""
+    if os.environ.get(UNSAFE_ENV, "").strip().lower() in ("1", "true", "yes"):
+        return True
+    from . import hostenv  # late: hostenv knows nothing of the compiler, keep it that way
+    try:
+        made = hostenv.RUNTIME_FILE.read_text(encoding="utf-8").strip()
+    except OSError:
+        made = ""
+    return made in ("wsl", "docker") or hostenv.runtime() == "docker"
+
+
 def _sandbox_mode(cfg: CompilerConfig) -> str:
     if cfg.wsl:
         return "wsl"
-    if cfg.sandbox != "auto":
-        return cfg.sandbox
-    return "bwrap" if shutil.which("bwrap") else "none"
+    mode = cfg.sandbox
+    if mode == "auto":
+        mode = "bwrap" if shutil.which("bwrap") else "none"
+    if mode == "none" and not _unsandboxed_allowed():
+        why = 'this project asks for sandbox = "none"' if cfg.sandbox == "none" else "bubblewrap (`bwrap`) isn't installed"
+        raise SandboxUnavailable(
+            f"agent-written C is not compiled without a sandbox, and {why}. Install bubblewrap and try again "
+            f"(Debian, Ubuntu, Parrot: `sudo apt install bubblewrap`). Only if you accept that the compiler then runs "
+            f"with your user's full access, set {UNSAFE_ENV}=1.")
+    return mode
+
+
+def sandbox_problem() -> str:
+    """Why compiling would be refused on this machine, for a warning at startup; "" when it would not."""
+    if os.name == "nt":  # there the compilers run in WSL 2, which has its own checks
+        return ""
+    try:
+        _sandbox_mode(CompilerConfig(cmd=[]))
+    except SandboxUnavailable as e:
+        return str(e)
+    return ""
 
 
 def _root(cfg: CompilerConfig, work: Path) -> str:
@@ -138,6 +184,10 @@ def compile_source(cfg: CompilerConfig, context_header: str, source: str, truste
             check_source(source)
         except SourceRejected as e:
             return CompileResult(False, None, f"rejected: {e}")
+    try:  # before anything is written or run: no sandbox, no compile
+        _sandbox_mode(cfg)
+    except SandboxUnavailable as e:
+        return CompileResult(False, None, str(e))
 
     with tempfile.TemporaryDirectory(prefix="decompnet-") as tmp:
         work = Path(tmp)

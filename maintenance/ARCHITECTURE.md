@@ -101,7 +101,7 @@ src/decompnet/
 Verified by reading the code:
 
 1. **Updater and installers are hard-wired to the original author.** `app/updates.py` sets `REPO = "i12bp8/decomp.wtf"` and `SITE = "https://decomp.wtf"`. `install.sh`, `install.ps1`, `app/cli.py` (`--repo` default), the UI (`app.js` ~L351 and ~L2543, `index.html` ~L108) and the README all point there too. Any installed copy of your fork will offer to replace itself with upstream's code, or whatever that domain serves later. **This is the first thing to change.**
-2. **The sandbox falls back to no sandbox.** `compiler._sandbox_mode` returns `"none"` when `bwrap` is not installed (it was missing here, and may be on your Parrot box). Only `prlimit` remains. Agent-submitted C then reaches 1990s compilers with your user's privileges.
+2. **The sandbox fell back to no sandbox** (fixed in 0.10.11). `compiler._sandbox_mode` returned `"none"` when `bwrap` was not installed; only `prlimit` remained, and agent-submitted C reached 1990s compilers with the user's privileges (demonstrated live: uid 0, host files readable). Now it refuses, with the explicit exceptions listed in the changelog. Note `trusted=True` does not mean "not agent code": exports compile matched agent C with it.
 3. **Version coupling.** `mcp>=2.3.0` has no upper bound, and the code imports `mcp.server.mcpserver`, which is the 2.x API. `uv.lock` pins 2.3.0, but anything that installs without the lock can drift.
 4. `rom/luvdis_run.py` patches the source of a third-party module at runtime (a string replace of `PUSH` with `SAFE_PUSH`, then `exec`). It breaks silently if luvdis changes.
 5. The pinned toolchains download from external hosts (GitHub releases, `archive.archlinux.org`, `snapshot.debian.org`). They are sha256-pinned (no trust-on-first-use entries), but URL rot would break installs.
@@ -120,7 +120,6 @@ Still open (needs your machine or a later change):
 
 - PS2, GBA, DS, GameCube and Windows/WSL tests are skipped here. They need `ee-gcc-2.96`, `agbcc` plus the Arm GNU toolchain, the proprietary CodeWarrior compilers, and Windows. The sandbox could not reach `archive.archlinux.org`, `snapshot.debian.org`, `developer.arm.com` or `zlib.net`.
 - The demo ROM needs zlib 1.1.4 from `zlib.net` (`projects/zlib-n64/prepare.py`, sha256-pinned). It was exercised here with an equivalent source (regenerated headers were byte-identical to the committed ones); run the real `prepare.py` on your machine.
-- The compile sandbox's fallback to no sandbox (finding 2) was read in the code but not yet exercised by a test.
 - The GUI, the installers, and each platform pipeline end to end.
 - Whether the legacy layer is used by anything you care about.
 

@@ -58,8 +58,9 @@ reach `archive.archlinux.org`, `snapshot.debian.org`, `developer.arm.com` or `zl
 not measured here. **They are your next measurement:** run `setup-test-env.sh` and the suite on the Parrot box and
 compare with summary-C.
 
-The one suspected-but-unmeasured area that matters most is the compile sandbox. The tests ran with `bwrap` present, so
-the "no `bwrap` means no sandbox" fallback in `compiler.py` was not exercised. It gets its own test when it is fixed.
+The one suspected-but-unmeasured area that mattered most was the compile sandbox. The baseline ran with `bwrap`
+present, so the "no `bwrap` means no sandbox" fallback in `compiler.py` was not exercised. It was demonstrated by hand
+and fixed in 0.10.11, with its own tests.
 
 ## A note on how run C got its zlib source
 

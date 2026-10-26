@@ -68,12 +68,15 @@ def _no_wslpath(*args, **kwargs):  # this test machine has no WSL
 
 
 @pytest.mark.skipif(toolchains.installed("gcc-2.7.2-kmc") is None, reason="needs gcc-2.7.2-kmc")
-def test_compiles_when_the_app_runs_from_root(monkeypatch):
+def test_compiles_when_the_app_runs_from_root(monkeypatch, tmp_path):
     """A service or a container starts decomp.wtf in /, and there's no bwrap in decomp.wtf's own Linux: KMC GCC's
     assembler can't read its input from there, so every compile runs in its own work folder."""
     from decompnet import compiler, project
 
     monkeypatch.chdir("/")
+    marker = tmp_path / "runtime"  # what linux-base.sh writes in decomp.wtf's own Linux, where there is no bwrap
+    marker.write_text("docker\n", encoding="utf-8")
+    monkeypatch.setattr(hostenv, "RUNTIME_FILE", marker)
     cfg = project.compiler_config(hostenv.Path("/tmp"), {"compiler": {"toolchain": "gcc-2.7.2-kmc", "sandbox": "none"}})
     res = compiler.compile_source(cfg, "", "int f(int v) { return v < 0 ? -v : v; }", trusted=True)
     assert res.ok, res.log

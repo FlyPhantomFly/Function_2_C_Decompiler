@@ -49,11 +49,9 @@ Windows tests need compilers or platforms that may not be installed. Compare a r
 6. No ROM bytes or assembly cross a team-room connection.
 7. The app contacts no update host except this fork's repository (`updates.REPO`), installs nothing from anywhere else,
    and with `REPO` empty contacts nothing. (True since 0.10.10.)
-
-Targets that are **not yet true of the code** (this list shrinks as the changelog records each one landing):
-
-8. Agent-written C only ever compiles inside the sandbox. Today it falls back to no sandbox when `bwrap` is missing
-   (plan item 1.4).
+8. Agent-written C only ever compiles inside the sandbox, unless `DECOMP_UNSAFE_NO_SANDBOX=1` is set or this is
+   upstream's own marked Linux or a container. `trusted=True` never changes that: it only skips the source filter.
+   (True since 0.10.11.)
 
 ## Needs the owner's review before it merges
 

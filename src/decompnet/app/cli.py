@@ -152,6 +152,10 @@ def run(args) -> int:
     url = f"http://127.0.0.1:{port}/?k={secret}"
     print(f"decomp.wtf {__import__('decompnet').__version__} on {url}\nyour projects: {hostenv.shown_path(home)}"
           + ("\nupdated and restarted" if restarted else "\nstop with Ctrl-C"), flush=True)
+    from .. import compiler
+
+    if problem := compiler.sandbox_problem():  # say it now, not after an agent has spent its tokens on compiles that can't run
+        print(f"WARNING: {problem}", flush=True)
     if not args.no_browser and not restarted:
         _open_when_ready(url, port)
     try:

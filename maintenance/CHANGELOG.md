@@ -13,6 +13,37 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.11] - 2026-10-21
+
+**Security.** Agent-written C is no longer compiled outside the sandbox unless someone explicitly says so. (Plan item 1.4.)
+
+- Before: `sandbox = "auto"` quietly became `"none"` when `bwrap` was not installed, leaving only `prlimit`. Shown live on
+  the old code with `bwrap` removed: the compile ran as uid 0 and could read the host's `/etc/passwd`.
+- Now, in `src/decompnet/compiler.py`: with no sandbox, `compile_source` returns a failed result and `run_in` raises
+  `SandboxUnavailable`, both saying why and how to fix it (`sudo apt install bubblewrap`). Nothing is run.
+  `compiler.sandbox_problem()` reports the same thing, and `decomp` prints it as a `WARNING:` at startup, before an
+  agent spends tokens on compiles that cannot run.
+- The ways to compile without `bwrap` are all explicit: `DECOMP_UNSAFE_NO_SANDBOX=1` (only `1`, `true` or `yes`
+  count); a project that sets `sandbox = "none"` is refused the same way unless that is set; and upstream's own
+  environments are left as designed, because there the machine is the boundary: a Linux marked by
+  `/etc/decomp-wtf-runtime` (what upstream's `linux-base.sh` writes in its WSL distro and Docker image, which ship
+  without `bwrap`) and any Docker container. A user's own general-purpose WSL distro is **not** exempt:
+  `hostenv.runtime()` says "wsl" for any Linux that can see Windows, so it is not used as the signal.
+- `trusted=True` does not buy a way around it. It only skips the source filter, and `export_build.py` /
+  `export_gba_build.py` pass it for matched *agent-written* code. A test pins that.
+- With `bwrap` present nothing changes, and the opt-out does not switch off a sandbox that is there.
+- Tests: 21 new in `maintenance/tests/test_maint_sandbox.py`, including one that proves isolation (the compiler
+  cannot see `/etc/passwd` inside `bwrap`, and can outside it). `tests/test_hostenv.py` simulates the marked Linux its
+  docstring describes. `tests/conftest.py`: on a machine without `bwrap` the demo-code tests run with the opt-out set
+  and the pytest header says so, so the suite behaves as before there.
+- Verified with `bwrap` really removed: the startup banner shows the warning; through the real tool path an agent
+  gets `COMPILE ERROR ... not compiled without a sandbox`; the full suite is 271 passed, 52 skipped, 0 failed. With
+  `bwrap`: the compile-path test files and all maintenance tests, 94 passed.
+- **Users on a machine without bubblewrap must install it**, or compiles stop. Not changed: if `bwrap` is installed but
+  cannot create a namespace (some hardened kernels) every compile already fails closed with bwrap's own error, and it
+  is not probed in advance; `bwrap` finds `prlimit` through the inherited `PATH`, so a `PATH` without `/usr/bin` also
+  fails closed.
+
 ## [0.10.10] - 2026-10-21
 
 **Security.** The updater reads from and installs from this fork's repository only. (Plan items 1.1 and 1.2, the
