@@ -13,6 +13,29 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.37] - 2026-10-22
+
+**Tooling, Docs.** The sidebar layout, the one thing the rename (0.10.34) left unverified, is now checked in a real browser, and the
+way to do that is a tool. No change under `src/`.
+
+- **Verified by looking.** The product name is 23 characters where the old one had 10, in a 248 px sidebar. I could not see it in 0.10.34, so
+  I made the CSS tolerant and said so. A real browser is obtainable here (the portable `ungoogled-chromium` 155.0.8059.84-1 from GitHub
+  releases; **its sha256 matched the digest GitHub shows for that asset** before it was run, and it only ever loaded the app's own localhost
+  page). Result: at 1280 px the wordmark `Function_2_C_Decompiler`, with `Decompiler` in green, sits inside the sidebar with room to spare; at 420 px
+  the narrow header shows the menu button, the logo and the whole name on one line. Nothing overflows or wraps. The screenshots are kept in
+  `maintenance/baseline/ui/`.
+- New `maintenance/tools/screenshot_ui.py`: starts the app on a free port with a throwaway home and updates off, loads it headless at both widths,
+  writes `desktop.png` and `phone.png`, and stops the app by its process id. Needs `CHROME=<a Chromium binary>`; a browser is not a dependency.
+  Tests (4 in `test_maint_screenshot_tool.py`): the command it builds and its two widths, a polite refusal without a browser, and, only when
+  `CHROME` is set, a real run that takes both screenshots and leaves no app process behind. All four pass here with the browser; three pass
+  without it.
+- Still showing the old name, found by looking at it: the README banner image (`.github/assets/banner-light.png`) shows the wordmark
+  `decomp.wtf` and upstream's tagline "What the function?" beside the README's new alt text. It is artwork, so replacing it is your call; the
+  documents now say exactly that instead of "banner images".
+- Two stale statements in the plan corrected (the rebrand was still listed as an open decision, and the tools table in this folder's README missed
+  three tools).
+- Nothing for users to do.
+
 ## [0.10.36] - 2026-10-21
 
 **Fix, CI.** The rename tool and its tests work in an unpacked zip. Found by the cold-start check of the 0.10.35 zip; **that zip had the

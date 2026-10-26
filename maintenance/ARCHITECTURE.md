@@ -195,6 +195,7 @@ a credit string into fixed-width ROM header fields (`b"...".ljust(40)` does not 
 demo executable), nor the PowerShell installers (they refuse to run), nor `maintenance/` (history and documentation about upstream).
 
 Known gaps: the README's banner images (`.github/assets/*.png`) still show the old wordmark (they are pictures, not text); the demo ROMs carry the old
-name in their embedded credit; and the sidebar layout for the longer name was made tolerant in CSS (smaller type, wrapping allowed) but **not viewed in a
-browser** (none was available when it was made), so look at it once.
+name in their embedded credit; and the sidebar layout for the longer name was made tolerant in CSS (smaller type, wrapping allowed) and then **checked in a real browser**
+(0.10.37): `baseline/ui/desktop.png` and `phone.png` show the wordmark fitting at 1280 and 420 px. The README banner shows the old `decomp.wtf`
+wordmark and the tagline "What the function?": artwork, so replacing it is the owner's design call.
 

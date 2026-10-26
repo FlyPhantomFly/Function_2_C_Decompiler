@@ -17,6 +17,7 @@ maintenance/baseline/setup-test-env.sh            # apt packages + free toolchai
 python3 maintenance/tools/summarize_junit.py junit.xml   # needs: pytest --junitxml=junit.xml
 python3 maintenance/tools/bump_version.py --check        # do the three version places agree?
 python3 maintenance/tools/check_toolchains.py            # does every pinned compiler download still exist? (--verify: hash them)
+CHROME=/path/to/chromium python3 maintenance/tools/screenshot_ui.py   # after any GUI change: look at maintenance/baseline/ui/*.png
 ```
 
 Entry point (from `pyproject.toml`): `decomp` is the local app (`decompnet.app.cli`); it is the only one since the hosted
