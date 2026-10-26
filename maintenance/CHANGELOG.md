@@ -13,6 +13,22 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.14] - 2026-10-21
+
+**Docs.** Attribution and package metadata. (Plan item 1.3.)
+
+- `LICENSE`: added `Copyright (c) 2026 PhantomThreads` under upstream's `Copyright (c) 2026 Sam Wolfs`. The original
+  notice and the MIT permission text are unchanged and stay first, which is what the license requires of a fork.
+- `pyproject.toml`: `maintainers = [PhantomThreads]` (the original author stays under `authors`); `Homepage` and
+  `Source` now point at `github.com/FlyPhantomFly/Function_2_C_Decompiler`; a new `Upstream` link credits
+  `github.com/i12bp8/decomp.wtf` (a credit, nothing downloads from it). The `decomp.wtf` website is not this fork's.
+- Verified: 3 tests in `maintenance/tests/test_maint_attribution.py` (failed before); `uv lock --check` passes; a real
+  wheel was built and its `METADATA` shows `Author: sam wolfs`, `Maintainer: PhantomThreads`, the three links and
+  `License-File: LICENSE`.
+- Not changed: the name "decomp.wtf" in code and text. It is upstream's brand, not covered by the MIT license, and
+  replacing it is the staged rebrand (plan item 1.1), still open and separate from this change.
+- Nothing for users to do.
+
 ## [0.10.13] - 2026-10-21
 
 **CI.** GitHub Actions workflow `.github/workflows/ci.yml`. (Plan item 1.6.)
