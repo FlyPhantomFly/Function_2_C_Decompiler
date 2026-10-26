@@ -18,8 +18,8 @@ python3 maintenance/tools/bump_version.py --check        # do the three version 
 python3 maintenance/tools/check_toolchains.py            # does every pinned compiler download still exist? (--verify: hash them)
 ```
 
-Entry points (from `pyproject.toml`): `decomp` is the local app (`decompnet.app.cli`), `decompnet` is the older
-network CLI (`decompnet.cli`). Python 3.12 or newer.
+Entry point (from `pyproject.toml`): `decomp` is the local app (`decompnet.app.cli`); it is the only one since the hosted
+network's `decompnet` command was removed in 0.10.25. Python 3.12 or newer.
 
 A skipped test names what it needs in its reason (`-rs`). Many skips are expected: PS2, GBA, DS, GameCube and
 Windows tests need compilers or platforms that may not be installed. Compare a run with
@@ -56,7 +56,8 @@ Windows tests need compilers or platforms that may not be installed. Compare a r
    (True since 0.10.11.)
 9. The installers, the README's instructions, the app's links and the plugin's agent skill send people and agents to this
    fork's repository and nowhere else, and nothing tells an agent to pipe a download into a shell. (True since 0.10.15
-   and 0.10.17; `maintenance/tests/test_maint_installers.py` and `test_maint_links.py` guard it. Open: the legacy CLI.)
+   and 0.10.17; `maintenance/tests/test_maint_installers.py` and `test_maint_links.py` guard it. The hosted-network
+   layer that used to print upstream's invitation line was deleted in 0.10.25.)
 
 ## Needs the owner's review before it merges
 

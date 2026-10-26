@@ -13,6 +13,44 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.25] - 2026-10-21
+
+**Removal.** The retired hosted-network layer is deleted. The owner decided to delete it (plan Phase 2, option (a)). 54 files
+changed, 4,245 lines deleted and 200 added (the additions are tests, edits and documentation).
+
+- What went, after an AST import graph (including imports inside functions, and a check for dynamic imports) showed that
+  nothing under `app/` reaches it: `src/decompnet/{server,cli,registration,jobs,public,upstream,local}.py` (881 lines: the
+  coordinator's HTTP and MCP server, the `decompnet` command, Turnstile signup, donated-compute jobs, public pages, the per-match
+  git export, hash-only contributor tools); `site-redirect/`; and the website under `site/` (34 files: pages, the simulation, fonts,
+  Cloudflare and Node packaging, build tools, and upstream's legal and privacy pages, which named upstream's operator and contact
+  address and described *his* website). The `decompnet` console script is gone from `pyproject.toml`; `decomp` is the only one.
+- Also removed: the volunteer half of `permuter.py` (`LocalScorer`, `search`, `_api`, `worker`: HTTP calls to a coordinator, a
+  live file whose dead half the import graph cannot see), 239 lines to 130. The mutation helpers the app's local permuter uses stay.
+- What stays on purpose: `network.py`, `policy.py`, `project.py` (the core the app builds on), the installers and container files
+  in `site/public/`, and the files the import graph cannot see but that are used (scripts the exporter copies into generated
+  projects, `luvdis_run.py` run as a subprocess, the DS template's tools). Two leftovers are named, not hidden: **hash-only
+  projects** still exist in `network.py` and `project.py` and are tested, but nothing can create one from the app now; and the
+  unused `registrations` and `jobs` tables stay in `store.py` so existing databases keep working.
+- Fixed on the way: two messages in `network.py` told agents and users to run `decompnet local asm` and `decompnet local diff`,
+  commands that no longer exist; they now say plainly that a hash-only project can only answer match or no match.
+  `tests/test_phase23.py` keeps its three core tests (reputation gating, hash-only import and match, per-unit headers); its
+  helper now creates the untrusted agent with the same `register_agent` call the deleted `Registrar` made. `tests/test_http.py`
+  went whole; it tested only the deleted server.
+- Dependencies: no declared dependency became unused (checked by import scan; `splat64`, `spimdisasm` and `ninja` are run as
+  tools, not imported). The deleted modules' only third-party imports were `anyio`, `starlette` and `mcp`, which the app still uses.
+- Tests: 14 in `maintenance/tests/test_maint_legacy_removed.py` (12 failed before), which pin the end state and **fail if an
+  orphaned module ever appears again** (every module must be reachable from the app or be a listed script), if a hosted-service
+  endpoint returns to the code, if any instruction names a deleted subcommand, or if the permuter grows network code.
+  **Whole suite with every tool: 396 passed and the changelog test this entry satisfies, 52 skipped, 0 failed.** Test by test
+  against the previous full run, the only items that disappeared are the six legacy tests (two in `test_http.py`, four in
+  `test_phase23.py`), the 26 new ones pass (12 from 0.10.24, 14 here), and nothing that passed regressed.
+- Documentation: `ARCHITECTURE.md` section 8 describes what was removed and what was kept; section 9 gains an **inventory of the
+  hosts the code can contact**, read from the source (not captured traffic), replacing what upstream's privacy page said. Notably the
+  app does not contact `decomp.dev` at runtime. The plan, `CLAUDE.md` and the README layout table are updated.
+- Not done: generated export files and the export build scripts still link to `decomp.wtf` as text (next version).
+- Nothing for users to do: `decomp` is unchanged. Anyone who used `decompnet serve` or its moderation commands should keep upstream's
+  tag `upstream-0.10.6`.
+
 ## [0.10.24] - 2026-10-21
 
 **Tooling.** `decomp toolchain list | install ID | path ID`, ported from the hosted-network CLI so that CLI can be deleted next.

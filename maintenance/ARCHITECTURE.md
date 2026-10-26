@@ -25,8 +25,8 @@ Provenance: upstream is `i12bp8/decomp.wtf` by Sam Wolfs, version **0.10.6**, **
 
 ## 2. Size and shape
 
-- ~21k lines of Python in `src/decompnet`, ~5.5k lines in `tests/` (246 test functions, 269 collected test items once parametrized, in 38 files), plus a vanilla-JS front end (`app/static/app.js`), a marketing site (`site/`), installers (`site/public/install.sh|ps1`, `linux-base.sh`, `Dockerfile`) and a Claude Code plugin (`plugins/decomp-wtf`).
-- Largest modules: `app/forkengine.py` 2396, `app/engine.py` 1730, `app/server.py` 1244, `app/agents.py` 1110, `app/collab.py` 844, `network.py` 779, `forks/scratch_dtk.py` 740, `app/twins.py` 694.
+- ~20.9k lines of Python in `src/decompnet`, ~5.4k lines in `tests/` (263 collected test items in 37 files) and `maintenance/tests/` (our additions, 186 items), plus a vanilla-JS front end (`app/static/app.js`), the installers and container files (`site/public/`) and a Claude Code plugin (`plugins/decomp-wtf`).
+- Largest modules: `app/forkengine.py` 2396, `app/engine.py` 1730, `app/server.py` 1245, `app/agents.py` 1110, `app/collab.py` 844, `network.py` 781, `forks/scratch_dtk.py` 740, `app/twins.py` 694.
 - Python 3.12+, built with `uv` / `uv_build`. Dependencies: capstone, mcp (2.x), pyelftools, splat64, spimdisasm, rabbitizer, httpx, uvicorn, ninja (plus truststore on Windows and zstandard on Linux). There are two console scripts: `decomp` (the app) and `decompnet` (the older network CLI).
 
 ## 3. Module map
@@ -51,8 +51,6 @@ src/decompnet/
   app/              The local app: engine, forkengine, tools (MCP tools + prompts), agents (running agents),
                     server (GUI API + MCP), collab (team rooms), twins, permute, updates, connect, service,
                     static/ (GUI), guide/ (agent knowledge base, ~20 markdown guides)
-  server.py, registration.py, jobs.py, public.py, upstream.py, local.py, cli.py
-                    LEGACY hosted-network layer (see section 8)
 ```
 
 ## 4. The core loop
@@ -86,9 +84,19 @@ src/decompnet/
 - **Platforms:** GameCube/Wii and N64 are "recommended". PS1, PS2, GBA and DS are beta. Windows runs inside its own WSL2 distro. macOS is unsupported.
 - **Toolchains:** 25 registry entries (`toolchains.toml`) with sha256 pins on every download part. Proprietary ones (IDO 5.3/7.1, mwcc, mwccarm) are installed only after explicit license acceptance. Old 32-bit compilers run on a pinned i386 glibc runtime inside the sandbox.
 
-## 8. Legacy hosted-network layer
+## 8. The retired hosted-network layer (removed in 0.10.25)
 
-`server.py`, `registration.py` (Cloudflare Turnstile signup), `jobs.py` (donated compute workers), `public.py` (website JSON), `upstream.py` (per-match git commits with credit), `local.py` (hash-only projects) and `cli.py` belong to an earlier design: a public coordinator at `api.decomp.online`. `.gitignore` says the hosted network was retired and its server scripts are "kept locally only". The code is still wired up (`decompnet/server.py` imports `jobs`, `policy`, `public` and `registration`; `decompnet/cli.py` imports `upstream` and `local`), and `cli.py` still defaults to `https://api.decomp.online`. The local app (`app/`) builds on `network.py` but does not need the web-signup, worker or public-page parts.
+Upstream once ran decomp.wtf as a public coordinator at `api.decomp.online` next to the local app, and its code was still in
+the repository: `server.py` (the coordinator's HTTP and MCP server), `registration.py` (Cloudflare Turnstile signup),
+`jobs.py` and the volunteer half of `permuter.py` (donated compute), `public.py` (website JSON), `upstream.py` (per-match git
+commits with credit), `local.py` (hash-only contributor tools) and `cli.py` (the `decompnet` command), plus the website under
+`site/`, the redirect worker in `site-redirect/`, and the website's legal and privacy pages. The import graph showed `app/` needs
+none of it (it builds on `network.py`), so it was deleted; `decomp toolchain` (the one useful part of that CLI) was ported first.
+What was kept on purpose, because the app's core uses it: `network.py`, `policy.py` (reputation levels), `project.py`, and the
+installers in `site/public/`. What is left over and now has no client: **hash-only projects** (`verification = "hash"`, kept in
+`network.py` and `project.py`, tested, but nothing can create one from the app), and the unused `registrations` and `jobs` tables
+in `store.py` (left in the schema so existing databases keep working). Removing the hash-only mode is possible as a later,
+separate decision.
 
 ## 9. Security model (as implemented)
 
@@ -96,11 +104,33 @@ src/decompnet/
 - Compiles run with `prlimit` (2 GB address space, 30 s CPU, 64 MB file size), a global concurrency semaphore, a 15 s default timeout and a 64 KB source cap.
 - The source filter is regex-based, so treat it as defense in depth, not a boundary. The boundary is the sandbox.
 
+### Outbound connections (read from the source, not captured from traffic)
+
+The app has no account, no telemetry and no analytics endpoint: the hosts below are the only ones the code can contact, and each
+needs a reason. A tool the app starts (`uv`, `git`, an agent CLI) makes its own connections as well.
+
+- **This fork's repository on GitHub** (`api.github.com`, `raw.githubusercontent.com`, `github.com` archives): update checks, only
+  while the updater is on (`DECOMP_UPDATES=off`, or an empty `REPO`, turns it off). Verified live: one URL.
+- **Compiler and tool downloads**: the hosts named in `src/decompnet/toolchains.toml` (`github.com` releases, `files.decomp.dev`,
+  `archive.archlinux.org`, `snapshot.debian.org`, `developer.arm.com`), sha256-pinned, only on `decomp setup`,
+  `decomp toolchain install`, or when you ask the app to install one. `maintenance/tools/check_toolchains.py` checks them.
+- **`uv`, PyPI and Astral**: the installer, once.
+- **A project you choose to fork**: `git clone` of that repository, with its submodules, from whatever host it lives on. The app
+  does not contact `decomp.dev` (the directory was retired; it lists what an earlier install saved).
+- **The AI agent you connect**: the built-in API agent sends your prompts and the code it works on to the provider you configure
+  (presets: DeepSeek, OpenRouter, OpenAI, or Ollama, LM Studio and llama.cpp on `127.0.0.1`). Agent CLIs (Claude Code, Codex and
+  so on) use their own connections.
+- **Team rooms**: when you host without giving an address, `cloudflared` (a pinned download) opens a `*.trycloudflare.com` quick
+  tunnel; members connect to the host's address. Nothing else is sent anywhere.
+- Other hosts that appear in the source are install hints (`nodejs.org`, `git-scm.com`, `adoptium.net`), documentation or product
+  links, or identifiers inside text (`www.apple.com` in a plist DOCTYPE, `www.apache.org` in a licence header). Generated export
+  files still link to `decomp.wtf` as text (changed in a later version).
+
 ## 10. Findings that matter for maintainers
 
 Verified by reading the code:
 
-1. **Updater and installers are hard-wired to the original author.** `app/updates.py` sets `REPO = "i12bp8/decomp.wtf"` and `SITE = "https://decomp.wtf"`. `install.sh`, `install.ps1`, `app/cli.py` (`--repo` default), the UI (`app.js` ~L351 and ~L2543, `index.html` ~L108) and the README all point there too. Any installed copy of your fork will offer to replace itself with upstream's code, or whatever that domain serves later. **This is the first thing to change.**
+1. **Updater and installers were hard-wired to the original author** (fixed in 0.10.10, 0.10.15 and 0.10.17). `app/updates.py` sets `REPO = "i12bp8/decomp.wtf"` and `SITE = "https://decomp.wtf"`. `install.sh`, `install.ps1`, `app/cli.py` (`--repo` default), the UI (`app.js` ~L351 and ~L2543, `index.html` ~L108) and the README all point there too. Any installed copy of your fork will offer to replace itself with upstream's code, or whatever that domain serves later. **This is the first thing to change.**
 2. **The sandbox fell back to no sandbox** (fixed in 0.10.11). `compiler._sandbox_mode` returned `"none"` when `bwrap` was not installed; only `prlimit` remained, and agent-submitted C reached 1990s compilers with the user's privileges (demonstrated live: uid 0, host files readable). Now it refuses, with the explicit exceptions listed in the changelog. Note `trusted=True` does not mean "not agent code": exports compile matched agent C with it.
 3. **Version coupling** (bounded in 0.10.12 to `mcp>=2.3.0,<3`). `mcp>=2.3.0` had no upper bound, and the code imports `mcp.server.mcpserver`, which is the 2.x API. `uv.lock` pins 2.3.0, but anything that installs without the lock can drift.
 4. `rom/luvdis_run.py` patches the source of a third-party module at runtime (a string replace of `PUSH` with `SAFE_PUSH`, then `exec`). It breaks silently if luvdis changes.
@@ -129,7 +159,6 @@ Still open (needs your machine or a later change):
 - PS2, GBA, DS, GameCube and Windows/WSL tests are skipped here. They need `ee-gcc-2.96`, `agbcc` plus the Arm GNU toolchain, the proprietary CodeWarrior compilers, and Windows. The sandbox could not reach `archive.archlinux.org`, `snapshot.debian.org`, `developer.arm.com` or `zlib.net`.
 - The demo ROM needs zlib 1.1.4 from `zlib.net` (`projects/zlib-n64/prepare.py`, sha256-pinned). It was exercised here with an equivalent source (regenerated headers were byte-identical to the committed ones); run the real `prepare.py` on your machine.
 - The GUI, the installers, and each platform pipeline end to end.
-- Whether the legacy layer is used by anything you care about.
 
 ## 11. Responsible-use constraints worth keeping
 

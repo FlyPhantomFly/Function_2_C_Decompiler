@@ -4,24 +4,24 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.10.23
+## Status as of 0.10.25
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
 | Phase 0 (0.1 to 0.5) | done | 0.10.7 | Re-run on your machine for the PS2, GBA, DS, GameCube and Windows rows (the sandbox could not reach four download hosts). |
-| 1.1 name, repo, domain | **partly** | 0.10.10, .14, .15, .17 | Decided: `Function_2_C_Decompiler`, `FlyPhantomFly/Function_2_C_Decompiler`. Done: updater, installers, README, app links, team-room page, plugin and its agent skill, package metadata. **Open:** the product name "decomp.wtf" in app text, on-disk names such as `.decomp.wtf.json` (file formats: rename deliberately, never by find-and-replace), the legacy CLI's invitation line, the marketing site in `site/`. |
+| 1.1 name, repo, domain | **partly** | 0.10.10, .14, .15, .17 | Decided: `Function_2_C_Decompiler`, `FlyPhantomFly/Function_2_C_Decompiler`. Done: updater, installers, README, app links, team-room page, plugin and its agent skill, package metadata. **Open:** the product name "decomp.wtf" in app text, on-disk names such as `.decomp.wtf.json` (file formats: rename deliberately, never by find-and-replace), and generated export files that still link to upstream's website (next version). |
 | 1.2 updater | done | 0.10.10, .16 | It points at this fork's repository (not switched off); `auto_update` stays off; never offers a downgrade. Installs from GitHub archives over HTTPS with no signature (Phase 4). |
 | 1.3 license | done | 0.10.14 | No separate `NOTICE` file; the README credits upstream. |
 | 1.4 sandbox | done | 0.10.11 | A `bwrap` that is installed but cannot create a namespace fails each compile with its own error; not probed in advance. |
 | 1.5 `mcp` bound, lock in CI | done | 0.10.12, .13 | |
 | 1.6 CI | **written, not yet run on GitHub** | 0.10.13, .18 | Push, enable Actions, read the first runs. The `sandbox` and `toolchain-urls` jobs are `continue-on-error` until then. The plan's "green badge" is not met yet; ruff covers serious errors only (428 style findings remain). |
 | 1.7 toolchain URL check | done | 0.10.18 | Run it where the four blocked hosts resolve. Does not cover `m2c` (git revision). |
-| Phase 2 | **started** | 0.10.20 to .22 | Done: the matching-integrity tests (invariant 1 is now guarded), which found and fixed two real defects in the core (a hash that was not an identity, an x86 crash). **Open:** the legacy layer decision, `luvdis_run.py`, the `except Exception` audit, schema migrations, refactors. Invariants 2 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
+| Phase 2 | **started** | 0.10.20 to .25 | Done: the matching-integrity tests (invariant 1 is now guarded), which found and fixed two real defects in the core (a hash that was not an identity, an x86 crash); and the **legacy hosted-network layer, deleted** (the website, the coordinator server, signup, donated compute, the `decompnet` CLI). **Open:** `luvdis_run.py`, the `except Exception` audit, schema migrations, refactors, and whether to remove the now client-less hash-only mode. Invariants 2 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
 | Phases 3 and 4 | not started | | |
 
 **Your next steps:** (1) push this work to `main` (the updater compares against that branch; until then the app is rightly
 "ahead"); (2) enable Actions and watch the first runs; (3) `sudo apt install bubblewrap`, run
-`maintenance/baseline/setup-test-env.sh`, then the suite, on the Parrot box; (4) decide the legacy layer (below).
+`maintenance/baseline/setup-test-env.sh`, then the suite, on the Parrot box.
 
 ## Phase 0: Baseline (day 1, on your Parrot box)
 
@@ -48,7 +48,7 @@ Nothing else is trustworthy until this is green.
 
 ## Phase 2: Correctness and debt (weeks 2 to 4)
 
-- **Decide on the legacy layer** (`decompnet/server.py`, `registration.py`, `jobs.py`, `public.py`, `upstream.py`, `local.py`, `cli.py`, `site/`, `site-redirect/`). Options: (a) delete it and keep only `app/` plus `network.py`, (b) move it to `legacy/` behind an extra. I recommend (a) after confirming with the import graph that `app/` does not need it. Remove `api.decomp.online` defaults either way. **Done when:** tests pass without it and the package imports cleanly.
+- **The legacy hosted-network layer** *(Done in 0.10.24 to 0.10.25: option (a), deleted. The import graph confirmed `app/` did not need it; `decomp toolchain` was ported first, the hosted website and redirect worker went with it, and the `api.decomp.online` defaults are gone. See ARCHITECTURE section 8. What is left: hash-only projects, which nothing can create any more, and unused tables in `store.py`.)*
 - **Harden `luvdis_run.py`:** pin the luvdis version in `toolchains.toml`, assert the expected string exists before patching, and fail with a clear message otherwise. Better: upstream the fix or vendor a patched copy.
 - **Exceptions:** audit the ~26 `except Exception` sites. Log with context, and re-raise anything that hides a bad match or a corrupted DB.
 - **Matching-integrity tests (the heart of "everything is correct").** *(Done in 0.10.20 to 0.10.22; see the changelog.)* Add property tests for `scoring.py`:
@@ -95,6 +95,6 @@ Ranked by value for effort. Pick with me before building.
 ## Open decisions for you
 
 1. ~~Fork name and repo.~~ Decided: `FlyPhantomFly/Function_2_C_Decompiler`, license name PhantomThreads. The staged rebrand of the product name is still open (1.1).
-2. Delete or keep the legacy hosted-network code.
+2. ~~Delete or keep the legacy hosted-network code.~~ Decided: delete (done in 0.10.25).
 3. Which platform or feature you want first (Phase 3 item 2 depends on what you reverse).
 4. Whether this stays a private tool or is published, which affects naming, update channel and the community-norms note.

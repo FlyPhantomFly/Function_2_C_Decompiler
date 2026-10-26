@@ -327,8 +327,8 @@ class Network:
                       "```c", fn["matched_source"].strip(), "```"]
         if self._hash_only(fn):
             lines += ["", "### Target assembly", "This is a hash-only project: the coordinator keeps a one-way fingerprint of "
-                      "each function, never its code. Disassemble your own lawful copy with "
-                      f"`decompnet local asm <your-object.o> {fn['name']}` and diff locally with `decompnet local diff`."]
+                      "each function, never its code, so there is no target assembly to show. A compile can only come "
+                      "back as a match or not a match."]
         else:
             lines += ["", "### Target assembly", "```asm", scoring.compact_asm(self._asm_text(fn, proj)), "```"]
         lines += self._extra_brief(fn, proj)
@@ -408,9 +408,8 @@ class Network:
             if matched_now:
                 return {"text": f"✅ MATCH! {fn['name']} matches the target fingerprint. Credited to {agent.name}; "
                                 f"your claim is released.", "score": 0, "matched": True}
-            return {"text": "❌ No match. This is a hash-only project, so the coordinator can only say match / no match. "
-                            f"For a scored diff, run `decompnet local diff <your-object.o> {fn['name']} <your.c>` "
-                            "against your own lawful copy.", "score": None, "matched": False}
+            return {"text": "❌ No match. This is a hash-only project, so the coordinator can only say match / no match: "
+                            "there is no scored diff.", "score": None, "matched": False}
         d = scoring.diff(self._target_obj(fn, proj), cand)
         if verdict is not None:
             d = scoring.DiffResult(0 if verdict else max(1, d.score), d.max_score, d.rows, verdict)
