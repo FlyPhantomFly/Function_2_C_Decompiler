@@ -1,10 +1,10 @@
 # Phase 0 baseline (upstream 0.10.6 code, measured for the 0.10.7 release)
 
 Runs A to C below were made against the untouched upstream tree (git tag `upstream-0.10.6`), so they say what the code
-did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31), H (0.10.34), I (0.10.39), J (0.10.41) and K (0.10.43) are the maintained code, for comparison. The raw pytest output and
+did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31), H (0.10.34), I (0.10.39), J (0.10.41), K (0.10.43) and L (0.10.45) are the maintained code, for comparison. The raw pytest output and
 JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
 
-## The eleven runs
+## The twelve runs
 
 | Run | State of the machine | Result (269 test items) | Summary |
 | --- | --- | --- | --- |
@@ -19,6 +19,7 @@ JUnit XML for each run are in `raw/` exactly as captured (they contain the sandb
 | **I** | The maintained code at 0.10.39, same machine | **530 passed, 0 failed, 53 skipped** (583 items) | [summary-I.md](summary-I.md) |
 | **J** | The maintained code at 0.10.41, same machine | **548 passed, 0 failed, 53 skipped** (601 items) | [summary-J.md](summary-J.md) |
 | **K** | The maintained code at 0.10.43, same machine | **575 passed, 0 failed, 53 skipped** (628 items) | [summary-K.md](summary-K.md) |
+| **L** | The maintained code at 0.10.45, same machine, with `BUILD_WHEEL=1` | **617 passed, 0 failed, 53 skipped** (670 items) | [summary-L.md](summary-L.md) |
 
 Test machine: Ubuntu 24.04 container, Python 3.12.3, uv 0.11.7, gcc 13.3, bubblewrap 0.9.0 (it does create a sandbox
 in that container), lld and llvm 18.1.3. Toolchains installed through the project's own installer
@@ -103,6 +104,12 @@ CI commands on the same code: 448 passed, 153 skipped, 0 failed.
 
 628 items against 601: 27 new (the backup tests; all pass), none gone. **Nothing that passed in J, or in upstream's run C, fails in K.** The bare-machine
 CI commands on the same code: 475 passed, 153 skipped, 0 failed.
+
+## Run L against run K
+
+670 items against 628: 43 new (the release-tool, release-workflow and issue-template tests; all pass), 1 gone (a CI guard test renamed when it was narrowed; its replacement passes). **Nothing that passed in K, or in
+upstream's run C, fails in L.** Run with `BUILD_WHEEL=1`, so the real-wheel test ran; without it that test skips. The bare-machine CI commands on the same code (now including the wheel build and check):
+516 passed, 154 skipped, 0 failed.
 
 ## What the 50 skips in run C need
 

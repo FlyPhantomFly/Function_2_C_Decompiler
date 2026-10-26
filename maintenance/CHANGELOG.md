@@ -13,6 +13,19 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.46] - 2026-10-22
+
+**Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.
+
+- **Run L** in `maintenance/baseline/`: the maintained code at 0.10.45, measured the same way, **with `BUILD_WHEEL=1`** so the test that builds and checks the real wheel runs and passes (without it that one test is
+  skipped): **617 passed, 0 failed, 53 skipped (670 items)** with every free tool and `bwrap`. Test by test, nothing that passed in upstream's run C or in run K fails; against K, 43 items are
+  new (all pass) and 1 is gone: the CI guard test I renamed when I narrowed it (`test_no_workflow_uses_secrets_or_writes_to_the_repository` became
+  `test_no_workflow_uses_secrets_or_pushes_and_only_the_release_workflow_may_write_at_all`, which is present and passes). The bare-machine CI commands, now including the wheel build and check:
+  516 passed, 154 skipped, 0 failed; `actionlint` on both workflows: clean.
+- `MAINTENANCE_PLAN.md`: status as of this version. Phase 4: the release workflow, the wheel check and the issue template are done; signing and the update channel are not, and the first release's number is yours.
+- `maintenance/patches/`: regenerated, 40 patches (0.10.7 to 0.10.46).
+- Nothing for users to do.
+
 ## [0.10.45] - 2026-10-22
 
 **Tooling, CI.** A release workflow with checksums, a wheel checker, and a bug-report issue template that matches the app. (Plan Phase 4: "release wheels built by CI, with
