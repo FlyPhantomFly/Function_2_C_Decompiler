@@ -950,8 +950,11 @@ class Manager:
                     return True
                 for _attempt in range(4):
                     fit(messages, budget)
-                    r = client.post(f"{base}/chat/completions", headers=headers,
-                                    json={"model": model, "messages": messages, "tools": schema, "tool_choice": "auto"})
+                    r = post_with_retries(client, f"{base}/chat/completions", headers=headers, stop=s.stop,
+                                          note=lambda text: s.push("info", text), retry_connect_errors=not is_local(base),
+                                          payload={"model": model, "messages": messages, "tools": schema, "tool_choice": "auto"})
+                    if r is None:  # stopped while waiting to try again
+                        return True
                     if r.status_code == 200 or not _too_long(r):
                         break
                     budget = int(budget * 0.6)  # the server counts differently, or knows better: trim more
@@ -992,6 +995,51 @@ class Manager:
                 if len(messages) > 80:  # keep the conversation small: summarize by restarting fresh
                     return True
         return used_tool
+
+
+RETRY_STATUS = frozenset({429, 500, 502, 503, 504})  # a busy or briefly broken server; 4xx other than 429 are the request's own fault
+RETRY_ATTEMPTS = 5
+RETRY_CAP = 120  # seconds: never wait longer than this between tries, whatever the server asks
+
+
+def _retry_wait(r, attempt: int) -> float:
+    """Seconds to wait before the next try: what the server asked for (`Retry-After`, in seconds), else 2, 4, 8, 16; at most RETRY_CAP."""
+    if r is not None:
+        try:
+            asked = float(r.headers.get("retry-after", ""))
+            if asked >= 0:
+                return min(asked, RETRY_CAP)
+        except ValueError:
+            pass
+    return min(2.0 ** (attempt + 1), RETRY_CAP)
+
+
+def post_with_retries(client, url: str, *, headers: dict, payload: dict, stop, note, attempts: int = RETRY_ATTEMPTS,
+                      retry_connect_errors: bool = True):
+    """POST, and try again in place (after a wait) when the failure is plausibly transient: a connection error or timeout, or a 429, 500,
+    502, 503 or 504. Never when retrying cannot help: a refused request or key, "out of credit" (OpenAI reports that as a 429) or "context
+    too long" (some servers report that as a 500): those are returned at once for the caller to act on. `note` says what is happening, and
+    `stop.wait` is what waits, so stopping the agent ends the retrying (None is returned). After the last try the last answer is returned,
+    or the network error raised, exactly as a single request would have. `retry_connect_errors=False` (a server on this computer) raises
+    a refused connection at once: waiting cannot start a server that is not running (a busy one, a 503, is still retried)."""
+    for attempt in range(attempts):
+        last = attempt == attempts - 1
+        r = None
+        try:
+            r = client.post(url, headers=headers, json=payload)
+        except httpx.TransportError as e:
+            if last or (isinstance(e, httpx.ConnectError) and not retry_connect_errors):
+                raise
+            why = f"the model's server didn't answer ({type(e).__name__})"
+        else:
+            if last or r.status_code not in RETRY_STATUS or _too_long(r) or no_credit(r.text):
+                return r
+            why = f"the model's server said {r.status_code}"
+        wait = _retry_wait(r, attempt)
+        note(f"{why}: trying again in {wait:g}s")
+        if stop.wait(wait):
+            return None
+    raise RuntimeError("unreachable: the last attempt returns or raises")
 
 
 def _tokens(obj) -> int:

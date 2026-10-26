@@ -1,6 +1,7 @@
 """The local app: GUI API security, demo import, live feed, agent output parsing, the built-in API agent."""
 
 import json
+import types
 import os
 import shutil
 import sys
@@ -155,13 +156,15 @@ def test_an_agent_out_of_credit_stops_and_says_so(tmp_path, monkeypatch):
 def test_builtin_api_agent_out_of_credit(app, monkeypatch):
     client, net, manager = app
     slug = net.store.one("SELECT slug FROM projects")["slug"]
-    answers = iter([httpx.Response(429, json={"error": {"message": "Rate limit reached for requests"}}),
-                    httpx.Response(402, json={"error": {"message": "Insufficient Balance"}})])
+    # a provider that keeps saying 429 is retried in place first (RETRY_ATTEMPTS answers), then the session ends as throttled
+    answers = iter([httpx.Response(429, json={"error": {"message": "Rate limit reached for requests"}})] * agents.RETRY_ATTEMPTS
+                   + [httpx.Response(402, json={"error": {"message": "Insufficient Balance"}})])
     real = httpx.Client
     monkeypatch.setattr(agents.httpx, "Client", lambda **kw: real(transport=httpx.MockTransport(lambda r: next(answers)), **kw))
     s = agents.Session("api-c", "api", "Test", slug, "api-credit", {"base_url": "http://mock/v1", "model": "m",
                                                                     "context_tokens": 32768})
     agent, _ = net.local_agent("api-credit")
+    s.stop = types.SimpleNamespace(wait=lambda seconds: False, is_set=lambda: False)  # the backoff between tries must not make a test sleep
     assert manager._run_api(s, agent) is False and s.throttled
     with pytest.raises(agents.Fatal, match="out of credit"):
         manager._run_api(s, agent)

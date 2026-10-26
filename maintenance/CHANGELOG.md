@@ -13,6 +13,41 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.38] - 2026-10-22
+
+**Fix.** The built-in API agent retries a request in place, so a blip between the app and the model's server no longer costs it the
+conversation. (Plan Phase 3, item 1, first half: "retries and backoff in the built-in API agent".) Touches `app/agents.py` and one upstream test.
+
+- What the plan said was missing was partly there already: throttling (429 and rate-limit wording) is detected and waited out at the session
+  level, "no credit" is fatal, an over-long request is trimmed and resent, three failures in a row stop an agent, and a budget cap exists. What was
+  really missing was at the level of the single request. `client.post(...)` was not guarded, so a connection reset or a timeout raised out of the
+  loop, and a 502/503/504 returned "failed"; either way **the conversation was thrown away**, the turn counted as a failure (three in a row stop
+  the agent), and a 429 restarted the whole session a minute later.
+- Now `post_with_retries` sends the request again, in the same conversation, after a wait, when the failure is plausibly transient: a connection
+  error or timeout, or a 429, 500, 502, 503 or 504. Up to 5 tries, waiting 2, 4, 8, 16 seconds, or what the server's `Retry-After` asks, never more than
+  two minutes. The agent's feed says what is happening ("the model's server said 503: trying again in 2s"). Stopping the agent ends the waiting. After
+  the last try the last answer or the network error comes back exactly as before, so everything downstream (the session-level throttle wait, the three
+  failures rule) is unchanged.
+- **Never retried**, because retrying cannot help: a bad request, a refused key, a missing model (400/401/403/404), payment required (402), "out of
+  credit" (OpenAI reports that as a 429 `insufficient_quota`), and "context too long" (some servers report that as a 500, and the existing code
+  trims and resends those itself). Eight such cases are pinned.
+- **A server on this computer that is not running fails at once.** Retrying a refused connection to `127.0.0.1` cannot start Ollama, and without
+  this the user would wait about 30 seconds per session to be told so. `is_local` decides (it counts any dotless host name, such as a docker-compose
+  service called `ollama`, as local); a *busy* local server (llama.cpp answers 503 while it loads a model) is still retried. Found while testing:
+  my first tests used a made-up host `mock`, which `is_local` treats as local, so they used a public address literal instead.
+- Tests: 23 in `maintenance/tests/test_maint_api_agent_retry.py` (the helper alone with a scripted server and a fake clock; then through the real
+  agent loop: one 503 and one connection reset in the middle of a session now leave a single conversation sent three times, no error, and a feed
+  that says so. **22 of the 23 fail against the previous code** (measured by running them against it); the 23rd is a guard that a server
+  that stays down is still reported as before). **Against real sockets and a real clock:** a
+  throwaway HTTP server answering 503 twice with `Retry-After: 0.3` was retried at exactly 0.3 s intervals and then succeeded; a real refused
+  connection to a local port raised in 27 ms.
+- One upstream test adapted: `test_builtin_api_agent_out_of_credit` scripted one 429 and then a 402 as two separate sessions; a 429 is now retried
+  in place, so it scripts a *persistent* 429 (`RETRY_ATTEMPTS` of them) for the first session, with a fake clock so no test sleeps. Its intent is
+  unchanged: a throttled session is not a failure, and the next session meets the fatal no-credit.
+- Verified here: the agent, server, bridge and retry tests (51 passed), lint clean; the whole suite runs at the next version.
+- Behavior to know about: a remote provider that is down now takes up to about 30 seconds per session to report it, instead of failing at once.
+- Nothing for users to do.
+
 ## [0.10.37] - 2026-10-22
 
 **Tooling, Docs.** The sidebar layout, the one thing the rename (0.10.34) left unverified, is now checked in a real browser, and the
