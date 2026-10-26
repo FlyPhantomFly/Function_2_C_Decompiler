@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import collections
 import json
+import logging
 import os
 import re
 import shutil
@@ -29,6 +30,7 @@ import httpx
 from . import tools
 from .engine import RomNetwork
 
+log = logging.getLogger("decomp.wtf")
 WIN = sys.platform == "win32"
 
 
@@ -578,8 +580,8 @@ class Manager:
         try:
             self.net.twins.refresh(slug)
             self.net.permuter.start(slug)  # near misses agents leave, on spare CPU
-        except Exception:  # agents work without them
-            pass
+        except Exception:  # agents work without them, but if they are missing there should be a reason on record
+            log.warning("agents: twins and the permuter could not start for %s", slug, exc_info=True)
         with self._lock:
             if slug in self._prep:
                 return
@@ -590,6 +592,7 @@ class Manager:
                 if not (self.net.forks.uncovered(slug) or {}).get("functions") or not fp.linkable():
                     return
             except Exception:
+                log.warning("agents: could not tell whether %s has files to start", slug, exc_info=True)
                 return
             done = self._prep[slug] = threading.Event()
 
@@ -597,7 +600,7 @@ class Manager:
             try:
                 self.net.forks.start_files(slug, log=lambda *_: None)
             except Exception:  # the agents still work on what has files
-                pass
+                log.warning("agents: starting the files of %s failed", slug, exc_info=True)
             finally:
                 done.set()
                 with self._lock:

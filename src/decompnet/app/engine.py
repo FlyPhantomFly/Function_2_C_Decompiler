@@ -321,7 +321,8 @@ class RomNetwork(Network):
         """For a brief: the matched function with the same code, and its C with this one's names."""
         try:
             twin_id = self.twins.twin_of(proj, fn["id"])
-        except Exception:
+        except Exception:  # no hint in the brief, but a bug here should not be invisible
+            logging.getLogger("decomp.wtf").warning("twin lookup failed for function %s", fn["id"], exc_info=True)
             return []
         if twin_id is None:
             return []
@@ -1472,7 +1473,8 @@ class RomNetwork(Network):
                 return
             try:
                 outcome = try_one(agent, proj, fid)
-            except Exception:  # one odd function must not stop the rest
+            except Exception:  # one odd function must not stop the rest, but a bug in the draft step must show
+                logging.getLogger("decomp.wtf").warning("autopilot: function %s failed", fid, exc_info=True)
                 outcome = "fail"
             state["tried"] += 1
             if outcome in ("match", "near"):

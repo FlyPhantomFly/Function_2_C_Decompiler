@@ -839,7 +839,7 @@ class ForkEngine:
                 try:
                     self.link(slug, log=lambda *_: None, agent=agent)
                 except Exception:  # a background tidy-up: the next match tries again
-                    pass
+                    logging.getLogger("decomp.wtf").warning("linking %s after a match failed", slug, exc_info=True)
                 with self._mlock:
                     if not state["again"]:
                         state["running"] = False
@@ -1651,7 +1651,8 @@ class ForkEngine:
         one's when the names can be swapped."""
         try:
             twin_id = self.net.twins.twin_of(proj, fn["id"])
-        except Exception:
+        except Exception:  # no hint in the brief, but a bug here should not be invisible
+            logging.getLogger("decomp.wtf").warning("twin lookup failed for function %s", fn["id"], exc_info=True)
             return []
         if twin_id is None:
             return []
@@ -2133,7 +2134,8 @@ class ForkEngine:
                     for x in symtab.iter_symbols() if symtab else ():
                         if x.name and x["st_info"]["type"] in ("STT_OBJECT", "STT_NOTYPE") and isinstance(x["st_shndx"], int):
                             index[x.name].append(unit.name)
-            except Exception:
+            except Exception:  # an object pyelftools can't read: its data is left out of the index
+                logging.getLogger("decomp.wtf").warning("data index: %s can't be read", unit.name, exc_info=True)
                 continue
         self._data_idx = (key, dict(index))
         return self._data_idx[1]

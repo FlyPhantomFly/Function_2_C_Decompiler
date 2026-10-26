@@ -259,7 +259,8 @@ class Twins:
             if not entry or entry.get("mtime") != mtime:
                 try:
                     prints = object_prints(unit.target.read_bytes())
-                except Exception:  # an object pyelftools can't read: no twins for it
+                except Exception as e:  # an object pyelftools can't read: no twins for it (a missed free match, never a wrong one)
+                    log.info("twins: %s can't be read: %s", unit.target.name, e)
                     prints = {}
                 entry = {"mtime": mtime, "prints": {k: [p.key, p.refs, p.size, p.asm] for k, p in prints.items()}}
                 cache[uname] = entry

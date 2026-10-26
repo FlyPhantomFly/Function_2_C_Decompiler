@@ -13,6 +13,35 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.29] - 2026-10-21
+
+**Fix, Test.** No broad `except` can make a bug invisible any more. The audit of the inherited `except Exception` sites (plan
+Phase 2). Behavior is unchanged: the same values are returned and the same errors are tolerated; what is added is a record.
+
+- The audit: **30 broad handlers** (25 `except Exception`, and 5 `except BaseException` that clean up and re-raise). **None sits
+  on a path that can produce a false match or corrupt state**: the code that judges and links a match (`scoring`, `elfobj`,
+  `network`, `compiler`, `project`, `rom/match*.py`) has no broad handler at all, and the database wrapper rolls back and
+  re-raises. Seven handlers re-raise, ten report through the exception or the GUI, and **thirteen swallowed the error
+  without a trace** (7 + 10 + 13 = 30, counted by the same classifier the policy test uses; afterwards: 7 re-raise, 11 report,
+  8 log, and the 4 allowlisted stay silent).
+- Nine of those thirteen now log through the `decomp.wtf` logger (which the app writes to its log file), with the traceback:
+  `agents.py` (three, in `_prepare`: twins and the permuter, the start-files check, starting files), `engine.py` (the twin
+  hint, and **the autopilot's per-function handler**, where a crash such as the x86 one fixed in 0.10.22 would have shown only
+  as one more function counted "fail"), `forkengine.py` (the background link, the twin hint, the data index), and
+  `twins.py` (info level: an unreadable object means a missed free match, never a wrong one).
+- The other four stay silent on purpose and are listed, each with its reason, in
+  `maintenance/tests/test_maint_exception_policy.py`: a network blip while waiting for a room's host, releasing a claim in a room
+  as an agent stops, `literals.py`'s deliberate "no verdict rather than a wrong one", and failing to open a browser on a server.
+- Tests, 5 in `test_maint_exception_policy.py` (3 failed before): **a policy test over the whole source tree** that fails when
+  anyone adds a broad handler that neither re-raises, reports, nor logs, or leaves a stale allowlist entry; a test that the
+  judging and matching code stays free of broad handlers; and two that a failing twin lookup still returns an empty hint
+  and now leaves a traceback.
+- Verified: **whole suite with every tool: 428 passed and the changelog test this entry satisfies, 52 skipped, 0 failed**; test
+  by test against the last full run, nothing dropped, the 32 new tests (added in 0.10.26 to 0.10.29) all pass, nothing regressed.
+- Not changed: an unused import (`AUTO_NAME` in `engine.py`) that was already there and that CI's rule set (serious errors only)
+  does not cover; fixing unrelated style would mix a refactor into this change.
+- Nothing for users to do. If an agent helper or the autopilot misbehaves, the app's log now says why.
+
 ## [0.10.28] - 2026-10-21
 
 **Test, Docs.** A guard for the git-installed tools' pins, and a correction to a claim I got wrong. No change to the application.

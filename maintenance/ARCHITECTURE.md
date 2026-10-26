@@ -135,7 +135,7 @@ Verified by reading the code:
 3. **Version coupling** (bounded in 0.10.12 to `mcp>=2.3.0,<3`). `mcp>=2.3.0` had no upper bound, and the code imports `mcp.server.mcpserver`, which is the 2.x API. `uv.lock` pins 2.3.0, but anything that installs without the lock can drift.
 4. `rom/luvdis_run.py` patches the source of a third-party module at runtime (a string replace of `PUSH` with `SAFE_PUSH`, then `exec`). It used to break silently if luvdis changed (it ran unpatched and exited 0); since 0.10.27 it refuses unless the code is there exactly once.
 5. The pinned toolchains download from external hosts (GitHub releases, `archive.archlinux.org`, `snapshot.debian.org`). They are sha256-pinned (no trust-on-first-use entries), but URL rot would break installs.
-6. About 26 `except Exception` sites. `grep` found no TODO/FIXME markers and no `shell=True`.
+6. About 26 `except Exception` sites (audited in 0.10.29: 30 broad handlers in all, none on the path that decides a match; thirteen were silent, nine now log and four are allowlisted with a reason, enforced by a test). `grep` found no TODO/FIXME markers and no `shell=True`.
 7. `compileall` over `src`, `tests`, `projects` and `site` succeeds, so there are no syntax errors on Python 3.12 (re-checked in 0.10.7).
 
 Verified by running the code (0.10.7 baseline, see `baseline/README.md`):

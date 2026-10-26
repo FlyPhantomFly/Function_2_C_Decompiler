@@ -4,7 +4,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.10.27
+## Status as of 0.10.29
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 | 1.5 `mcp` bound, lock in CI | done | 0.10.12, .13 | |
 | 1.6 CI | **written, not yet run on GitHub** | 0.10.13, .18 | Push, enable Actions, read the first runs. The `sandbox` and `toolchain-urls` jobs are `continue-on-error` until then. The plan's "green badge" is not met yet; ruff covers serious errors only (428 style findings remain). |
 | 1.7 toolchain URL check | done | 0.10.18 | Run it where the four blocked hosts resolve. Does not cover `m2c` (git revision). |
-| Phase 2 | **started** | 0.10.20 to .27 | Done: the matching-integrity tests (invariant 1 is now guarded), which found and fixed two real defects in the core (a hash that was not an identity, an x86 crash); the **legacy hosted-network layer, deleted** (the website, the coordinator server, signup, donated compute, the `decompnet` CLI); and `luvdis_run.py`, which now refuses a luvdis it was not written for (0.10.27). **Open:** the `except Exception` audit, schema migrations, refactors, and whether to remove the now client-less hash-only mode. Invariants 2 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
+| Phase 2 | **started** | 0.10.20 to .29 | Done: the matching-integrity tests (invariant 1 is now guarded), which found and fixed two real defects in the core (a hash that was not an identity, an x86 crash); the **legacy hosted-network layer, deleted** (the website, the coordinator server, signup, donated compute, the `decompnet` CLI); and `luvdis_run.py`, which now refuses a luvdis it was not written for (0.10.27); and the `except Exception` audit, with a test that keeps any broad handler from hiding a bug (0.10.29). **Open:** schema migrations, refactors, and whether to remove the now client-less hash-only mode. Invariants 2 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
 | Phases 3 and 4 | not started | | |
 
 **Your next steps:** (1) push this work to `main` (the updater compares against that branch; until then the app is rightly
