@@ -46,6 +46,33 @@ def read(rel: str) -> str:
     return (ROOT / rel).read_text(encoding="utf-8")
 
 
+# ---- the tool must work where the tests will be run: an unpacked zip has no .git -------------------------------------------------------
+
+
+def _without_git(monkeypatch):
+    def refuse(*args, **kwargs):
+        raise subprocess.CalledProcessError(128, args[0], stderr="fatal: not a git repository")
+
+    monkeypatch.setattr(tool.subprocess, "run", refuse)
+
+
+def test_the_file_list_works_without_git_as_in_an_unpacked_zip(monkeypatch):
+    _without_git(monkeypatch)
+    names = {p.relative_to(ROOT).as_posix() for p in tool.files()}
+    assert {"README.md", "src/decompnet/app/static/index.html", "src/decompnet/__init__.py"} <= names
+    assert not any(n.startswith(("maintenance/", "tests/", "projects/")) or n.endswith(".ps1") for n in names)  # the same scope as with git
+
+
+def test_the_file_list_is_never_empty_even_when_git_lists_nothing_for_this_folder(monkeypatch):
+    """Unpacked inside some other git repository, `git ls-files` succeeds and lists nothing: the checks would pass over zero files."""
+    monkeypatch.setattr(tool.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(a, 0, stdout="\n", stderr=""))
+    assert len(tool.files()) > 50
+
+
+def test_the_checks_look_at_a_real_number_of_files():
+    assert len(tool.files()) > 50
+
+
 # ---- the product name --------------------------------------------------------------------------------------------------------
 
 

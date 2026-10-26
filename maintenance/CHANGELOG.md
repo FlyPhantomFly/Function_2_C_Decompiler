@@ -13,6 +13,29 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.36] - 2026-10-21
+
+**Fix, CI.** The rename tool and its tests work in an unpacked zip. Found by the cold-start check of the 0.10.35 zip; **that zip had the
+defect** (two tests fail when the suite is run from it), and this version replaces it. No change under `src/`.
+
+- The problem: `maintenance/tools/rename_product.py` listed files with `git ls-files`, which exits 128 ("not a git repository") in an
+  unpacked zip. So `test_no_covered_file_still_has_the_old_name_outside_a_protected_span` and
+  `test_every_credit_link_to_the_original_project_is_intact_and_none_is_damaged` errored for anyone who unzipped the delivery and ran the
+  suite. (They had passed in my working tree and in every run, which is why only the cold start from the actual zip showed it.)
+- A quieter variant, fixed with it: unpacked *inside another git repository* (say, copied into a clone before committing), `git ls-files`
+  succeeds and names nothing for these untracked files, and the checks would then **pass over zero files**. The file list now falls back to
+  walking the folder when git cannot answer, or answers with nothing under `src/`, and a test asserts it is never empty.
+- Tests: 3 new in `test_maint_naming.py` (2 failed before): the list works without git and has the same scope as with it; it is never empty when
+  git lists nothing here; the checks look at a real number of files. Also run in a copy made like the zip, with the real interpreter: 32 passed.
+- **CI now proves it every time:** a step in the `checks` job runs `maintenance/tests` from an unpacked `git archive HEAD`, which has no
+  `.git`, in its own environment (`uv sync --locked`). Its commands were run here exactly as written, with `RUNNER_TEMP` set as GitHub sets
+  it: 272 passed, 2 skipped, no `.git`. `actionlint` is clean, and the workflow guard test requires the step. `CLAUDE.md` gains the rule: tests and
+  tools must work in an unpacked zip.
+- Verified: **whole suite with every tool: 485 passed, 0 failed, 52 skipped (537 items)**; test by test, nothing that passed in run H fails and nothing is gone, and the 3 new tests pass.
+  The bare-machine CI commands: 391 passed, 146 skipped, 0 failed. The delivered zip was then unpacked fresh and its whole suite, run from there, passes.
+- `maintenance/patches/`: regenerated, 30 patches (0.10.7 to 0.10.36).
+- Nothing for users to do.
+
 ## [0.10.35] - 2026-10-21
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.

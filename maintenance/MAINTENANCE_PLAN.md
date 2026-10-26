@@ -4,7 +4,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.10.35
+## Status as of 0.10.36
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |

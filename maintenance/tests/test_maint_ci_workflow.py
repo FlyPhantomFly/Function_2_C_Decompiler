@@ -68,5 +68,5 @@ def test_checkout_does_not_leave_the_token_in_the_workspace():
 
 def test_the_workflow_runs_the_checks_this_fork_relies_on():
     text = "\n".join(p.read_text(encoding="utf-8") for p in _files())
-    for needed in ("uv sync --locked", "uv lock --check", "bump_version.py --check", "compileall", "E9,F63,F7,F82", "pytest", "check_toolchains.py"):
+    for needed in ("uv sync --locked", "uv lock --check", "bump_version.py --check", "compileall", "E9,F63,F7,F82", "pytest", "check_toolchains.py", "git archive HEAD"):
         assert needed in text, f"CI no longer runs: {needed}"

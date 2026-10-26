@@ -35,7 +35,9 @@ Windows tests need compilers or platforms that may not be installed. Compare a r
    verified, and anything the user must do. `maintenance/tests/test_maint_release_hygiene.py` fails otherwise.
 4. Put new tests in `maintenance/tests/` (name files `test_maint_*.py`; `tests/` keeps upstream's). Every fix gets a
    test that fails before the fix and passes after.
-5. Everything we generate (docs, scripts, tests, baselines, patches) lives in `maintenance/`. Edits to upstream's own
+5. Tests and tools must work in an unpacked zip, which has no `.git` (CI runs `maintenance/tests` from a `git archive` to prove it): never
+   assume `git` is there without a fallback, and never let a check pass over zero files.
+   Everything we generate (docs, scripts, tests, baselines, patches) lives in `maintenance/`. Edits to upstream's own
    files are unavoidable but stay minimal. The only things outside the folder are the one-line root `CLAUDE.md` and
    `.github/workflows/` (GitHub requires that path).
 6. Do not move `VERSION` in `site/public/install.sh` or `install.ps1`: it names a wheel that must exist on a server.

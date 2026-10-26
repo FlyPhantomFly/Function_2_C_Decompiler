@@ -20,6 +20,7 @@ test says so), and `uv.lock`.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
@@ -53,10 +54,32 @@ INCLUDE_PREFIXES = ("src/", "plugins/", ".claude-plugin/")
 EXCLUDE_PREFIXES = ("src/decompnet/app/static/demo/", "maintenance/", "tests/")
 
 
+SKIP_DIRS = {".git", ".venv", "node_modules", "__pycache__", ".ruff_cache", ".pytest_cache"}
+
+
+def _walk() -> list[str]:
+    """Every file under the tree: what there is to look at when git cannot say (an unpacked zip has no .git)."""
+    found = []
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+        found += [(Path(dirpath) / f).relative_to(ROOT).as_posix() for f in filenames]
+    return sorted(found)
+
+
+def _listing() -> list[str]:
+    """The tracked files when this is a git checkout; otherwise every file. Never an empty list: unpacked inside some other repository,
+    `git ls-files` succeeds and names nothing here, and every check made on that list would pass over zero files."""
+    try:
+        listed = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split("\n")
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return _walk()
+    listed = [n for n in listed if n]
+    return listed if any(n.startswith("src/") for n in listed) else _walk()
+
+
 def files() -> list[Path]:
-    tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split("\n")
     out = []
-    for name in tracked:
+    for name in _listing():
         if not name or name.startswith(EXCLUDE_PREFIXES) or name.endswith(".ps1"):
             continue
         if name in INCLUDE_EXACT or (name.startswith(INCLUDE_PREFIXES) and Path(name).suffix in INCLUDE_SUFFIXES):
