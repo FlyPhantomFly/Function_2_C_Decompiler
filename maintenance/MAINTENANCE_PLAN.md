@@ -4,7 +4,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.10.42
+## Status as of 0.10.43
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
@@ -77,7 +77,7 @@ Ranked by value for effort. Pick with me before building.
 3. **C++ for MIPS-era platforms** (PS2 especially). The README says functions from scratch there are C only.
 4. **N64 shiftable export** (README: "coming"). Lets mods grow code.
 5. **Better guides:** the 20 files in `app/guide/` are the agents' knowledge base. Keep improving them from real failure notes (`add_note` data).
-6. **Local-first quality of life:** resume after crash, project backup/export of the SQLite DB, a headless `decomp run --until N%` mode for Claude Code.
+6. **Local-first quality of life:** resume after crash, project backup/export of the SQLite DB, a headless `decomp run --until N%` mode for Claude Code. *(Status, 0.10.43: **backup and restore of the project database done** (`decomp backup`, `decomp restore`). Not started: resume after a crash, and the headless `decomp run --until N%` mode; both need a decision on what "resume" and "until" should mean.)*
 
 ## Phase 4: Release and operations
 

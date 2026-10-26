@@ -50,6 +50,7 @@ src/decompnet/
                     Ghidra + m2c drafts
   app/              The local app: engine, forkengine, tools (MCP tools + prompts), agents (running agents),
                     server (GUI API + MCP), collab (team rooms), twins, permute, updates, connect, service,
+                    backup (`decomp backup` / `restore`: a verified, WAL-safe snapshot of the project database, section 7),
                     static/ (GUI), guide/ (agent knowledge base, ~20 markdown guides)
 ```
 
@@ -80,6 +81,7 @@ src/decompnet/
 ## 7. Persistence, multi-user, platforms
 
 - **State:** SQLite via `store.py` (WAL; additive migrations inline, the format version in `PRAGMA user_version`, a backup kept before the first migration, a newer database refused) in `~/Decomp` (`$DECOMP_HOME`). Logs in `.decomp/logs/decomp.log`.
+- **Backups:** `decomp backup [DEST]` and `decomp restore FILE --yes` (`app/backup.py`). A snapshot uses SQLite's online backup API, because a plain copy of `decomp.db` can miss committed work still in the `-wal` file; it is verified before it is renamed into place. Restore refuses while the app runs, works on a copy of the backup, keeps the database it replaces (`decomp.db.before-restore-<time>`) and removes stale `-wal`/`-shm`. The database only: API keys and settings are in `settings.json` and are not in a backup. There is no automatic backup, by decision of omission (disk cost without asking); the first migration of an old database keeps its own copy (`.bak-v<old version>`, section 10, item 15).
 - **Team rooms:** `app/collab.py` and `forkroom.py`. One host hands out functions, verifies every match against its own copy, and shares only names, structs and notes. No ROM bytes or assembly cross the wire. Exposure is via a Cloudflare quick tunnel (`cloudflared` is a pinned toolchain) or your own address.
 - **Platforms:** GameCube/Wii and N64 are "recommended". PS1, PS2, GBA and DS are beta. Windows runs inside its own WSL2 distro. macOS is unsupported.
 - **Toolchains:** 25 registry entries (`toolchains.toml`) with sha256 pins on every download part. Proprietary ones (IDO 5.3/7.1, mwcc, mwccarm) are installed only after explicit license acceptance. Old 32-bit compilers run on a pinned i386 glibc runtime inside the sandbox.

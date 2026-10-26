@@ -300,6 +300,59 @@ def stop(args) -> int:
     return 0
 
 
+def _app_running(home: Path) -> bool:
+    """Is the app running against this home folder? The same question `decomp stop` asks."""
+    try:
+        prev = json.loads((home / ".decomp" / "server.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return False
+    return _alive(prev.get("port", 0))
+
+
+def _summary(info: dict) -> str:
+    n = info["projects"]
+    return f"{n} project{'s' if n != 1 else ''}, {info['functions']:,} functions ({info['matched']:,} matched)"
+
+
+def backup_cmd(args) -> int:
+    """Save a verified snapshot of your project work: matches, attempts, notes, names. Safe while the app is running."""
+    from . import backup
+
+    home = home_dir()
+    dest = Path(args.dest).expanduser() if args.dest else backup.default_destination(home)
+    try:
+        info = backup.snapshot(home / ".decomp" / "decomp.db", dest, force=args.force)
+    except backup.BackupError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+    print(f"Backed up {_summary(info)}, {info['bytes'] / 1e6:.1f} MB, to {info['path']}")
+    print("It holds your project work. It does not hold your API keys or settings, your game files, or the git repositories of forked projects.")
+    return 0
+
+
+def restore_cmd(args) -> int:
+    """Replace your project work with a backup. The app must be stopped; the database it replaces is kept beside it."""
+    from . import backup
+
+    home = home_dir()
+    db, source = home / ".decomp" / "decomp.db", Path(args.file).expanduser()
+    try:
+        backup.verify(source)
+        info = backup.describe(source)
+        if not args.yes:
+            print(f"This replaces your projects database ({db}) with {source}: {_summary(info)}.")
+            print(f"Your current database is kept beside it as {db.name}.before-restore-<time>. Run again with --yes to go ahead.")
+            return 1
+        kept = backup.restore(source, db, running=_app_running(home))
+    except backup.BackupError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+    print(f"Restored {_summary(info)} from {source}.")
+    if kept:
+        print(f"The database it replaced is kept as {kept}")
+    return 0
+
+
 def connect_agents(args) -> int:
     """Give the AI agents you use Function_2_C_Decompiler's tools: then ask them to decompile your game."""
     from . import agents, connect
@@ -473,6 +526,12 @@ def main(argv: list[str] | None = None) -> int:
     tp = tcsub.add_parser("path", help="print a toolchain's install directory")
     tp.add_argument("id")
     sub.add_parser("stop", help="stop the running app")
+    bk = sub.add_parser("backup", help="save a snapshot of your project work (safe while the app runs)")
+    bk.add_argument("dest", nargs="?", help="a file, or a folder to put a timestamped file in (default: <home>/backups/)")
+    bk.add_argument("--force", action="store_true", help="replace the destination if it already exists")
+    rs = sub.add_parser("restore", help="replace your project work with a backup (stop the app first; your current work is kept)")
+    rs.add_argument("file", help="a backup made by `decomp backup`")
+    rs.add_argument("--yes", action="store_true", help="do it (without this, only say what would happen)")
     sub.add_parser("shortcut", help="add Function_2_C_Decompiler to your apps menu / desktop")
     sub.add_parser("url", help="print the address that opens the app (starts it if needed)")
     up = sub.add_parser("update", help="install the newest Function_2_C_Decompiler (the running app restarts into it)")
@@ -514,7 +573,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp":
         from .bridge import main as bridge
         return bridge(args.name)
-    return {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "shortcut": shortcut, "connect": connect_agents, "share": share,
+    return {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
             "host": host, "join": join, "service": service_cmd, "url": url_cmd, "update": update_cmd,
             "install-info": install_info}.get(args.cmd, run)(args)
 

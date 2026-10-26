@@ -13,6 +13,35 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.43] - 2026-10-22
+
+**Feature.** `decomp backup` and `decomp restore`: a safe way to keep a copy of your project work. (Plan Phase 3, item 6, the backup half.) New `app/backup.py`, two
+subcommands in `app/cli.py`, a README line. Nothing existing changed.
+
+- Your work (matches, attempts, notes, names) is one SQLite file, `~/Decomp/.decomp/decomp.db`, and there was no supported way to snapshot it. **`cp` is not safe**: while the
+  app runs the database is in WAL mode, so committed work can still be only in the `-wal` file, which a copy of `decomp.db` misses. A test shows it, not assumes it: a note committed
+  through an open `Store` is in the backup's snapshot and absent from a plain file copy of the same database.
+- `decomp backup [DEST] [--force]`: a consistent snapshot through SQLite's online backup API, safe while the app is running and writing. The live database is opened query-only.
+  The snapshot is written under a temporary name, **verified (a SQLite file, `integrity_check` ok, our tables, a format version this build understands) and only then renamed**, so a failed run
+  never leaves something that looks like a backup. DEST can be a file or a folder (it gets a timestamped name); the default is `<home>/backups/decomp-backup-<time>.sqlite`. An existing file
+  is never overwritten without `--force`, and backing up onto the live database is refused. It prints what it holds ("Backed up 1 project, 95 functions (0 matched), 0.7 MB") and what it does not.
+- `decomp restore FILE [--yes]`: refuses while the app is running (replacing a database under a live connection corrupts it); without `--yes` it only says what it would do. It works on a **copy** of
+  your backup (the file you give it is only ever read: its hash is unchanged), verifies that copy before touching anything, keeps the database it replaces as
+  `decomp.db.before-restore-<time>` (never over an earlier one: a second restore in the same second gets `-2`), deletes stale `-wal`/`-shm` files, then swaps. A backup from a newer version, a
+  file that is not a database, and a damaged copy are each refused with a reason, and the current database is left exactly as it was.
+- **What it holds, and does not:** the project database. API keys and settings are in `settings.json`, so a backup can be shared without leaking them. Game files and forked projects' git repositories are
+  yours and already live elsewhere. The command says so every time.
+- Tests: 27 in `maintenance/tests/test_maint_backup.py`, found to be able to fail by **mutation checks** (each of four breakages of the module was applied in turn): a naive file copy fails 3 tests;
+  ignoring a running app fails 2; skipping verification fails 1; and removing the stale-`-wal` cleanup **failed none**. The check caught that my first test for that was vacuous: restoring first snapshots the old
+  database to keep it, and opening and closing a database makes SQLite tidy its own sidecar files, so the test's stale files were gone before the cleanup ran. A second test now uses orphaned
+  sidecars with no database beside them, which only the cleanup removes, and the mutation fails it. (So in the ordinary case SQLite already tidies up; the explicit deletion covers orphans and is defense in depth.)
+- **Against the real app, with the demo project:** `decomp backup` while the app was running worked; `decomp restore --yes` while it was still running was refused with the error line and changed nothing;
+  after `decomp stop` the restore succeeded, reported where the replaced database was kept, and the restored database opened in `RomNetwork` with its 95 functions.
+- Verified here: the 27 backup tests pass; lint clean. The whole suite runs at the next version.
+- Not covered: automatic backups (they cost disk without asking, and a big game's database is large: say if you want a rolling daily one); backing up `settings.json` (it holds keys; copy it yourself if you
+  want it); resume after a crash and the headless run mode, the other two items under plan Phase 3 item 6.
+- Nothing for users to do. Try `decomp backup`.
+
 ## [0.10.42] - 2026-10-22
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.
