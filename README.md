@@ -30,7 +30,7 @@ Thanks to everyone who tried it, reported bugs and sent fixes.
   <a href="https://github.com/FlyPhantomFly/Function_2_C_Decompiler">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.png">
-      <img alt="Function_2_C_Decompiler: What the function? Your AI agent decompiles games you own into C that compiles to the exact same bytes." src=".github/assets/banner-light.png">
+      <img alt="Function_2_C_Decompiler. Your AI agents decompile the games you own into C that compiles to the exact same bytes." src=".github/assets/banner-light.png">
     </picture>
   </a>
 </p>

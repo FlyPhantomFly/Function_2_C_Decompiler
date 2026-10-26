@@ -1,0 +1,72 @@
+<!doctype html>
+<!-- The source of .github/assets/banner-light.png and banner-dark.png. Edit this, then run maintenance/tools/make_banner.py.
+     1280 x 400 CSS px, rendered at 2x. The palette and fonts are the app's own (src/decompnet/app/static/app.css; Geist and Geist Mono, SIL OFL).
+     The theme comes from the URL hash: banner.html#dark. The code in the card is the demo ROM's player_take_damage (the demo is CC0). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Function_2_C_Decompiler</title>
+<style>
+@font-face { font-family: "Geist"; src: url("../../src/decompnet/app/static/fonts/Geist-Variable.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Geist Mono"; src: url("../../src/decompnet/app/static/fonts/GeistMono-Variable.woff2") format("woff2"); font-weight: 100 900; }
+:root {
+  --bg: #f4f2ec; --panel: #fbfaf6; --ink: #14130f; --ink-2: #3a382f; --muted: #6d695e; --faint: #a7a295; --line: #d8d4c8; --line-soft: #e4e0d5;
+  --match: #157a49; --match-bg: #d4eadb; --work: #a8670d; --open: #d9d5c9; --tried: #c9c1a6; --move: #2f5fb8; --code-bg: #f7f5ef;
+  --glow: rgba(21, 122, 73, .16); --shadow: 0 1px 0 var(--line-soft), 0 34px 60px -34px rgba(20, 18, 10, .45);
+}
+:root[data-theme="dark"] {
+  --bg: #0d0d0b; --panel: #131310; --ink: #ecebe5; --ink-2: #c6c4bb; --muted: #8e8a7f; --faint: #57544c; --line: #2a2924; --line-soft: #1f1e1a;
+  --match: #4fcf8c; --match-bg: #11301f; --work: #e5b04b; --open: #272622; --tried: #4a4433; --move: #8fb0f0; --code-bg: #0f0f0d;
+  --glow: rgba(79, 207, 140, .13); --shadow: 0 1px 0 var(--line-soft), 0 34px 60px -34px rgba(0, 0, 0, .9);
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 1280px; height: 400px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+body { position: relative; background:
+  radial-gradient(600px 360px at 1010px 90px, var(--glow), transparent 70%), var(--bg); }
+.left { position: absolute; left: 64px; top: 40px; width: 700px; }
+.eyebrow { display: flex; align-items: center; gap: 12px; font: 500 13px/1 "Geist Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.eyebrow svg { width: 26px; height: 26px; }
+h1 { margin-top: 20px; font-weight: 640; font-size: 76px; line-height: .98; letter-spacing: -.035em; }
+h1 span { display: block; }
+h1 .g { color: var(--match); }
+.tag { margin-top: 16px; width: 640px; font-size: 21px; line-height: 1.32; color: var(--ink-2); letter-spacing: -.005em; }
+.chips { position: absolute; left: 64px; bottom: 34px; display: flex; gap: 8px; font: 500 13px/1 "Geist Mono", monospace; }
+.chip { padding: 7px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: var(--panel); }
+.chip.rec { border-color: var(--match); color: var(--match); }
+.card { position: absolute; left: 812px; top: 36px; width: 404px; height: 328px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; }
+.card .bar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 46px; border-bottom: 1px solid var(--line-soft); }
+.file { font: 500 13px/1 "Geist Mono", monospace; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.file i { width: 8px; height: 8px; border-radius: 2px; background: var(--match); display: inline-block; }
+.badge { font: 600 12px/1 "Geist Mono", monospace; color: var(--match); background: var(--match-bg); padding: 6px 10px; border-radius: 999px; }
+pre { margin: 0; padding: 12px 0 0 0; background: var(--code-bg); height: 246px; font: 500 14px/1.5 "Geist Mono", monospace; color: var(--ink); }
+.ln { display: block; padding: 0 16px 0 0; white-space: pre; }
+.ln b { display: inline-block; width: 40px; text-align: right; padding-right: 16px; color: var(--faint); font-weight: 400; }
+.k { color: var(--move); } .n { color: var(--work); } .c { color: var(--muted); }
+.map { display: grid; grid-template-columns: repeat(26, 1fr); gap: 4px; padding: 16px 16px 0; }
+.map u { height: 12px; border-radius: 3px; background: var(--open); }
+.map u.t { background: var(--tried); } .map u.m { background: var(--match); } .map u.w { background: var(--work); }
+</style>
+</head>
+<body>
+<script>if (location.hash === "#dark") document.documentElement.dataset.theme = "dark";</script>
+<div class="left">
+  <div class="eyebrow">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="var(--match)"><rect x="1" y="1" width="10" height="10" rx="1.5"/><rect x="13" y="1" width="10" height="10" rx="1.5"/><rect x="1" y="13" width="10" height="10" rx="1.5"/></g><rect x="14" y="14" width="8" height="8" rx="1.5" fill="none" stroke="var(--ink)" stroke-width="2"/></svg>
+    Matching decompilation
+  </div>
+  <h1><span>Function_2_C_</span><span class="g">Decompiler</span></h1>
+  <p class="tag">Your AI agents decompile the games you own into C that compiles to the exact same bytes.</p>
+</div>
+<div class="chips"><span class="chip rec">N64</span><span class="chip rec">GameCube</span><span class="chip rec">Wii</span><span class="chip">PlayStation</span><span class="chip">PS2</span><span class="chip">GBA</span><span class="chip">DS</span></div>
+<div class="card">
+  <div class="bar"><span class="file"><i></i>player_take_damage.c</span><span class="badge">score 0 · byte-identical</span></div>
+<pre><span class="ln"><b>1</b><span class="k">void</span> player_take_damage(<span class="k">s32</span> amount) {</span><span class="ln"><b>2</b>    <span class="k">if</span> (g_player.invuln_timer &gt; <span class="n">0</span>) {</span><span class="ln"><b>3</b>        <span class="k">return</span>;</span><span class="ln"><b>4</b>    }</span><span class="ln"><b>5</b>    g_player.hp -= amount;</span><span class="ln"><b>6</b>    <span class="k">if</span> (g_player.hp &lt;= <span class="n">0</span>) {</span><span class="ln"><b>7</b>        g_player.hp = <span class="n">0</span>;</span><span class="ln"><b>8</b>        g_player.state = <span class="n">3</span>;</span><span class="ln"><b>9</b>    }</span><span class="ln"><b>10</b>    g_player.invuln_timer = <span class="n">60</span>;</span><span class="ln"><b>11</b>}</span></pre>
+  <div class="map" id="map"></div>
+</div>
+<script>
+// a strip of functions turning green: fixed, so every render is identical
+const kinds = "mmmmmmmmmmmmmmmmmtmmmwtmmo".split(""); // m matched, t tried, w working, o to do
+document.getElementById("map").innerHTML = kinds.map((k) => `<u class="${k === "o" ? "" : k}"></u>`).join("");
+</script>
+</body>
+</html>

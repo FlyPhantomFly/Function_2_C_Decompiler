@@ -13,6 +13,26 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.48] - 2026-10-22
+
+**Docs, Tooling.** A new README banner, designed for this project (owner's decision), from a source that can be edited. Nothing under `src/` changed.
+
+- **The banner is new.** The old one was upstream's artwork: its wordmark (`decomp.wtf`) and its tagline ("What the function?"). The new one puts the project's name first, set the way the app sets it: `Function_2_C_` over a green
+  `Decompiler`. Beside it is a card that shows the product's idea in one look: real matching C, the demo ROM's `player_take_damage`, with a **score 0 · byte-identical** badge and a strip of functions turning green.
+  The platform chips mark the three recommended platforms the way the README's table does. It uses the app's own colors and fonts (Geist and Geist Mono, SIL OFL, already shipped), so it looks like the product. Light
+  and dark versions, 2560 x 800 (345 KB and 285 KB), served by the README's existing `<picture>`. I looked at both renders and changed two things I did not like in the first one: the strip of functions
+  overlapped the end of the code (lines 10 and 11 were cut off), and the tagline ran into the chips.
+- **It is editable.** `maintenance/assets/banner.html` is the source (one file, a theme switch in the URL hash); `maintenance/tools/make_banner.py` renders both PNGs with a headless Chromium (`CHROME=...`),
+  and `maintenance/assets/README.md` says how. The code in the card is from the demo, which is CC0.
+- The README's alt text is now the project name and the banner's own tagline. 12 tests in `test_maint_banner.py`: both files are PNGs of the expected size and under 600 KB; **neither is upstream's artwork** (checked
+  by hash, which is what catches it: upstream's banner has the same dimensions); the `<picture>` serves dark to dark mode; **the alt text equals the source's tagline** (an image's words are invisible to a
+  screen reader, so the alt text is all those readers get); the source spells the name as the app does and never as the original; its fonts exist and are the app's; its palette is the app's; the render command
+  is right; and, with a browser, the real render gives both banners at the right size. Four breakages (the old alt text, the tagline edited without the README, **upstream's banner restored**, the dark
+  source pointing at the light file) each turn exactly one test red.
+- **Still showing the old name, found by looking:** `.github/assets/demo.webp`, the animated recording of the live view in the README, has `decomp.wtf / Demo Quest 64` in its title bar. It is a recording, so it
+  cannot be edited frame by frame; fixing it means re-recording the animation, which is a separate piece of work (say if you want it). `how-light.png` and `how-dark.png` (the "How it works" diagram) carry no product name.
+- Nothing for users to do.
+
 ## [0.10.47] - 2026-10-22
 
 **Feature.** A provider-aware budget (owner's decision): prices per endpoint, so OpenAI's and DeepSeek's spend counts; every charge logged by provider, agent and model; one global cap that
