@@ -332,15 +332,14 @@ def _forged_longer_function() -> tuple[FunctionObj, FunctionObj]:
 
 
 def test_known_limitation_the_fingerprint_alone_cannot_tell_these_two_functions_apart():
-    """Documents the weakness so nobody relies on fingerprint equality alone. If this ever fails because the fingerprint
-    was reframed, that is the fix landing: delete this test and the xfail below with it, in the same change."""
+    """Documents what remains of the weakness, so nobody decides a match by fingerprint equality alone: use
+    FunctionObj.same_as when both functions are at hand, and the stored size too in hash-only projects. If this ever
+    fails because the fingerprint was reframed (a stored-data migration), delete it in that change."""
     target, forged = _forged_longer_function()
     assert len(forged.code) > len(target.code) and not forged.relocs and target.relocs
     assert target.fingerprint() == forged.fingerprint()
 
 
-@pytest.mark.xfail(strict=True, reason="diff() trusts the fingerprint alone (fixed in the next version): a longer function "
-                                       "with no relocations is scored as a match for a shorter one that has one")
 def test_diff_does_not_call_a_longer_function_a_match_for_a_shorter_one():
     target, forged = _forged_longer_function()
     d = scoring.diff(target, forged)

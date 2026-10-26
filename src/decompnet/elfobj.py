@@ -72,8 +72,17 @@ class FunctionObj:
     def normalized(self) -> bytes:
         return mask_relocs(self.code, self.relocs, self.arch, self.big_endian)
 
+    def same_as(self, other: FunctionObj) -> bool:
+        """Whether `other` is this same function: the same masked code and the same relocations, compared directly.
+        Use this, not fingerprint equality, to decide a match when both functions are at hand: the fingerprint hashes the
+        code and the relocation list as one stream with no length or separator, so a longer function whose tail spells out
+        the relocations' text hashes the same as a shorter one that really has them."""
+        return (self.normalized() == other.normalized()
+                and sorted(r.key() for r in self.relocs) == sorted(r.key() for r in other.relocs))
+
     def fingerprint(self) -> str:
-        """Hash of masked bytes + symbolic relocs. Equal fingerprints == matching function."""
+        """Hash of masked bytes + symbolic relocs. Equal fingerprints == matching function, for functions of the same
+        length (see same_as); hash-only projects keep this and the size."""
         h = hashlib.sha256(self.normalized())
         for r in sorted(self.relocs, key=Reloc.key):
             h.update(repr(r.key()).encode())

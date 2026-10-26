@@ -13,6 +13,31 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.21] - 2026-10-21
+
+**Security (correctness of the core).** A function is only a match for the function it really is. Fixes defect 1 from
+0.10.20. This touches `scoring.py`, `elfobj.py` and `network.py`, which are on the review-first list: it is one self-contained
+version so that it can be reviewed, or reverted, on its own.
+
+- The problem: `fingerprint()` hashes the masked code and the relocation list as one unframed stream, and three places
+  decided "match" by fingerprint equality alone, so a longer function with no relocations, whose tail spelled out the
+  relocations' text, was credited as a match: `compile_and_diff` answered `MATCH! ... byte-identical to the target`, the
+  hash-only path credited it, and the header re-check called it "still matching" (all three demonstrated in 0.10.20).
+- The fix: new `FunctionObj.same_as(other)` compares the masked code and the sorted relocation keys directly, and
+  `scoring.diff` uses it. The two hash-only comparisons in `network.py` (crediting a compile, and the header re-check)
+  keep the fingerprint and also require the candidate's length to equal the `size` stored with it; the header re-check
+  uses `same_as` where the target is stored. **A legitimate match can never be rejected by this:** equal masked code and
+  equal relocations have equal length by definition, and the stored size is `len(code)` of the target (`project.py`). The
+  fingerprint algorithm and every stored fingerprint are unchanged, so no migration and no invalidated data.
+- Verified: the four tests that failed in 0.10.20 pass (their `xfail` markers are removed in this change, as strict xfail
+  requires), with the three controls beside them. **Whole suite with every tool: 372 passed, 55 skipped, 1 xfailed (defect
+  2), 0 failed. Test by test against the previous full run: nothing that passed fails, 63 items added, none dropped.**
+- Still true, and pinned by `test_known_limitation_the_fingerprint_alone_cannot_tell_these_two_functions_apart`: the
+  fingerprint by itself remains ambiguous, so any new code that has both functions must use `same_as`, and code that has
+  only a stored fingerprint must also check the size. A reframed fingerprint would fix it at the root but invalidates
+  stored fingerprints (hash-only projects, DBs), so it needs a versioned migration and is left as a decision for you.
+- Nothing for users to do.
+
 ## [0.10.20] - 2026-10-21
 
 **Test.** Matching-integrity tests for `scoring.py` and the three places a match is decided. They found two defects, which

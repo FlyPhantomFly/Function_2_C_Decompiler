@@ -402,7 +402,8 @@ class Network:
             return {"text": f"❌ Compiled, but the object has no function named `{fn['name']}`. "
                             f"Define it with exactly that name (non-static).", "score": None, "matched": False}
         if self._hash_only(fn):
-            matched_now = cand.fingerprint() == fn["fingerprint"] and not scratch
+            # the fingerprint alone is not an identity (see FunctionObj.same_as): the size we kept must agree too
+            matched_now = cand.fingerprint() == fn["fingerprint"] and len(cand.code) == fn["size"] and not scratch
             self._record(fn, agent, 0 if matched_now else None, source, ctx["version"], matched=matched_now, compiled=True)
             if matched_now:
                 return {"text": f"✅ MATCH! {fn['name']} matches the target fingerprint. Credited to {agent.name}; "
@@ -596,8 +597,10 @@ class Network:
                 return fn["name"], "no longer compiles: " + res.log.strip().splitlines()[0][:200] if res.log.strip() else "compile failed"
             cand, verdict, _ = self._evaluate(fn, proj, res.obj)
             if verdict is None and cand is not None:
-                want = fn["fingerprint"] if self._hash_only(fn) else self._target_obj(fn, proj).fingerprint()
-                verdict = cand.fingerprint() == want
+                if self._hash_only(fn):
+                    verdict = cand.fingerprint() == fn["fingerprint"] and len(cand.code) == fn["size"]
+                else:
+                    verdict = cand.same_as(self._target_obj(fn, proj))
             if cand is None or not verdict:
                 return fn["name"], "compiles but no longer matches"
             return None

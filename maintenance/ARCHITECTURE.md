@@ -115,6 +115,14 @@ Verified by running the code (0.10.7 baseline, see `baseline/README.md`):
 10. **Updater defaults (read, then confirmed in `app/server.py`):** the background watcher starts 20 s after launch and re-checks every 5 minutes, `check_updates` defaults to on, and `auto_update` (default off) installs without asking. The recorded `repo` in `install.json` overrides the `REPO` constant, so an install made by upstream's installer keeps pointing at upstream. `tests/conftest.py` sets `DECOMP_UPDATES=off`, which is how the suite avoids it.
 11. **Installers fetched and ran code from upstream's network** (`site/public/install.sh`, `install.ps1`; fixed in 0.10.15). Their `VERSION` line names a wheel on a server; it must not be bumped unless that wheel exists.
 12. The toolchain installer prints a raw Python traceback when a download host is unreachable (seen for `agbcc`, `ee-gcc-2.96`, `zlib.net`) instead of a one-line message.
+13. **The fingerprint is not an identity** (fixed in 0.10.21). `FunctionObj.fingerprint()` hashes masked code and relocations as one
+    unframed stream; three places decided a match by fingerprint equality alone, so a longer function with no relocations whose tail
+    spells out the relocations' text was credited as a match (demonstrated through the real code; not reachable from C source compiled
+    by the real toolchain). Now `same_as` compares directly, and hash-only paths also check the stored size. The relocation mask table
+    (17 entries, 2,176 bit flips), the penalty ladder, and real gcc output (1,212 flips) were tested and are exact.
+14. **A relocation inside undecodable x86 bytes crashes scoring** (open, fixed in the next version). `scoring.disassemble` reads
+    `ins.disp_size` on capstone's SKIPDATA pseudo-instructions, which raises, so `diff(f, f)` itself fails. Fails closed; x86 and
+    x86-64 only.
 
 Still open (needs your machine or a later change):
 

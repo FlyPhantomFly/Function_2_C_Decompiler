@@ -243,7 +243,7 @@ def compact_asm(text: str) -> str:
 def diff(target: FunctionObj, candidate: FunctionObj) -> DiffResult:
     t_ins, c_ins = disassemble(target), disassemble(candidate)
     max_score = max(1, len(t_ins)) * PENALTY_INSERTION
-    bytes_match = target.fingerprint() == candidate.fingerprint()
+    bytes_match = target.same_as(candidate)
 
     sm = difflib.SequenceMatcher(a=[i.mnemonic for i in t_ins], b=[i.mnemonic for i in c_ins], autojunk=False)
     rows: list[tuple[str, str, str]] = []

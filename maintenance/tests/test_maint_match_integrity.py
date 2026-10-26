@@ -78,7 +78,6 @@ def test_a_real_solution_is_credited(tmp_path):
     assert status(net) == "matched"
 
 
-@pytest.mark.xfail(strict=True, reason="diff() trusts the fingerprint alone (fixed in the next version)")
 def test_a_forged_longer_candidate_is_not_credited(tmp_path):
     net, root = make_net(tmp_path, hash_only=False)
     stub_compiler(net, forge(target_function(root)))
@@ -99,7 +98,6 @@ def test_a_real_solution_is_credited_in_a_hash_only_project(tmp_path):
     assert status(net) == "matched"
 
 
-@pytest.mark.xfail(strict=True, reason="the hash-only comparison trusts the fingerprint alone (fixed in the next version)")
 def test_a_forged_longer_candidate_is_not_credited_in_a_hash_only_project(tmp_path):
     net, root = make_net(tmp_path, hash_only=True)
     stub_compiler(net, forge(target_function(root)))
@@ -126,7 +124,6 @@ def test_the_header_recheck_accepts_a_function_that_still_matches(tmp_path):
     assert net.regression_test(proj, header, only=[row]) == []
 
 
-@pytest.mark.xfail(strict=True, reason="the header re-check trusts the fingerprint alone (fixed in the next version)")
 def test_the_header_recheck_does_not_accept_a_forged_candidate_as_still_matching(tmp_path):
     net, root = make_net(tmp_path, hash_only=False)
     proj, row = _matched_row(net, root)
