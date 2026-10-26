@@ -13,6 +13,27 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.19] - 2026-10-21
+
+**Docs.** Status, the final measurements, and the patch set. No change to the application.
+
+- `maintenance/MAINTENANCE_PLAN.md`: a status table (what is done, in which version, what is left) and "your next steps";
+  the fork-name decision is recorded as made. It says plainly what is **not** done: the product-name rebrand, Phase 2
+  (the scoring property tests are the recommended next piece of work) and the legacy layer, and CI having never run on
+  GitHub. `maintenance/CLAUDE.md` gains the installer/plugin invariant and the checker command;
+  `maintenance/README.md` lists the new tool.
+- `maintenance/baseline/`: **run D**, the maintained code measured the same way as upstream's runs A to C.
+  With every free tool and `bwrap`: **310 passed, 55 skipped, 0 failed (365 items)**. Test by test against run C:
+  nothing that passed there fails now, the one test that failed there passes, 95 of the 97 new tests pass and 2 skip
+  (no PowerShell), and the one upstream test I renamed is accounted for. On a bare machine (the commands of CI's `checks`
+  job): 220 passed, 145 skipped, 0 failed. What still skips is what needs compilers or platforms this sandbox lacks.
+- `maintenance/patches/`: one `git am` patch per version, 0.10.7 to 0.10.19, and `tools/make_patches.sh` to regenerate
+  them. Verified against your real repository: a clone of `FlyPhantomFly/Function_2_C_Decompiler` at `575b4a3` has the
+  same tree hash as my import of upstream 0.10.6 (`f65de84`, 273 files), and `git am` of the patches onto it applies
+  cleanly and produces a tree identical to this one (minus the patches folder). The commits are authored "Maintainer
+  (Claude session)"; `maintenance/patches/README.md` shows how to re-author them as yourself.
+- Nothing for users to do.
+
 ## [0.10.18] - 2026-10-21
 
 **Tooling, CI.** A checker for the pinned compiler downloads. (Plan item 1.7.)

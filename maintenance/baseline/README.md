@@ -1,16 +1,17 @@
 # Phase 0 baseline (upstream 0.10.6 code, measured for the 0.10.7 release)
 
-Nothing in this folder was produced by the maintained code: the three runs below were made against the untouched
-upstream tree (git tag `upstream-0.10.6`), so they say what the code did *before* any change by us. The raw pytest
-output and JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
+Runs A to C below were made against the untouched upstream tree (git tag `upstream-0.10.6`), so they say what the code
+did *before* any change by us. Run D, added at 0.10.19, is the maintained code, for comparison. The raw pytest output and
+JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
 
-## The three runs
+## The four runs
 
 | Run | State of the machine | Result (269 test items) | Summary |
 | --- | --- | --- | --- |
 | **A** | Fresh checkout, `uv sync --locked`, nothing else | 107 passed, 3 failed, 20 errors, 139 skipped | [summary-A.md](summary-A.md) |
 | **B** | A, plus an empty `projects/demo/target/` directory | 128 passed, 1 failed, 1 error, 139 skipped | [summary-B.md](summary-B.md) |
 | **C** | B, plus every free tool the tests use (below) | **218 passed, 1 failed, 50 skipped** | [summary-C.md](summary-C.md) |
+| **D** | The maintained code at 0.10.18 (no code change in 0.10.19), everything C had plus `bwrap` | **310 passed, 0 failed, 55 skipped** (365 items) | [summary-D.md](summary-D.md) |
 
 Test machine: Ubuntu 24.04 container, Python 3.12.3, uv 0.11.7, gcc 13.3, bubblewrap 0.9.0 (it does create a sandbox
 in that container), lld and llvm 18.1.3. Toolchains installed through the project's own installer
@@ -48,6 +49,16 @@ PlayStation demo" on the **first** run in a tree that has never built them. The 
 `test_rom` and `test_psx`, and pytest runs files alphabetically, so a second run executes the three tests that the
 first run skipped. Run C was measured in a tree earlier runs had populated, which is why it shows them passing; a
 first run in a clean tree gives 53 skips instead of 50. This is a property of upstream's suite, not of a change we made.
+
+## Run D against run C, test by test
+
+365 items against 269: 97 new (95 pass, 2 skip for lack of PowerShell), 1 renamed (the upstream test
+`test_release_update_from_github_when_decomp_wtf_is_unreachable` became `..._when_the_release_site_is_unreachable`).
+**Nothing that passed in C fails in D.** The one test that failed in C (the autopilot timing flake) passes. Three tests
+(`test_bridge`, two in `test_overlays`) show as skipped in D only because the run started in a tree with no built ROMs;
+they pass on the next run (the order dependence described above). On a bare machine (no toolchains, no `bwrap`, `lld` or
+`llvm-objcopy`, no zlib source) the same code gives 220 passed, 145 skipped, 0 failed, which is what CI's `checks` job
+runs.
 
 ## What the 50 skips in run C need
 

@@ -15,6 +15,7 @@ uv run --locked decompnet toolchain install ID    # install one (sha256-verified
 maintenance/baseline/setup-test-env.sh            # apt packages + free toolchains + zlib source, safe to re-run
 python3 maintenance/tools/summarize_junit.py junit.xml   # needs: pytest --junitxml=junit.xml
 python3 maintenance/tools/bump_version.py --check        # do the three version places agree?
+python3 maintenance/tools/check_toolchains.py            # does every pinned compiler download still exist? (--verify: hash them)
 ```
 
 Entry points (from `pyproject.toml`): `decomp` is the local app (`decompnet.app.cli`), `decompnet` is the older
@@ -52,6 +53,9 @@ Windows tests need compilers or platforms that may not be installed. Compare a r
 8. Agent-written C only ever compiles inside the sandbox, unless `DECOMP_UNSAFE_NO_SANDBOX=1` is set or this is
    upstream's own marked Linux or a container. `trusted=True` never changes that: it only skips the source filter.
    (True since 0.10.11.)
+9. The installers, the README's instructions, the app's links and the plugin's agent skill send people and agents to this
+   fork's repository and nowhere else, and nothing tells an agent to pipe a download into a shell. (True since 0.10.15
+   and 0.10.17; `maintenance/tests/test_maint_installers.py` and `test_maint_links.py` guard it. Open: the legacy CLI.)
 
 ## Needs the owner's review before it merges
 
@@ -63,6 +67,7 @@ updater or the installers fetch.
 
 - Accept a proprietary compiler license (IDO, mwcc, mwccarm) on the user's behalf.
 - Run agents against a real commercial game's data in CI. Use `projects/demo-*` only.
+- Add a download to `toolchains.toml` without an https URL and a sha256 (a test fails), or install one unpinned.
 - Bypass a sha256 pin to make a download work. A pin that fails means the file is not the one that was reviewed.
 - Rename `.decomp.wtf.json` or other on-disk names as part of a branding change; they are file formats, and renaming
   them breaks existing projects. Classify each `decomp.wtf` reference (network endpoint, file-format name, comment,
