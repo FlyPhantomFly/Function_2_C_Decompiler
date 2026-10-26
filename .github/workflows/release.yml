@@ -37,6 +37,7 @@ jobs:
             exit 1
           fi
           python3 maintenance/tools/release_notes.py "$version" > release-notes.md
+          python3 maintenance/tools/release_notes.py "$version" --title > release-title.txt
           printf '\n---\nThe downloads are checksummed in SHA256SUMS: put it beside them and run `sha256sum -c SHA256SUMS`.\n' >> release-notes.md
           echo "VERSION=$version" >> "$GITHUB_ENV"
       - name: Install exactly what uv.lock says
@@ -58,6 +59,7 @@ jobs:
         run: |
           mkdir release
           cp dist/*.whl dist/*.tar.gz release-notes.md release/
+          cp release-title.txt release/title.txt
           cd release
           sha256sum -- *.whl *.tar.gz > SHA256SUMS
           sha256sum --check SHA256SUMS
@@ -84,4 +86,4 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" release/*.whl release/*.tar.gz release/SHA256SUMS \
             --repo "$GITHUB_REPOSITORY" --verify-tag \
-            --title "Function_2_C_Decompiler ${GITHUB_REF_NAME#v}" --notes-file release/release-notes.md
+            --title "$(cat release/title.txt)" --notes-file release/release-notes.md

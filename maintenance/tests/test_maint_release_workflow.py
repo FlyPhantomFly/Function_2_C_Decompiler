@@ -47,6 +47,8 @@ def test_the_job_that_can_write_runs_no_code_from_the_repository():
     commands = [line.strip() for line in run_text(publish).replace("\\\n", " ").splitlines() if line.strip()]
     assert len(commands) == 1 and commands[0].startswith("gh release create ")
     assert "--verify-tag" in commands[0] and "SHA256SUMS" in commands[0]
+    assert '--title "$(cat release/title.txt)"' in commands[0]  # read from a file the build job wrote: this job computes nothing from the repository
+    assert "release/*.whl release/*.tar.gz release/SHA256SUMS" in commands[0] and "title.txt" not in commands[0].split("--title")[0]  # and the title file is not a download
 
 
 def test_the_build_job_does_not_keep_credentials_and_uses_nothing_unpinned():
@@ -69,6 +71,7 @@ def test_the_notes_come_from_the_changelog_and_a_missing_entry_stops_the_release
     text = run_text(load()["jobs"]["build"])
     # `release_notes.py` exits 2 when there is no entry, and the step is not `|| true`: the shell stops the job
     assert "release_notes.py \"$version\" > release-notes.md" in text and "|| true" not in text
+    assert 'release_notes.py "$version" --title > release-title.txt' in text and "cp release-title.txt release/title.txt" in text  # the title is made here, from the changelog
 
 
 def test_the_wheel_is_installed_and_run_from_outside_the_checkout():

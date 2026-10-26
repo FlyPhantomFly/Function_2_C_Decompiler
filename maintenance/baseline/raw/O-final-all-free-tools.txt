@@ -1,0 +1,63 @@
+.........................................s................ssss.ss....... [  8%]
+.......................s..............ssssssss.............s..........ss [ 17%]
+sssssssss..s....................................s....sss....ss...ssss... [ 25%]
+...........sssss.........................ssssss......................... [ 34%]
+........................................................................ [ 43%]
+........................................................................ [ 51%]
+.........ss............................................................. [ 60%]
+........................................................................ [ 69%]
+........................................................................ [ 77%]
+........................................................................ [ 86%]
+........................................................................ [ 94%]
+..........................................                               [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_chd.py:19: needs a PlayStation CHD (the developer's own copy)
+SKIPPED [1] tests/test_ds.py:41: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds.py:55: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds.py:79: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds.py:93: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds_rom_check.py:34: needs the demo DS ROM (projects/demo-ds)
+SKIPPED [1] tests/test_ds_rom_check.py:47: needs the demo DS ROM (projects/demo-ds)
+SKIPPED [1] tests/test_export.py:79: needs the ps2 toolchain and binutils-mips
+SKIPPED [1] tests/test_fork_rooms.py:54: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:66: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:76: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:86: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:114: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:131: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:156: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:170: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_forks.py:243: needs Ghidra and Java 21+
+SKIPPED [1] tests/test_gba.py:41: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:51: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:79: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:87: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:110: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:124: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gc.py:43: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:55: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:72: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:94: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:128: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_handwritten.py:37: needs the GameCube binutils
+SKIPPED [1] tests/test_period_compilers.py:22: ee-gcc-2.96 not installed
+SKIPPED [1] tests/test_platform.py:37: Windows only
+SKIPPED [1] tests/test_platform.py:48: Windows only
+SKIPPED [1] tests/test_platform.py:63: Windows only
+SKIPPED [1] tests/test_platform.py:126: Windows only
+SKIPPED [1] tests/test_platform.py:135: Windows only
+SKIPPED [1] tests/test_ps2.py:44: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_ps2.py:52: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_ps2.py:70: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_ps2.py:94: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_rom_data.py:210: needs agbcc and the Arm GNU toolchain
+SKIPPED [4] tests/test_rom_data.py:215: needs agbcc and the Arm GNU toolchain
+SKIPPED [1] tests/test_wsl.py:42: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl.py:58: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl.py:64: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl.py:72: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl_windows.py:27: needs Windows
+SKIPPED [1] tests/test_wsl_windows.py:33: needs Windows
+SKIPPED [2] maintenance/tests/test_maint_installers.py:155: needs PowerShell (pwsh)
+782 passed, 52 skipped in 226.49s (0:03:46)
+exit=0

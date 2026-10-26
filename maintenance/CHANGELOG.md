@@ -13,6 +13,40 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.11.0] - 2026-10-23 - ROMday
+
+**ROMday is the first release of Function_2_C_Decompiler**, a maintained fork of [decomp.wtf](https://github.com/i12bp8/decomp.wtf) (MIT, by sam wolfs; the original was discontinued at 0.10.6), maintained by PhantomThreads.
+It points your AI agents at a game you own and turns its functions into C that compiles to the exact same bytes. This release collects everything done since the fork: 47 versioned changes (0.10.7 to 0.10.53), each in the history below.
+
+**Safer**
+- The updater, the installers, the app's links, the plugin and the generated files point at this repository only; nothing contacts the original project. The Windows installer refuses (Windows is not maintained here).
+- Agent-written C is compiled only inside a sandbox (bubblewrap on Linux: `sudo apt install bubblewrap`). Running without one needs an explicit opt-out.
+- A match is accepted only when the function itself is identical, not when a short fingerprint of it happens to be. Two real defects the new tests found in the original are fixed (an x86 crash on a relocation, and a hash treated as an identity).
+- The hosted-network layer (a coordinator server, signup, donated compute) is removed: 42 files, 4,245 lines.
+
+**Your work is protected**
+- The database format is versioned. The first time an old database is opened a copy is kept beside it, with a checksum; a database from a newer version is refused untouched.
+- **Daily automatic backups** (3 daily, 2 weekly, 1 monthly), each with a checksum, and a weekly check that the newest one really restores. `decomp backup` and `decomp restore` do the same by hand. They share your disk: copy `~/Decomp/backups/` elsewhere now and then.
+
+**New**
+- **`decomp run PROJECT --until 50%`** works until half of the project's starting functions are matched, stops gracefully, and **`--resume`** carries on without redoing or re-paying for anything. `--until-budget USD` is a separate limit. It keeps running if you close the terminal.
+- **A provider-aware budget:** give each model endpoint its prices (OpenAI and DeepSeek charge less for cached tokens, and both are handled), and spend is logged by provider, agent and model, with subtotals in the app and one global cap.
+- The built-in API agent retries a busy or briefly broken server in place instead of losing its conversation.
+- `decomp toolchain list|install|path`; an eval harness to measure a model on the demo ROM (`maintenance/tools/eval_agent.py`); a new banner; releases built by CI with a `SHA256SUMS` file.
+- The product is named Function_2_C_Decompiler wherever you read it. The command is still `decomp`, the package `decompnet`, and the names on disk that existing projects use are unchanged.
+
+**Tested**: the original's own tests plus this fork's, 782 passed and 0 failed with every free compiler installed, and 679 passed on a bare machine with none; the same suite also passes from a fresh unpacked copy with no git. Every new feature was also broken on purpose to confirm its tests fail.
+
+**Not verified, so you know what to try first**
+- **GitHub CI has not run before this release.** This push is its first real run.
+- **`decomp run` has never run with a real agent matching functions**: there was no agent or API key where it was built. Start small: `decomp run PROJECT --agent claude --until 5%`.
+- The eval harness has not run against a real provider. PlayStation 2, GBA, DS, GameCube and Windows are unmeasured.
+- The N64 **shiftable export is not built** (an analysis and a plan are in `maintenance/SHIFTABLE_EXPORT.md`). Today a rebuilt game matches the original byte for byte, at its original addresses.
+- Checksums beside the downloads detect a damaged file; they do not prove who made it. Releases are not signed.
+- The animated demo in the README still shows the old name in its title bar.
+
+**Download and check**: put `SHA256SUMS` beside the files and run `sha256sum -c SHA256SUMS`. To install from a checkout, see "Install" in the README.
+
 ## [0.10.53] - 2026-10-23
 
 **Docs, Tooling.** Status, the final measurements for 0.10.51 and 0.10.52, and the patch set; and the analysis for the N64 shiftable export, which **corrects something I said while starting it**. No change to the application.

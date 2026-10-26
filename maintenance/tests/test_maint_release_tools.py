@@ -164,3 +164,55 @@ def test_the_real_changelog_has_notes_for_the_version_being_released():
     version = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
     notes = release_notes.section((ROOT / "maintenance" / "CHANGELOG.md").read_text(encoding="utf-8"), version)
     assert notes and len(notes) > 100
+
+
+# ---- a release can have a name -------------------------------------------------------------------------------------------------------------------------
+
+NAMED = """# Changelog
+
+## [1.0.0] - 2026-05-05 - ROMday
+
+**First.** The first release.
+
+## [0.9.0] - 2026-04-04
+
+**Before.** No name.
+"""
+
+
+def test_a_release_may_carry_a_name_after_its_date_and_the_notes_do_not_include_the_heading():
+    assert release_notes.release_name(NAMED, "1.0.0") == "ROMday"
+    assert release_notes.release_name(NAMED, "0.9.0") is None
+    assert release_notes.release_name(NAMED, "7.7.7") is None
+    assert release_notes.section(NAMED, "1.0.0") == "**First.** The first release.\n"  # the heading, and so the name, is not part of the notes
+
+
+def test_the_release_title_is_the_product_the_version_and_the_name_if_there_is_one():
+    assert release_notes.title(NAMED, "1.0.0") == "Function_2_C_Decompiler 1.0.0 - ROMday"
+    assert release_notes.title(NAMED, "0.9.0") == "Function_2_C_Decompiler 0.9.0"
+    import decompnet
+
+    assert release_notes.PRODUCT == decompnet.PRODUCT
+
+
+def test_the_title_option_prints_it_and_a_missing_entry_prints_nothing(tmp_path, capsys):
+    log = tmp_path / "CHANGELOG.md"
+    log.write_text(NAMED, encoding="utf-8")
+    assert release_notes.main(["1.0.0", "--title", "--changelog", str(log)]) == 0
+    assert capsys.readouterr().out == "Function_2_C_Decompiler 1.0.0 - ROMday\n"
+    assert release_notes.main(["7.7.7", "--title", "--changelog", str(log)]) == 2
+    assert capsys.readouterr().out == ""
+
+
+def test_a_name_with_a_quote_or_a_shell_character_is_not_expanded_by_anything_that_reads_the_title_file(tmp_path):
+    """The title travels through a file and `$(cat ...)` in the publishing job; the name comes from the changelog, which maintainers write, but the point of
+    that job is that it expands nothing. A name is kept to ordinary words so there is nothing to expand in the first place."""
+    for bad in ('Evil"; rm -rf ~; "', "a $(whoami) b", "back`tick`", "x" * 41, "-starts-with-a-dash"):
+        log = f"## [1.0.0] - 2026-05-05 - {bad}\n\nnotes\n"
+        assert release_notes.release_name(log, "1.0.0") is None, bad
+
+
+def test_the_first_release_is_called_romday():
+    log = (ROOT / "maintenance" / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert release_notes.release_name(log, "0.11.0") == "ROMday"
+    assert release_notes.title(log, "0.11.0") == "Function_2_C_Decompiler 0.11.0 - ROMday"

@@ -1,10 +1,10 @@
 # Phase 0 baseline (upstream 0.10.6 code, measured for the 0.10.7 release)
 
 Runs A to C below were made against the untouched upstream tree (git tag `upstream-0.10.6`), so they say what the code
-did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31), H (0.10.34), I (0.10.39), J (0.10.41), K (0.10.43), L (0.10.45), M (0.10.49) and N (0.10.52) are the maintained code, for comparison. The raw pytest output and
+did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31), H (0.10.34), I (0.10.39), J (0.10.41), K (0.10.43), L (0.10.45), M (0.10.49), N (0.10.52) and O (0.11.0) are the maintained code, for comparison. The raw pytest output and
 JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
 
-## The fourteen runs
+## The fifteen runs
 
 | Run | State of the machine | Result (269 test items) | Summary |
 | --- | --- | --- | --- |
@@ -22,6 +22,7 @@ JUnit XML for each run are in `raw/` exactly as captured (they contain the sandb
 | **L** | The maintained code at 0.10.45, same machine, with `BUILD_WHEEL=1` | **617 passed, 0 failed, 53 skipped** (670 items) | [summary-L.md](summary-L.md) |
 | **M** | The maintained code at 0.10.49, same machine, with `CHROME` and `BUILD_WHEEL=1` | **700 passed, 0 failed, 52 skipped** (752 items) | [summary-M.md](summary-M.md) |
 | **N** | The maintained code at 0.10.52, same machine, with `CHROME` and `BUILD_WHEEL=1` | **777 passed, 0 failed, 52 skipped** (829 items) | [summary-N.md](summary-N.md) |
+| **O** | The first release, 0.11.0 "ROMday", same machine, with `CHROME` and `BUILD_WHEEL=1` | **782 passed, 0 failed, 52 skipped** (834 items) | [summary-O.md](summary-O.md) |
 
 Test machine: Ubuntu 24.04 container, Python 3.12.3, uv 0.11.7, gcc 13.3, bubblewrap 0.9.0 (it does create a sandbox
 in that container), lld and llvm 18.1.3. Toolchains installed through the project's own installer
@@ -123,6 +124,11 @@ those switches: 597 passed, 155 skipped, 0 failed.
 
 829 items against 752: 77 new (the run, closed-pipe and related tests; all pass), none gone. **Nothing that passed in M, or in upstream's run C, fails in N.** Run with a headless browser and `BUILD_WHEEL=1`. The bare-machine CI commands on the same
 code, without those switches: 674 passed, 155 skipped, 0 failed.
+
+## Run O against run N
+
+834 items against 829: 5 new (the release-name tests; all pass), none gone. **Nothing that passed in N, or in upstream's run C, fails in O.** The bare-machine CI commands on the same code, without the browser and wheel switches:
+679 passed, 155 skipped, 0 failed.
 
 ## What the 50 skips in run C need
 

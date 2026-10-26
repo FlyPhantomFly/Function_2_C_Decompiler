@@ -17,7 +17,7 @@ from decompnet import __version__
 
 ROOT = Path(__file__).resolve().parents[2]
 CHANGELOG = ROOT / "maintenance" / "CHANGELOG.md"
-HEADING = re.compile(r"^## \[(\d+\.\d+\.\d+)\] - (\d{4}-\d{2}-\d{2}|upstream)$", re.M)  # `upstream`: the anchor entry
+HEADING = re.compile(r"^## \[(\d+\.\d+\.\d+)\] - (\d{4}-\d{2}-\d{2}|upstream)(?: - .+)?$", re.M)  # `upstream`: the anchor entry; a release may be named: `- 2026-10-23 - ROMday`
 
 
 def _load_bump():

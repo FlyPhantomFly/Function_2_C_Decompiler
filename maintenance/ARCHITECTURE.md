@@ -233,8 +233,8 @@ Written for a person who has never done it here. Nothing in this section has run
 4. Anyone can check a download against the checksums: put `SHA256SUMS` beside the files and run `sha256sum -c SHA256SUMS`.
 
 What a checksum does and does not give: it detects a damaged or truncated download. It does **not** prove who made the files, since someone who can replace the wheel can replace `SHA256SUMS` beside it. Proving that
-needs signing with a key the owner holds. The plan keeps an update channel waiting for that, and `decomp update` (which installs from this repository) is unchanged. The first release's name is the owner's decision:
-`0.10.x` continues as it is, and the plan's `0.11.0-fork.1` is not valid under PEP 440 as written (`0.11.0+fork.1` would be).
+needs signing with a key the owner holds. The plan keeps an update channel waiting for that, and `decomp update` (which installs from this repository) is unchanged. **The first release is 0.11.0, named ROMday** (the owner chose the name; the number is a plain PEP 440 one, since a name cannot be part of a version). A release can be named by its changelog heading, `## [0.11.0] - 2026-10-23 - ROMday`: the name is ordinary
+words (letters, digits, spaces and `. _ ' -`, at most 40), becomes the GitHub release's title (`Function_2_C_Decompiler 0.11.0 - ROMday`) and is not part of the version or the tag. Most releases need no name.
 
 One-time setup for the repository: switch on **private vulnerability reporting** (Settings, Code security), because the issue template's security link goes to that page and is a 404 until then.
 
