@@ -30,7 +30,7 @@
 # On a server, Function_2_C_Decompiler also runs in Docker: docker-compose.yml in the repository.
 set -euo pipefail
 
-VERSION="0.11.0"
+VERSION="0.12.0"
 REPO="FlyPhantomFly/Function_2_C_Decompiler"
 START=1
 SOURCE="${DECOMP_SOURCE:-}"
