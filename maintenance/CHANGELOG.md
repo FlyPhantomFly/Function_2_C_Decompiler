@@ -13,6 +13,40 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.52] - 2026-10-23
+
+**Feature.** `decomp run`: work on a project until N% of it is matched, stop gracefully, and resume later without redoing or re-paying for anything (owner's definitions). Schema version 3.
+
+- **The command.** `decomp run [PROJECT] --until 50% [--until-budget USD] [--agent claude|codex|antigravity|opencode|api] [--count N] [--model M] [--endpoint ID ...] [--resume] [--stop] [--status] [--detach]`.
+  It starts the same helper agents the Start button starts (one shared routine, so they cannot drift), prints progress when it changes, and ends with what happened and how to carry on. **The run lives in the app, not in the
+  terminal**: closing the terminal does not end it, `--detach` starts it and returns, and Ctrl-C stops it gracefully (130) and says how to resume.
+- **The definitions, exactly as you gave them.** *Total* is the functions open when the run starts, fixed for the run's life, also across resumes. A unit is *completed* when it is matched, by anyone (an agent of the run, the
+  autopilot, a teammate). `--until N%` accepts a whole number from 1 to 100 and stops once at least ceil(total x N / 100) are completed: a share of the work, not of the time or the budget. A check can find that agents matched a few
+  more since it last looked, so a run may end slightly past N%. **`--until-budget`** is separate and optional, and is counted from the run's own start, so resuming does not reset it.
+- **Resume = continue from the last committed checkpoint, skip what is completed, start fresh if there is none.** The checkpoint *is* the database: a match is committed the moment it happens, so there is nothing to replay. The new
+  `runs` table only records what is being resumed (the queue, the target, how the agents were started) and the progress at the last flush. So resuming **cannot redo or re-charge a completed function** (completed functions are no
+  longer open, agents only take open ones, and the controller itself never spends anything: tested, including that the spend is unchanged by a stop and a resume). `--resume` can change the target or the agents; with no earlier run it says
+  "no earlier run to resume: starting a new one"; resuming a run whose target was met meanwhile finishes it without starting anything; a second run while one is going is refused.
+- **How a run ends** (`complete`, `budget`, `stopped`, `ended`, `interrupted`): the target or all done; the budget; you; the agents giving up by themselves; the app stopping or dying. Every note says how far it got and how to carry on.
+  When the agents give up, the note says **why**: the newest session's summary plus the specific error its last attempt left. Found by running it: with Claude Code not installed here, the first version said only "the agents stopped on their
+  own"; it now says "... the agent failed three times in a row. Open a terminal, run `claude` and sign in with /login."
+- **After the app stops or dies.** A normal quit flushes every running run as `interrupted` with its progress; a run still marked running when the next app starts (it was killed) is marked interrupted at start-up with its progress
+  recounted. Either can be resumed. A crash inside the watching loop halts the agents (so nothing spends with nobody watching), is recorded on the run and is not raised.
+- Tests: 55 in `test_maint_runs.py` (the rules with a real database and fake agents: parsing, the rounded-up target, what counts and what does not, the budget baseline, stop, resume and its edge cases, recovery, the thread, the
+  schema and a v2 database migrating with a copy kept) and 19 in `test_maint_runs_app.py` (the routes through the real app, with its real session list; the command against a stand-in for the API). **Ten breakages** each turn a test
+  red (the target rounded down, counting every matched function of the project, a budget counted from zero, resume starting a new run, agents not halted, no recovery, no flush at shutdown, the route unguarded, the app not flushing or
+  not recovering). 15 repeats of both files gave identical results.
+- **Things the tests taught me, fixed:** a resume straight after a stop could be refused because the old watching thread had not yet noticed; the module now reads "is a run going" from the run's record, not from a thread. My first
+  test for that caught the bug **1 time in 25** (the window is too small to hit by chance), so it is now deterministic: it builds the situation (a still-alive old watcher) and fails 10 of 10 against the old check. Two tests of mine had
+  vacuous assertions (one compared a query with itself, one ended in `or`), and my fake agents never came back to life on launch; all fixed. A request that cannot work (no agent chosen, an unknown agent) is refused **before** it creates
+  a run, so it leaves nothing behind.
+- **Against the real app and the real command**, on the 95-function demo: bad `--until` and `--until-budget` values are refused with a sentence and exit 2; an unknown project says `no project 'nope'; projects here: demo-quest-64`
+  (the engine's own wording named an MCP tool nobody on a command line can call); an unknown agent is refused; a real run starts with total 95 and target 10, shows its progress and ends with the reason above.
+- **Not verified, and I want to be plain about it:** a run with a **real agent actually matching functions**. There is no agent installed or API key here, so the agents in every test are fakes, and the one real run failed at sign-in.
+  What is verified is the plumbing and every rule around it; that Claude Code (or any agent) really matches 10% of a project under `decomp run` is untested until you try it: start small, e.g. `decomp run PROJECT --agent claude --until 5%`.
+  There is no GUI for runs yet (the status is at `/api/run` and `decomp run --status`).
+- Nothing for users to do.
+
 ## [0.10.51] - 2026-10-23
 
 **Fix.** A reader that goes away is not an error: `decomp backup --status | head` no longer prints a traceback. Found in the cold-start check of the 0.10.50 zip.

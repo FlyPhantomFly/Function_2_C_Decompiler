@@ -363,6 +363,60 @@ def restore_cmd(args) -> int:
     return 0
 
 
+def work_cmd(args) -> int:
+    """`decomp run`: work on a project until N% of it is matched (or a budget is spent), or carry on a run that stopped. The run lives in the app, so closing this terminal does not end it."""
+    from . import runs
+    from .bridge import ensure_app
+
+    try:
+        until = runs.parse_until(args.until) if args.until is not None else None
+        budget = runs.parse_budget(args.until_budget) if args.until_budget is not None else None
+    except runs.RunError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 2
+    ensure_app(home_dir())
+    slug = args.project
+    slugs = [p["slug"] for p in _api("/api/state")["projects"]]
+    if not slug:
+        if len(slugs) != 1:
+            raise SystemExit(f"which project? {', '.join(slugs) or 'there are none yet: import a game first'}")
+        slug = slugs[0]
+    elif slug not in slugs:
+        raise SystemExit(f"no project {slug!r}; projects here: {', '.join(slugs) or 'none'}")
+    if args.stop:
+        run = _api("/api/run/stop", {"slug": slug})["run"]
+        print(run["note"] if run else f"no run on {slug}")
+        return 0
+    if args.status:
+        run = _api(f"/api/run?slug={slug}")["run"]
+        print(f"{run['state']}: {runs.progress_line(run)}\n{run['note']}" if run else f"no run on {slug}")
+        return 0
+    body = {"slug": slug, "resume": args.resume, "until": until, "until_budget": budget, "kind": args.agent, "count": args.count, "model": args.model, "endpoints": args.endpoint}
+    run = _api("/api/run", {k: v for k, v in body.items() if v is not None})["run"]
+    if run["note"] and run["state"] == "running":
+        print(run["note"].strip())
+    goal = f"{run['until']}% ({run['target']} of {run['total']} functions)" if run["until"] else f"all {run['total']} functions"
+    print(f"Running {slug} until {goal}" + (f" or ${run['until_budget']:g} spent" if run["until_budget"] else "") + f". {runs.progress_line(run)}")
+    if args.detach or run["state"] != "running":
+        if run["state"] != "running":
+            print(run["note"])
+        return 0
+    last = ""
+    try:
+        while run["state"] == "running":
+            time.sleep(2)
+            run = _api(f"/api/run?slug={slug}")["run"]
+            if (line := runs.progress_line(run)) != last:
+                last = line
+                print(f"  {line}")
+    except KeyboardInterrupt:
+        run = _api("/api/run/stop", {"slug": slug})["run"]
+        print(f"\nstopped. {run['note']}")
+        return 130
+    print(run["note"])
+    return 0 if run["state"] in ("complete", "budget") else 1
+
+
 def connect_agents(args) -> int:
     """Give the AI agents you use Function_2_C_Decompiler's tools: then ask them to decompile your game."""
     from . import agents, connect
@@ -536,6 +590,18 @@ def main(argv: list[str] | None = None) -> int:
     tp = tcsub.add_parser("path", help="print a toolchain's install directory")
     tp.add_argument("id")
     sub.add_parser("stop", help="stop the running app")
+    rn = sub.add_parser("run", help="work on a project until N%% of it is matched (or a budget is spent); --resume carries on a stopped run")
+    rn.add_argument("project", nargs="?", help="the project (default: the only one)")
+    rn.add_argument("--until", metavar="N%", help="stop once this share of the functions open at the start is matched, 1 to 100")
+    rn.add_argument("--until-budget", metavar="USD", help="stop once this run has spent this much (counted from its own start)")
+    rn.add_argument("--resume", action="store_true", help="carry on the last run that stopped, from where it got to (a new run if there is none)")
+    rn.add_argument("--agent", help="claude, codex, antigravity, opencode or api (default: the one you used last)")
+    rn.add_argument("--count", type=int, help="how many agents at once")
+    rn.add_argument("--model", help="the model for the agent")
+    rn.add_argument("--endpoint", action="append", help="with --agent api: a saved endpoint's id; repeat to spread over several")
+    rn.add_argument("--stop", action="store_true", help="end the run now; --resume carries on")
+    rn.add_argument("--status", action="store_true", help="show the last run of the project")
+    rn.add_argument("--detach", action="store_true", help="start the run and return at once")
     bk = sub.add_parser("backup", help="save a snapshot of your project work (safe while the app runs)")
     bk.add_argument("dest", nargs="?", help="a file, or a folder to put a timestamped file in (default: <home>/backups/)")
     bk.add_argument("--force", action="store_true", help="replace the destination if it already exists")
@@ -584,7 +650,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp":
         from .bridge import main as bridge
         return bridge(args.name)
-    handler = {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
+    handler = {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "run": work_cmd, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
                "host": host, "join": join, "service": service_cmd, "url": url_cmd, "update": update_cmd,
                "install-info": install_info}.get(args.cmd, run)
     try:

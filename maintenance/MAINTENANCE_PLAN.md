@@ -77,7 +77,7 @@ Ranked by value for effort. Pick with me before building.
 3. **C++ for MIPS-era platforms** (PS2 especially). The README says functions from scratch there are C only.
 4. **N64 shiftable export** (README: "coming"). Lets mods grow code.
 5. **Better guides:** the 20 files in `app/guide/` are the agents' knowledge base. Keep improving them from real failure notes (`add_note` data).
-6. **Local-first quality of life:** resume after crash, project backup/export of the SQLite DB, a headless `decomp run --until N%` mode for Claude Code. *(Status, 0.10.43: **backup and restore of the project database done** (`decomp backup`, `decomp restore`), and **automatic rolling backups done** (0.10.49: daily, 3 daily / 2 weekly / 1 monthly, checksums, a weekly restore test). Not started: resume after a crash, and the headless `decomp run --until N%` mode; both need a decision on what "resume" and "until" should mean.)*
+6. **Local-first quality of life:** resume after crash, project backup/export of the SQLite DB, a headless `decomp run --until N%` mode for Claude Code. *(Status, 0.10.43: **backup and restore of the project database done** (`decomp backup`, `decomp restore`), and **automatic rolling backups done** (0.10.49: daily, 3 daily / 2 weekly / 1 monthly, checksums, a weekly restore test). **`decomp run --until N%`, `--until-budget` and `--resume` done** (0.10.52, with your definitions); a run with a real agent matching functions is not yet verified.)*
 
 ## Phase 4: Release and operations
 

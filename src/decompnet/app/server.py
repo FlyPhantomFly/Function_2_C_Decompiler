@@ -33,7 +33,7 @@ from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse, Re
 from .. import __version__, hostenv, toolchains
 from ..network import NetworkError
 from ..rom.n64 import RomError
-from . import agents, autobackup, backup, chat, collab, connect, tools, updates
+from . import agents, autobackup, backup, chat, collab, connect, runs, tools, updates
 from .engine import COMPILERS, MW_VERSIONS, PLATFORM_STATUS, SHORT_NAMES, TOOLS, RomNetwork
 
 COOKIE = "decomp_live"
@@ -857,6 +857,76 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
             return {"kind": kind.id}
         return JSONResponse({"job": jobs.start("agent-install", work)})
 
+    def start_helpers(slug: str, kind: str, count: int, given: dict) -> tuple[list[str], list[str], dict]:
+        """Start `count` helper agents of `kind` on a project: what the Start button and `decomp run` both do. Returns the session ids, the endpoints picked and the options."""
+        options = {k: v for k, v in given.items() if k in ("model", "per_session")}
+        options.setdefault("per_session", settings.data.get("per_session", agents.PER_SESSION))
+        count = max(1, min(int(count), 8))
+        picked: list[str] = []
+        net.project_row(slug)
+        if kind == "api":
+            picked = [str(e) for e in (given.get("endpoints") or ([given["endpoint"]] if given.get("endpoint") else []))]
+            plan = _spread(settings, manager, picked, count, given)
+            ids = [sid for entry, n in plan for sid in manager.start(kind, slug, n, options | _session_options(entry))]
+        else:
+            ids = manager.start(kind, slug, count, options)
+        return ids, picked, options
+
+    def working_on(slug: str) -> list:
+        return [s for s in list(manager.sessions.values()) if s.slug == slug and s.state in ("starting", "working", "waiting")]
+
+    def run_launch(slug: str, spec: dict) -> list[str]:
+        kind = str(spec.get("kind") or (settings.data.get("launcher") or {}).get("kind") or "")
+        if not kind:
+            raise ValueError("choose an agent: --agent claude, codex, antigravity, opencode or api")
+        return start_helpers(slug, kind, int(spec.get("count") or 1), spec)[0]
+
+    def run_halt(slug: str) -> None:
+        for s in working_on(slug):
+            manager.stop(s.id)
+
+    def run_explain(slug: str) -> str:
+        """Why the newest session on a project failed: its summary, and the specific error its last failed attempt left in its feed."""
+        mine = [s for s in list(manager.sessions.values()) if s.slug == slug]
+        if not mine:
+            return ""
+        newest = mine[-1]
+        cause = next((f["text"] for f in reversed(newest.feed) if f.get("type") == "error"), "")
+        return "; ".join(dict.fromkeys(p for p in (newest.error, cause) if p))[:400]
+
+    run_ctl = runs.RunController(net, run_launch, run_halt, lambda slug: len(working_on(slug)), explain=run_explain)
+    run_ctl.recover()  # a run left running by an app that died was cut off: mark it, so `decomp run --resume` can carry on
+
+    @mcp.custom_route("/api/run", methods=["GET", "POST"])
+    async def api_run(request: Request) -> Response:
+        """`decomp run`: GET the latest run of a project, POST to start one (or `resume` the last unfinished one)."""
+        if (bad := guard(request, write=request.method == "POST")):
+            return bad
+        try:
+            if request.method == "GET":
+                return JSONResponse({"run": await call(run_ctl.status, request.query_params.get("slug", ""))})
+            data = await body(request)
+            spec = {k: data[k] for k in ("kind", "count", "model", "endpoints", "endpoint", "per_session") if data.get(k) not in (None, "", [])}
+            if not data.get("resume"):  # a request that cannot work is refused before it creates a run (a resume uses the agents the run already had)
+                kind = str(spec.get("kind") or (settings.data.get("launcher") or {}).get("kind") or "")
+                if not kind:
+                    raise ValueError("choose an agent: --agent claude, codex, antigravity, opencode or api")
+                if agents.kind_id(kind) not in agents.KINDS:
+                    raise ValueError(f"unknown agent {kind!r}: choose claude, codex, antigravity, opencode or api")
+            run = await call(run_ctl.start, str(data.get("slug", "")), spec, data.get("until"), data.get("until_budget"), bool(data.get("resume")))
+        except (runs.RunError, NetworkError, ValueError) as e:
+            return fail(e)
+        return JSONResponse({"run": run})
+
+    @mcp.custom_route("/api/run/stop", methods=["POST"])
+    async def api_run_stop(request: Request) -> Response:
+        if (bad := guard(request, write=True)):
+            return bad
+        try:
+            return JSONResponse({"run": await call(run_ctl.stop, str((await body(request)).get("slug", "")))})
+        except (runs.RunError, NetworkError, ValueError) as e:
+            return fail(e)
+
     @mcp.custom_route("/api/agents/start", methods=["POST"])
     async def api_agents_start(request: Request) -> Response:
         if (bad := guard(request, write=True)):
@@ -864,18 +934,9 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
         data = await body(request)
         kind, slug = str(data.get("kind", "")), str(data.get("slug", ""))
         given = data.get("options") or {}
-        options = {k: v for k, v in given.items() if k in ("model", "per_session")}
-        options.setdefault("per_session", settings.data.get("per_session", agents.PER_SESSION))
-        count = max(1, min(int(data.get("count", 1)), 8))
-        picked: list[str] = []
         try:
-            net.project_row(slug)
-            if kind == "api":
-                picked = [str(e) for e in (given.get("endpoints") or ([given["endpoint"]] if given.get("endpoint") else []))]
-                plan = _spread(settings, manager, picked, count, given)
-                ids = [sid for entry, n in plan for sid in manager.start(kind, slug, n, options | _session_options(entry))]
-            else:
-                ids = manager.start(kind, slug, count, options)
+            count = max(1, min(int(data.get("count", 1)), 8))
+            ids, picked, options = start_helpers(slug, kind, count, given)
         except (NetworkError, ValueError) as e:
             return fail(e)
         # remembered, so the next start is one click; models typed in come back as suggestions
@@ -1275,6 +1336,7 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
     prior_stop = manager.on_stop
 
     def stop_everything() -> None:
+        run_ctl.shutdown()  # flush every running run as interrupted, so it can be resumed
         prior_stop()
         auto.stop()
     manager.on_stop = stop_everything
