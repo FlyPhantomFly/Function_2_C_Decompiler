@@ -376,7 +376,38 @@ def shift_audit_cmd(args) -> int:
         print(f"error: {e}", file=sys.stderr)
         return 1
     print(json.dumps(report, indent=1) if args.json else shiftaudit.render(report))
-    return 1 if args.strict and not report["verdict"]["shiftable_as_exported"] else 0
+    return 1 if args.strict and not report["verdict"]["references_ready"] else 0
+
+
+def shift_prep_cmd(args) -> int:
+    """`decomp shift-prep TREE`: make an exported N64 tree's jump tables and function pointers symbolic, without changing what it builds. Previews unless --apply."""
+    from ..rom import shiftaudit, shiftprep
+
+    tree = Path(args.tree).expanduser()
+    if not (tree / "build.json").exists() and (tree / "source" / "build.json").exists():
+        tree = tree / "source"
+    try:
+        plan = shiftprep.prepare(tree, apply=args.apply)
+    except shiftaudit.AuditError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(plan, indent=1))
+        return 0
+    n, m = len(plan["labels"]), len(plan["words"])
+    s = lambda k, w: f"{k} {w}{'' if k == 1 else 's'}"  # noqa: E731
+    if not n and not m:
+        print("Nothing to do: no jump-table entry, `.L` word or function pointer in the data is still a number.")
+    elif plan["applied"]:
+        print(f"Inserted {s(n, 'label')} and rewrote {s(m, 'word')}. Every change is listed in {tree / shiftprep.MANIFEST}.")
+        print("Now run `python3 build.py` in the tree: it must still say `identical`. The layout has not changed.")
+    else:
+        print(f"Would insert {s(n, 'label')} and rewrite {s(m, 'word')} in {tree}. Nothing was changed: run again with --apply to do it.")
+    if plan["left_alone"]:
+        print(f"Left alone ({len(plan['left_alone'])}, not handled yet):")
+        for item in plan["left_alone"][:8]:
+            print(f"  {item['file']}:{item['line']}  {item['value']:#010x}  {item['reason']}")
+    return 0
 
 
 def work_cmd(args) -> int:
@@ -609,7 +640,11 @@ def main(argv: list[str] | None = None) -> int:
     sa = sub.add_parser("shift-audit", help="what in an exported N64 project is pinned to an absolute address, so that growing code would break it (reads only)")
     sa.add_argument("tree", help="the export: a project folder, or its `source` folder (the one with build.json)")
     sa.add_argument("--json", action="store_true", help="print the whole report as JSON")
-    sa.add_argument("--strict", action="store_true", help="exit 1 if anything would break")
+    sa.add_argument("--strict", action="store_true", help="exit 1 if any reference would break (it is about the references, not the layout)")
+    sp = sub.add_parser("shift-prep", help="make an exported N64 project's jump tables and function pointers symbolic, without changing what it builds (previews unless --apply)")
+    sp.add_argument("tree", help="the export: a project folder, or its `source` folder (the one with build.json)")
+    sp.add_argument("--apply", action="store_true", help="make the changes (without it, only say what would change)")
+    sp.add_argument("--json", action="store_true", help="print the plan as JSON")
     rn = sub.add_parser("run", help="work on a project until N%% of it is matched (or a budget is spent); --resume carries on a stopped run")
     rn.add_argument("project", nargs="?", help="the project (default: the only one)")
     rn.add_argument("--until", metavar="N%", help="stop once this share of the functions open at the start is matched, 1 to 100")
@@ -670,7 +705,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp":
         from .bridge import main as bridge
         return bridge(args.name)
-    handler = {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "run": work_cmd, "shift-audit": shift_audit_cmd, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
+    handler = {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "run": work_cmd, "shift-audit": shift_audit_cmd, "shift-prep": shift_prep_cmd, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
                "host": host, "join": join, "service": service_cmd, "url": url_cmd, "update": update_cmd,
                "install-info": install_info}.get(args.cmd, run)
     try:

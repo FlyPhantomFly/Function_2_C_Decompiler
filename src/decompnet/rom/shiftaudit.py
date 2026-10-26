@@ -30,6 +30,7 @@ CALL = re.compile(r"\b(jal|j)\s+(\S+)\s*$")
 WORD = re.compile(r"^\s*\.word\s+(.+?)\s*$")
 NUMBER = re.compile(r"^(0[xX][0-9A-Fa-f]+|\d+)$")
 SYMBOL = re.compile(r"^[A-Za-z_.][\w.]*$")
+PINNED_LABEL = re.compile(r"^\.L[0-9A-Fa-f]{8}$")  # a local label named for its address: the generated linker script defines it as that absolute number
 DLABEL = re.compile(r"^\s*(?:dlabel|glabel)\s+(\S+)")
 KINDS = ("jump-table entry", "function pointer", "data pointer", "bss pointer", "outside the image")
 PLURAL = {"jump-table entry": "jump-table entries", "function pointer": "function pointers", "data pointer": "data pointers", "bss pointer": "bss pointers",
@@ -132,7 +133,7 @@ def audit(tree: Path) -> dict:
                 return "bss pointer", f"{addr:#010x}", None
         return "outside the image", f"{addr:#010x}", None
 
-    data = {"symbolic_words": 0, "absolute_words": 0, "other_expressions": 0, "kinds": {}, "jump_table_entries_without_a_label": 0}
+    data = {"symbolic_words": 0, "pinned_labels": 0, "absolute_words": 0, "other_expressions": 0, "kinds": {}, "jump_table_entries_without_a_label": 0}
     findings = []
     for path, lines in texts.items():
         rel = path.relative_to(tree).as_posix()
@@ -150,7 +151,13 @@ def audit(tree: Path) -> dict:
                     data["kinds"][kind] = data["kinds"].get(kind, 0) + 1
                     if kind == "jump-table entry" and not has_label:
                         data["jump_table_entries_without_a_label"] += 1
-                    findings.append({"file": rel, "line": n, "value": value, "kind": kind, "target": target, "label_at_target": has_label})
+                    findings.append({"file": rel, "line": n, "value": value, "kind": kind, "target": target, "label_at_target": has_label, "text": operand,
+                                     "function": target.split("+")[0] if kind in ("jump-table entry", "function pointer") else None})
+                elif PINNED_LABEL.match(operand):
+                    data["pinned_labels"] += 1
+                    where, target, _ = locate(int(operand[2:], 16))
+                    findings.append({"file": rel, "line": n, "value": int(operand[2:], 16), "kind": "pinned label", "target": operand, "label_at_target": True, "text": operand,
+                                     "function": target.split("+")[0] if where in ("jump-table entry", "function pointer") else None})
                 elif SYMBOL.match(operand):
                     data["symbolic_words"] += 1
                 else:
@@ -167,6 +174,9 @@ def audit(tree: Path) -> dict:
         blockers.append(f"{inside} words in the data are absolute addresses of things inside the program ({detail})")
         if data["jump_table_entries_without_a_label"]:
             blockers.append(f"{data['jump_table_entries_without_a_label']} of the jump-table entries have no label at their target, so one has to be inserted at each")
+    if data["pinned_labels"]:
+        blockers.append(f"{data['pinned_labels']} words in the data name a local label (`.L<address>`), which the generated build defines as an absolute number, so it stays where it was")
+    layout = build.get("layout", "fixed")  # what the generated build.py does with the addresses: "fixed" pins every function to its original one
     last_code_end = max((s["start"] + (s["end"] - s["start"]) for s in code_segments), default=0)
     raw_after = [s["name"] for s in segments.values() if s.get("kind") == "raw" and s.get("start", 0) >= last_code_end]
     not_audited = ["overlays and code loaded later", "compressed segments", "ROM offsets kept in the game itself (DMA and file tables): when code grows, what they point at moves",
@@ -174,7 +184,7 @@ def audit(tree: Path) -> dict:
     if raw_after:
         not_audited.append(f"the raw segment(s) after the code ({', '.join(raw_after)}): their ROM position moves when code grows, and nothing here checks what refers to it")
     return {"tree": str(tree), "platform": "n64", "functions": len(funcs), "unreadable_functions": unreadable, "code": code, "data": data, "findings": findings,
-            "verdict": {"shiftable_as_exported": not blockers, "blockers": blockers, "not_audited": not_audited}}
+            "verdict": {"references_ready": not blockers, "layout": layout, "shiftable_as_exported": not blockers and layout == "shift", "blockers": blockers, "not_audited": not_audited}}
 
 
 def render(report: dict, limit: int = 10) -> str:
@@ -185,20 +195,27 @@ def render(report: dict, limit: int = 10) -> str:
              f"  {c['symbolic_hi']:>5}  address loads use %hi(symbol)", f"  {c['hardcoded_hi']:>5}  address loads use an absolute number            {ok(c['hardcoded_hi'])}",
              f"  {c['symbolic_calls']:>5}  calls (jal) and {c['symbolic_jumps']} jumps (j) use a symbol",
              f"  {c['hardcoded_calls'] + c['hardcoded_jumps']:>5}  calls or jumps use an absolute number              {ok(c['hardcoded_calls'] + c['hardcoded_jumps'])}", "",
-             "Data", f"  {d['symbolic_words']:>5}  words use a symbol or label", f"  {d['absolute_words']:>5}  words are absolute RAM addresses" + (":" if d["absolute_words"] else "")]
+             "Data", f"  {d['symbolic_words']:>5}  words use a symbol", f"  {d['pinned_labels']:>5}  words use a local label (`.L<address>`) that the build pins to its address   {ok(d['pinned_labels'])}",
+             f"  {d['absolute_words']:>5}  words are absolute RAM addresses" + (":" if d["absolute_words"] else "")]
     for kind in KINDS:
         if kind in d["kinds"]:
             extra = f" ({d['jump_table_entries_without_a_label']} with no label at the target)" if kind == "jump-table entry" and d["jump_table_entries_without_a_label"] else ""
             lines.append(f"          {d['kinds'][kind]} {PLURAL[kind]}{extra}")
     if d["other_expressions"]:
         lines.append(f"  {d['other_expressions']:>5}  words are expressions this audit does not classify")
-    shown = [f for f in report["findings"] if f["kind"] != "outside the image"][:limit]
+    shown = [f for f in report["findings"] if f["kind"] != "outside the image"][:limit]  # pinned labels are findings too
     if shown:
         lines += ["", f"First {len(shown)} of {len([f for f in report['findings'] if f['kind'] != 'outside the image'])}:"]
         for f in shown:
             note = "" if f["label_at_target"] in (None, True) else "  (no label there)"
             lines.append(f"  {f['file']}:{f['line']}  {f['value']:#010x}  {f['kind']} -> {f['target']}{note}")
-    lines += ["", "Verdict: " + ("shiftable as exported: every reference this audit can see is a symbol." if v["shiftable_as_exported"] else "NOT shiftable as exported.")]
+    if v["shiftable_as_exported"]:
+        lines += ["", "Verdict: shiftable as exported: every reference this audit can see is a symbol, and the build lets code move."]
+    elif v["references_ready"]:
+        lines += ["", "Verdict: the references are ready for a shiftable layout: every reference this audit can see is a symbol.",
+                  "  But the generated build still pins every function to its original address, so code cannot grow yet (layout: fixed)."]
+    else:
+        lines += ["", "Verdict: NOT shiftable as exported."]
     lines += [f"  - {b}" for b in v["blockers"]]
     lines += ["", "Not audited:"] + [f"  - {n}" for n in v["not_audited"]]
     return "\n".join(lines)

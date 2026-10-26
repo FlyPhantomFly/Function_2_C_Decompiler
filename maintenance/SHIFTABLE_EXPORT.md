@@ -1,6 +1,6 @@
 # The N64 shiftable export: what it needs, what was measured, how it will be verified
 
-Status: **step 1 of 6 done: the audit exists** (`decomp shift-audit`, 0.11.1). Nothing that changes a build is implemented. Everything under "measured" was counted on the exported demo ROM (Demo Quest 64, 96 functions); the audit now reproduces the numbers by itself.
+Status: **steps 1 and 2 of 6 done: the audit and the symbolic references** (`decomp shift-audit` 0.11.1, `decomp shift-prep` 0.11.2). The layout itself is still fixed: code cannot grow yet. Everything under "measured" was counted on the exported demo ROM (Demo Quest 64, 96 functions); the audit now reproduces the numbers by itself.
 
 ## What "shiftable" means here
 
@@ -43,7 +43,7 @@ thing most likely to be wrong in a real game too (switch statements are everywhe
 ## How it will be verified (in this order, each step before the next)
 
 1. **An audit** (read-only): classify every absolute-looking word in data and every absolute number in code as symbolic, jump-table, or a constant, and say which ones a shift would break. **Done (0.11.1): `decomp shift-audit PROJECT`** (`--json`, `--strict`). It also says what it does not look at: overlays, compressed segments, ROM offsets kept in the game, addresses built by arithmetic, the header checksums, and what refers to a raw segment after the code.
-2. **No-change test:** the shiftable build of an *unmodified* tree is byte-identical to the original. This proves the transformation (3 above) changed nothing by itself.
+2. **No-change test:** the transformation of the references (3 above) must change nothing by itself. **Done (0.11.2): `decomp shift-prep`.** On the demo it inserts 39 labels and rewrites 39 jump-table entries, and the tree's own `build.py` still says `identical` (byte for byte), before and after; two functions can then still be matched in C and the whole tree still rebuilds identical. It is explicit (a preview unless `--apply`), writes `shift-prep.json` listing every change, and leaves alone and reports what it does not handle yet: pointers into data or bss. The next no-change test is the same one for the *layout* mode, once it exists.
 3. **Growth test:** insert code at the start of the main segment and rebuild. Check that it links, that the checksums are valid, and that a normalized comparison holds: every function, with its calls, data references and jump-table
    entries mapped through the old-to-new addresses, equals the original. A reference the build failed to relocate shows up as a mismatch.
 4. **Execution test** where possible: run functions in a MIPS emulator (Unicorn) before and after the shift and compare results. Not available in this project's dependencies, so a test that needs it would skip without it.
