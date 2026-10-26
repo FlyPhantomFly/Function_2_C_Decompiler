@@ -13,6 +13,37 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.20] - 2026-10-21
+
+**Test.** Matching-integrity tests for `scoring.py` and the three places a match is decided. They found two defects, which
+are pinned as strict `xfail` tests and fixed in the next two versions. No change to the application. (Plan Phase 2.)
+
+- `maintenance/tests/test_maint_scoring.py` (57 tests): a score of 0 happens **exactly** when the functions are the same,
+  checked on 600 seeded random pairs against an oracle that does not use the hash; every kind of near miss costs exactly its
+  documented penalty (1, 5, 10, 60, 100, 100) and keeps its order; the same instruction text in two encodings scores 1;
+  relocation normalization is exact (**all 17 entries of the mask table, 2,176 single-bit flips: bits in a masked field are
+  ignored, every other bit changes the fingerprint**); relocations cannot be traded for different ones (symbol, type, addend,
+  position, missing, extra) or hide a neighbouring register or opcode bit (MIPS `lui`/`jal`, PPC `bl`); percentages never read
+  100% before a match. On **real gcc output** (the demo's 13 functions): they match themselves, `-O0` never matches `-O2`, and
+  **none of 1,212 bit flips in bytes outside relocations produced a match**, while changing the bytes a relocation fills in
+  still matches. Needs `gcc`; the rest runs anywhere.
+- `maintenance/tests/test_maint_match_integrity.py` (6 tests): for `scoring.diff`, the hash-only comparison and the header
+  re-check in `network.py`, a control (a real solution is still credited) beside a forgery.
+- **Defect 1, found (strict xfail, fixed in 0.10.21).** `FunctionObj.fingerprint()` hashes the masked code and the
+  relocation list as one stream with no length or separator, so a longer function with no relocations whose bytes are the
+  target's masked code followed by the text of its relocations has the same fingerprint. Demonstrated through the real
+  code: `compile_and_diff` replied `MATCH! rng_next is byte-identical to the target`, the hash-only path credited it, and the
+  header re-check reported nothing broken. Severity: low in practice, because C source compiled by the real toolchain cannot
+  produce such bytes (the tests substitute the compiler's output); it is still a hole in the one invariant that matters.
+- **Defect 2, found (strict xfail, fixed in 0.10.22).** On x86/x86-64, a relocation that falls inside bytes capstone cannot
+  decode (e.g. a 2-byte truncated instruction `86 0d` with a relocation at offset 1) makes `scoring.disassemble` raise
+  `CsError`, so `diff(f, f)` itself fails and the function can never be scored. It fails closed (no false match). MIPS, PPC,
+  ARM and Thumb are not affected (tested). It matters where x86 code embeds data with relocations (jump tables in `.text`).
+- Checked and fine: `percent_text` right up to the edge of 100; the mask table; the penalties.
+- Not covered: the ROM-link verdict in `app/engine.py` (it compares real bytes in the linked ROM, so it does not use the
+  fingerprint), the `twins` fingerprint (grouping only), and `forks/` judging (objdiff).
+- Nothing for users to do.
+
 ## [0.10.19] - 2026-10-21
 
 **Docs.** Status, the final measurements, and the patch set. No change to the application.
