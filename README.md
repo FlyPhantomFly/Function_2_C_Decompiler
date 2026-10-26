@@ -7,9 +7,6 @@ Python package is still `decompnet` and the command is still `decomp`, and the o
 It is not affiliated with upstream, and its installers and updater fetch nothing from upstream's website
 or repository. What was changed, and why, is in [`maintenance/CHANGELOG.md`](maintenance/CHANGELOG.md).
 
-The notice below is upstream's author's, kept as he wrote it. What it asks of users still applies here: only use this on
-games you own, don't share the game code it produces, and respect the rules of the projects you work with.
-
 ---
 
 <p align="center">
