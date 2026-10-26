@@ -13,6 +13,26 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.53] - 2026-10-23
+
+**Docs, Tooling.** Status, the final measurements for 0.10.51 and 0.10.52, and the patch set; and the analysis for the N64 shiftable export, which **corrects something I said while starting it**. No change to the application.
+
+- **Run N** in `maintenance/baseline/`: the maintained code at 0.10.52, with the browser (`CHROME`) and the real-wheel test (`BUILD_WHEEL=1`) enabled: **777 passed, 0 failed, 52 skipped (829 items)** with every free tool and `bwrap`. Test by
+  test, nothing that passed in upstream's run C or in run M fails; against M, 77 items are new (all pass) and none is gone. The bare-machine CI commands, without those switches and including the wheel build and check: 674 passed, 155 skipped,
+  0 failed; `actionlint` on both workflows: clean.
+- **The shiftable export: analysis only, nothing implemented** (`maintenance/SHIFTABLE_EXPORT.md`). **Correction:** partway through I told you the export "does not pin functions to addresses". That was wrong. I had read splat's own linker script, which flows,
+  but the build uses the one `build.py` writes: `. = 0x<offset>; <object>(.text)` for every function, data symbols and jump-table labels defined as absolute numbers, and segment-end symbols as constants. The layout is fixed on purpose.
+- **Measured on the demo export** (96 functions): in the code, 138 `%hi(symbol)` loads and 147 symbolic `jal`s and **no** absolute number in a `lui`, `jal` or `j`; so the code is already relocatable. In the data, **40 words are absolute RAM addresses, and 39 of them are
+  jump-table entries** (addresses inside functions written as raw numbers). Those are what break first when code grows: a `switch` would jump to the wrong place. (My first count said "0 point into a function": the function spans were empty, because `build.json`
+  has no size field. I recomputed before writing anything down; the second count is the one in the note.)
+- **The header checksum algorithm is validated against a real value:** with the standard routine and the CIC 6102 seed, the demo ROM's stored checksums (`6c8d30eb 81ee9bcf`) are reproduced exactly. A shifted ROM needs them recomputed. Not yet written into the product, and other boot chips are not verified.
+- The note lays out what a shiftable layout needs, a verification order (an audit; a no-change build that must stay byte-identical; a growth test with a normalized comparison; an emulator check where one is available), and what is **out of scope for a first version**: overlays,
+  compressed segments, ROM-offset and DMA tables, code that builds addresses arithmetically. **A first version could honestly grow the main program's code in a demo-class ROM; it must not be described as working on Super Mario 64, GoldenEye or Perfect Dark**, which have all of those.
+- `check_wheel.py` now also requires `decompnet/app/runs.py`: the server imports it at start-up, so a wheel without it would install and then crash.
+- `MAINTENANCE_PLAN.md`: status as of this version. Done from your answers: the provider-aware budget, the banner, automatic backups, `decomp run` with `--until`, `--until-budget` and `--resume`. In progress: the shiftable export (analysis). Still yours: the first release's name, signing, re-recording `demo.webp`.
+- `maintenance/patches/`: regenerated, 47 patches (0.10.7 to 0.10.53).
+- Nothing for users to do.
+
 ## [0.10.52] - 2026-10-23
 
 **Feature.** `decomp run`: work on a project until N% of it is matched, stop gracefully, and resume later without redoing or re-paying for anything (owner's definitions). Schema version 3.
