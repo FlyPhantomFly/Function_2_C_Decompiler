@@ -13,6 +13,30 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.39] - 2026-10-22
+
+**Fix.** The project budget can now stop the built-in API agent, and does so in the middle of a session. (Plan Phase 3, item 1, second half:
+"cost caps per project".) Touches `app/agents.py` and one line of text in the Settings screen.
+
+- The problem: the budget is in US dollars and was fed only by agents that report dollars (Claude Code and the like). The API agent recorded
+  `{"tokens": ...}` and nothing else, so its spend stayed at **$0 and the cap could never fire for exactly the agents that bill per token**. And the
+  cap was only looked at between sessions, so one session of up to 120 steps could spend past it.
+- Now: **the cost a provider reports is recorded in dollars** (OpenRouter puts `cost` in every response's `usage`; that is the common case that needs no
+  configuration), and **the budget is checked before every request**: when it is spent the session ends with "the project's budget is spent" in the agent's
+  feed, and the run loop then stops the agent with its existing message. A session can overshoot by at most the one request in flight.
+- The cost is never trusted blindly: only a real, positive, finite number counts. A string, `null`, a negative, NaN or infinity, a list, and **a JSON
+  boolean** are ignored (Python's `float(True)` is 1.0, so a naive parse would book a dollar for a provider that sent `"cost": true`).
+- **What this does not do, and the Settings label now says so:** a provider that reports no cost (OpenAI's own API, DeepSeek) is unchanged: tokens are
+  recorded and the dollar budget does not apply to it. Making it apply needs prices entered per agent (two numbers on the agent form, carried through the save
+  endpoint and the session options), which is a feature to decide on, not to slip in; it is left open in the plan.
+- Tests: 19 in `maintenance/tests/test_maint_api_agent_budget.py`. **5 fail against the previous code** (measured): cost recorded, cost recorded without a
+  token count, the budget ending a session mid-way (3 requests at 2 cents against a 5-cent budget), the same with no budget running to its end, and a
+  budget already spent stopping before the first request. The other 14 pin what must not change (tokens-only providers; bad costs ignored; no budget means no
+  limit; a dollar budget does not stop a provider that reports no cost). **Against a real socket:** a provider reporting 2 cents a request and a 5-cent budget
+  sent 3 requests, recorded $0.06 and 3,000 tokens, and ended the session with the message.
+- Verified here: the budget, retry, agent, server, bridge, naming, links and release-hygiene tests (120 passed, 1 skipped); lint clean; `app.js` parses. The whole suite runs at the next version.
+- Nothing for users to do. Set the budget in Settings as before.
+
 ## [0.10.38] - 2026-10-22
 
 **Fix.** The built-in API agent retries a request in place, so a blip between the app and the model's server no longer costs it the

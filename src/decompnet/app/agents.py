@@ -15,6 +15,7 @@ from __future__ import annotations
 import collections
 import json
 import logging
+import math
 import os
 import re
 import shutil
@@ -948,6 +949,9 @@ class Manager:
             for _step in range(int(s.options.get("max_steps", 120))):
                 if s.stop.is_set():
                     return True
+                if self.over_budget(s.slug) is not None:  # a session can spend a great deal before it ends: look before every request
+                    s.push("info", "the project's budget is spent: ending this session")
+                    return used_tool
                 for _attempt in range(4):
                     fit(messages, budget)
                     r = post_with_retries(client, f"{base}/chat/completions", headers=headers, stop=s.stop,
@@ -972,8 +976,8 @@ class Manager:
                 reply = r.json()
                 msg = reply["choices"][0]["message"]
                 usage = reply.get("usage") if isinstance(reply.get("usage"), dict) else {}
-                if usage.get("total_tokens"):
-                    self._account(s, {"tokens": usage["total_tokens"]})
+                if usage.get("total_tokens") or _reported_cost(usage):
+                    self._account(s, {"tokens": usage.get("total_tokens") or 0, "usd": _reported_cost(usage)})
                 if msg.get("reasoning_content"):
                     s.push("think", msg["reasoning_content"][:2000])
                 if msg.get("content"):
@@ -995,6 +999,15 @@ class Manager:
                 if len(messages) > 80:  # keep the conversation small: summarize by restarting fresh
                     return True
         return used_tool
+
+
+def _reported_cost(usage: dict) -> float:
+    """The dollars a provider says a request cost (OpenRouter puts `cost` in `usage`), else 0. Only a real, positive, finite number counts:
+    JSON `true` is a boolean (float(True) is 1.0, a dollar nobody spent), and a string, NaN or a negative figure is not to be believed."""
+    cost = usage.get("cost")
+    if isinstance(cost, bool) or not isinstance(cost, (int, float)):
+        return 0.0
+    return float(cost) if math.isfinite(cost) and cost > 0 else 0.0
 
 
 RETRY_STATUS = frozenset({429, 500, 502, 503, 504})  # a busy or briefly broken server; 4xx other than 429 are the request's own fault
