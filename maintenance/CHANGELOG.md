@@ -13,6 +13,25 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.11.1] - 2026-10-23
+
+**Feature.** `decomp shift-audit`: the first step of the N64 shiftable export. It reads an exported project and reports what is pinned to an absolute address, so that growing code would break it. It reads only and changes nothing.
+New `rom/shiftaudit.py`, one subcommand, and 13 tests. (This version comes after the ROMday release commit: tag `v0.11.0` on the commit titled "0.11.0 ROMday: the first release", not on this one.)
+
+- **What it reports.** In the code: address loads that are `%hi(symbol)` (the linker can move them) against `lui` with a number that looks like a RAM address (it cannot); calls and jumps to a symbol against to a number. In the data: words that are a symbol or label against
+  words that are an absolute RAM address, each classified by what it points at (the middle of a function: a jump-table entry; the start of a function; data, named relative to the nearest data label; bss; or nothing in the program, a constant left alone). For a
+  jump-table entry it says whether the function's assembly **already has a label at the target**. It ends with a verdict, the blockers, and what it does not look at. `--json` for the whole report, `--strict` to exit 1 if anything would break.
+- **On the real demo export it reproduces the hand count and sharpens it:** 138 `%hi` loads, 147 calls and 211 jumps to symbols, no absolute number in the code; 26 words that are symbols; 40 absolute words, of which 39 are jump-table entries and 1 is a constant outside the program.
+  **38 of the 39 entries have no label at their target.** My earlier note said "none of them" until the tool disagreed: one target (`0x80003A24`, in `func_8000321C`) is also a branch target and so already has a label. That 38 is the number the next step will be sized by:
+  the disassembler never emitted labels for jump-table targets, so the shiftable build has to insert one at each.
+- **What it is careful not to flag:** `lui $at, 0x3F80` is the float 1.0 and `0xA430` a hardware register, so only a top half of `0x8000` to `0x807F` counts as an address; numbers inside `/* ... */` listing comments are ignored (they would otherwise be read as code); small data constants are not addresses. A word it cannot classify (an expression such as
+  `0x80000484 + 4`) is counted and said so, not guessed at.
+- Tests: 13 in `test_maint_shift_audit.py`: synthetic trees with every number worked out by hand beforehand; the odd-assembly case; refusals (a folder that is not an export, a platform other than N64); the report's wording; the command, `--json` and `--strict`; and, where the compilers exist, the real demo export. Seven breakages (floats counted as addresses, comments read as code, a constant counted as a blocker,
+  a wrong function boundary, labels always assumed present, a numeric `jal` counted as symbolic, the raw segment after the code not mentioned) each turn a test red. While writing them I found and fixed my own fixture (one function's listing ran past the address where the next begins) and two vacuous assertions (`... or True`).
+- **Not done:** everything after step 1 of `maintenance/SHIFTABLE_EXPORT.md`: the layout mode, inserting the labels, the checksum fix (the algorithm is checked against the demo ROM's header but is not in the product), and the growth test. It supports N64 trees only.
+- Verified: the whole suite with every free tool, the browser and the real-wheel test enabled: **795 passed, 0 failed, 52 skipped (847 items)**; test by test, nothing that passed in upstream's run C or in run O fails, and the 13 new tests pass. The bare-machine CI commands: 690 passed, 157 skipped, 0 failed, and the wheel builds and checks clean (125 files); `actionlint` on both workflows is clean.
+- Nothing for users to do.
+
 ## [0.11.0] - 2026-10-23 - ROMday
 
 **ROMday is the first release of Function_2_C_Decompiler**, a maintained fork of [decomp.wtf](https://github.com/i12bp8/decomp.wtf) (MIT, by sam wolfs; the original was discontinued at 0.10.6), maintained by PhantomThreads.

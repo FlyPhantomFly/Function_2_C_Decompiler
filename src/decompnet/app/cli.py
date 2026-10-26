@@ -363,6 +363,22 @@ def restore_cmd(args) -> int:
     return 0
 
 
+def shift_audit_cmd(args) -> int:
+    """`decomp shift-audit TREE`: what in an exported N64 tree is pinned to an absolute address, so that growing code would break it. Reads only; changes nothing."""
+    from ..rom import shiftaudit
+
+    tree = Path(args.tree).expanduser()
+    if not (tree / "build.json").exists() and (tree / "source" / "build.json").exists():
+        tree = tree / "source"  # the project folder: its export is in `source`
+    try:
+        report = shiftaudit.audit(tree)
+    except shiftaudit.AuditError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+    print(json.dumps(report, indent=1) if args.json else shiftaudit.render(report))
+    return 1 if args.strict and not report["verdict"]["shiftable_as_exported"] else 0
+
+
 def work_cmd(args) -> int:
     """`decomp run`: work on a project until N% of it is matched (or a budget is spent), or carry on a run that stopped. The run lives in the app, so closing this terminal does not end it."""
     from . import runs
@@ -590,6 +606,10 @@ def main(argv: list[str] | None = None) -> int:
     tp = tcsub.add_parser("path", help="print a toolchain's install directory")
     tp.add_argument("id")
     sub.add_parser("stop", help="stop the running app")
+    sa = sub.add_parser("shift-audit", help="what in an exported N64 project is pinned to an absolute address, so that growing code would break it (reads only)")
+    sa.add_argument("tree", help="the export: a project folder, or its `source` folder (the one with build.json)")
+    sa.add_argument("--json", action="store_true", help="print the whole report as JSON")
+    sa.add_argument("--strict", action="store_true", help="exit 1 if anything would break")
     rn = sub.add_parser("run", help="work on a project until N%% of it is matched (or a budget is spent); --resume carries on a stopped run")
     rn.add_argument("project", nargs="?", help="the project (default: the only one)")
     rn.add_argument("--until", metavar="N%", help="stop once this share of the functions open at the start is matched, 1 to 100")
@@ -650,7 +670,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp":
         from .bridge import main as bridge
         return bridge(args.name)
-    handler = {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "run": work_cmd, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
+    handler = {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "run": work_cmd, "shift-audit": shift_audit_cmd, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
                "host": host, "join": join, "service": service_cmd, "url": url_cmd, "update": update_cmd,
                "install-info": install_info}.get(args.cmd, run)
     try:

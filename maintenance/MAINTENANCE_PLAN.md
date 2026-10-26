@@ -4,7 +4,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.11.0
+## Status as of 0.11.1
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
@@ -75,7 +75,7 @@ Ranked by value for effort. Pick with me before building.
 1. **Provider/agent robustness:** retries and backoff in the built-in API agent, cost caps per project (there is an `add_spend` hook), and a model-agnostic eval harness: run N fixed functions from the demo ROM per model and track match rate and cost. This also tells you whether prompt changes help. *(Status, 0.10.39: **retries done** (0.10.38: a blip no longer costs the conversation); **cost cap done for providers that report a cost** (0.10.39: OpenRouter does, OpenAI and DeepSeek do not; **per-agent prices, so the budget applies to OpenAI and DeepSeek, are done** (0.10.47: prices per endpoint, a spend log tagged by provider, agent and model, one global cap, subtotals in the app); **the eval harness is done and verified end to end with a scripted model (0.10.41, ARCHITECTURE section 13); it has not yet been run against a real provider, which needs your key.**)*
 2. **Platforms listed "coming":** PSP, 3DS, Switch (AArch64/Clang), PC/MSVC (x86), Xbox 360. Guides for `x86`, `aarch64` and `arm` already exist, and Ghidra drafts cover x86/AArch64. The missing parts are splitting, a pinned compiler and a judge for each. Start with whichever you actually reverse.
 3. **C++ for MIPS-era platforms** (PS2 especially). The README says functions from scratch there are C only.
-4. **N64 shiftable export** (README: "coming"). Lets mods grow code. *(Status, 0.10.53: **analysis done, nothing implemented**: `maintenance/SHIFTABLE_EXPORT.md` has what pins the layout, what was measured on the demo, what a shiftable layout needs and how each step will be verified. A first step that would be honest to ship: the main program's code growing in a demo-class ROM, with an audit and checksum fixing; real games (overlays, compression, offset tables) are out of its scope.)*
+4. **N64 shiftable export** (README: "coming"). Lets mods grow code. *(Status, 0.11.1: **step 1 of 6 done: `decomp shift-audit` reproduces the analysis as a tool**; the layout mode, the jump-table fix, the checksum fix and the growth test are not built. Earlier status, 0.10.53: **analysis done**: `maintenance/SHIFTABLE_EXPORT.md` has what pins the layout, what was measured on the demo, what a shiftable layout needs and how each step will be verified. A first step that would be honest to ship: the main program's code growing in a demo-class ROM, with an audit and checksum fixing; real games (overlays, compression, offset tables) are out of its scope.)*
 5. **Better guides:** the 20 files in `app/guide/` are the agents' knowledge base. Keep improving them from real failure notes (`add_note` data).
 6. **Local-first quality of life:** resume after crash, project backup/export of the SQLite DB, a headless `decomp run --until N%` mode for Claude Code. *(Status, 0.10.43: **backup and restore of the project database done** (`decomp backup`, `decomp restore`), and **automatic rolling backups done** (0.10.49: daily, 3 daily / 2 weekly / 1 monthly, checksums, a weekly restore test). **`decomp run --until N%`, `--until-budget` and `--resume` done** (0.10.52, with your definitions); a run with a real agent matching functions is not yet verified.)*
 

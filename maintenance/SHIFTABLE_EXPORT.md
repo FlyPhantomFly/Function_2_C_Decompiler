@@ -1,6 +1,6 @@
 # The N64 shiftable export: what it needs, what was measured, how it will be verified
 
-Status: **analysis only, nothing implemented.** (0.10.53.) Everything under "measured" was counted on the exported demo ROM (Demo Quest 64, 96 functions) with the code at that version.
+Status: **step 1 of 6 done: the audit exists** (`decomp shift-audit`, 0.11.1). Nothing that changes a build is implemented. Everything under "measured" was counted on the exported demo ROM (Demo Quest 64, 96 functions); the audit now reproduces the numbers by itself.
 
 ## What "shiftable" means here
 
@@ -23,7 +23,7 @@ code grow: later code, and the data after it, move, and everything that refers t
 | Calls that are symbolic (`jal symbol`) | 147 |
 | Code references that are absolute numbers (`lui` with a number, `jal`/`j` to a number) | **0** |
 | Words in data that are symbols/labels | 26 |
-| Words in data that are absolute RAM addresses | **40** (39 are jump-table entries: addresses *inside* functions, written as numbers; 1 is a constant that is not an address) |
+| Words in data that are absolute RAM addresses | **40** (39 are jump-table entries: addresses *inside* functions, written as numbers; 1 is a constant that is not an address). **38 of the 39 have no label at their target**: the disassembler never emitted one. The 39th (`0x80003A24`, in `func_8000321C`) happens to be a branch target too, so it already has one |
 | Named symbols pinned as absolute numbers | 1 |
 | Segments | `header`, `ipl3` (raw), `entry` and `main` (code), one more raw block |
 
@@ -34,7 +34,7 @@ thing most likely to be wrong in a real game too (switch statements are everywhe
 
 1. A second layout mode in the generated `build.py`: functions placed one after another in their original order (no `. = offset`), data after the code as before, segment start addresses kept and later ones flowing from the previous end.
 2. Data symbols defined by where their data object lands, not as absolute numbers.
-3. **Jump-table entries turned into symbolic references** to labels inside the function objects, which need stable global names.
+3. **Jump-table entries turned into symbolic references** to labels inside the function objects, which need stable global names. Since 38 of the demo's 39 targets have no label, this step must **insert** a label at each target in the function's assembly (an instruction boundary the table already points at), and then export it.
 4. The segment-end symbols computed by the linker.
 5. **The ROM header checksums recomputed** after the link (any change to the first megabyte invalidates them, and real hardware and some emulators check them). The algorithm is already written and checked: with the standard routine and the CIC 6102 seed,
    the demo ROM's stored header checksums (`6c8d30eb 81ee9bcf`) are reproduced exactly. Other boot chips use other seeds; they are not verified here.
@@ -42,7 +42,7 @@ thing most likely to be wrong in a real game too (switch statements are everywhe
 
 ## How it will be verified (in this order, each step before the next)
 
-1. **An audit** (read-only): classify every absolute-looking word in data and every absolute number in code as symbolic, jump-table, or a constant, and say which ones a shift would break. It is the measurement above, as a tool.
+1. **An audit** (read-only): classify every absolute-looking word in data and every absolute number in code as symbolic, jump-table, or a constant, and say which ones a shift would break. **Done (0.11.1): `decomp shift-audit PROJECT`** (`--json`, `--strict`). It also says what it does not look at: overlays, compressed segments, ROM offsets kept in the game, addresses built by arithmetic, the header checksums, and what refers to a raw segment after the code.
 2. **No-change test:** the shiftable build of an *unmodified* tree is byte-identical to the original. This proves the transformation (3 above) changed nothing by itself.
 3. **Growth test:** insert code at the start of the main segment and rebuild. Check that it links, that the checksums are valid, and that a normalized comparison holds: every function, with its calls, data references and jump-table
    entries mapped through the old-to-new addresses, equals the original. A reference the build failed to relocate shows up as a mismatch.
