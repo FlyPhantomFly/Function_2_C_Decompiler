@@ -584,9 +584,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp":
         from .bridge import main as bridge
         return bridge(args.name)
-    return {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
-            "host": host, "join": join, "service": service_cmd, "url": url_cmd, "update": update_cmd,
-            "install-info": install_info}.get(args.cmd, run)(args)
+    handler = {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "backup": backup_cmd, "restore": restore_cmd, "shortcut": shortcut, "connect": connect_agents, "share": share,
+               "host": host, "join": join, "service": service_cmd, "url": url_cmd, "update": update_cmd,
+               "install-info": install_info}.get(args.cmd, run)
+    try:
+        code = handler(args)
+        if sys.stdout is not None:
+            sys.stdout.flush()  # piped output is buffered: the write that fails would otherwise happen as the interpreter exits, out of reach
+        return code
+    except BrokenPipeError:  # `decomp backup --status | head`: the reader went away on purpose. Not an error, and no traceback.
+        if sys.stdout is sys.__stdout__:  # the real standard output of this process (not a capture or a stream someone else gave us)
+            try:  # point it at nowhere so that flushing it when the interpreter exits cannot raise the same error again
+                os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+            except (OSError, ValueError):
+                pass
+        return 0
 
 
 if __name__ == "__main__":

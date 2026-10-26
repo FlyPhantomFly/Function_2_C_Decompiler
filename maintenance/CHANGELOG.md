@@ -13,6 +13,20 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.51] - 2026-10-23
+
+**Fix.** A reader that goes away is not an error: `decomp backup --status | head` no longer prints a traceback. Found in the cold-start check of the 0.10.50 zip.
+
+- The problem: Python raises `BrokenPipeError` when it writes to a pipe whose reader has exited, and no `decomp` command handled it, so a person who piped any of them into `head`, `less` or `grep -m1` saw a traceback for
+  something they did on purpose. `main()` now treats it as the end of the conversation: exit 0, nothing on stderr. Only that one exception is caught (a test shows a real error still propagates).
+- **Two wrong turns, both caught by the tests and by looking at their output:** (1) my first version redirected file descriptor 1 to `/dev/null`, the documented recipe for a real process, but when `main()` is called
+  from inside pytest that descriptor is *pytest's own capture file*, and pytest then failed to read its own output (`OSError: Bad file descriptor`). A command must not hijack the stdout of whatever called it, so it now
+  redirects only when stdout is the process's real one. (2) Even then the real-pipe test still failed, because piped output is buffered and the failing write happens in the flush **as the interpreter exits, after the
+  handler has returned**; I had guessed it was a re-wrapped stream. The output is now flushed inside the handler, where the error can be caught.
+- Tests: 3 in `test_maint_cli_pipe.py` (2 failed before; the third guards that other errors still propagate): a command whose reader vanished ends quietly, and **a real pipe to a reader that has already exited** shows no
+  traceback. By hand, `head -1`, `true` and `head -c 3` each leave stderr empty.
+- Nothing for users to do.
+
 ## [0.10.50] - 2026-10-23
 
 **Docs, Tooling.** Status, the final measurements for 0.10.47 to 0.10.49, and the patch set. One small change to a tool, none to the application.
