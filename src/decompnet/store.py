@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import sqlite3
 import threading
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from pathlib import Path
 
 SCHEMA = """
@@ -65,10 +65,67 @@ MIGRATIONS = [
 ]
 
 
+# The database format, kept in `PRAGMA user_version`:
+#   0  never stamped: a database from upstream decomp.wtf (which never versioned it) or from this fork before 0.10.31
+#   1  upstream 0.10.6's tables plus every column in MIGRATIONS above
+# An older database is migrated in place, after a copy of it is kept beside it (`<file>.bak-v<old version>`). A newer one is
+# refused untouched: running this code on a format it does not know could corrupt the user's work. To change the schema, add
+# a column to MIGRATIONS (additive, so it can be repeated) or write a numbered step, raise SCHEMA_VERSION, and add a test that
+# opens a database from the version before (see maintenance/tests/test_maint_schema.py).
+SCHEMA_VERSION = 1
+
+
+class StoreError(RuntimeError):
+    """The database cannot be opened by this version (for example, a newer one wrote it). Its message is meant to be shown."""
+
+
+def _copy_database(source: sqlite3.Connection, destination: Path) -> None:
+    with closing(sqlite3.connect(str(destination))) as out:
+        source.backup(out)  # a consistent snapshot, even if the database is in the middle of being written
+
+
+def _backup(conn: sqlite3.Connection, path: Path, version: int) -> Path | None:
+    """Keep the database as it was before its first migration. Never overwrites an earlier backup; written under a temporary
+    name and renamed, so a copy that dies midway never looks like a complete one."""
+    dest = path.with_name(f"{path.name}.bak-v{version}")
+    if dest.exists():
+        return None
+    part = dest.with_name(dest.name + ".part")
+    try:
+        _copy_database(conn, part)
+        part.replace(dest)
+    except BaseException:
+        part.unlink(missing_ok=True)
+        raise
+    return dest
+
+
 class Store:
     def __init__(self, path: str | Path):
-        self.conn = sqlite3.connect(str(path), check_same_thread=False, isolation_level=None)
+        location = str(path)
+        self.conn = sqlite3.connect(location, check_same_thread=False, isolation_level=None)
         self.conn.row_factory = sqlite3.Row
+        try:
+            version = self.conn.execute("PRAGMA user_version").fetchone()[0]
+            if version > SCHEMA_VERSION:  # before anything else touches the file (switching to WAL rewrites its header)
+                raise StoreError(f"{location} was written by a newer decomp.wtf: its database format is version {version}, and this "
+                                 f"one understands up to {SCHEMA_VERSION}. Update decomp.wtf, or use a different database. "
+                                 "The file has not been touched.")
+            if version < SCHEMA_VERSION and location != ":memory:" and self._has_tables():
+                _backup(self.conn, Path(location), version)
+            self._migrate()
+            if version != SCHEMA_VERSION:
+                self.conn.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
+        except BaseException:
+            self.conn.close()
+            raise
+        self.lock = threading.RLock()
+
+    def _has_tables(self) -> bool:
+        return self.conn.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table'").fetchone()[0] > 0
+
+    def _migrate(self) -> None:
+        """Bring the tables and the data up to date. Every step can be repeated, so a migration cut short finishes on the next open."""
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA foreign_keys=ON")
         self.conn.executescript(SCHEMA)
@@ -103,7 +160,6 @@ class Store:
                 DROP TABLE gave_up;
                 INSERT INTO settings(key, value) VALUES('abandons_recounted', '1');
                 COMMIT;""")
-        self.lock = threading.RLock()
 
     @contextmanager
     def tx(self):

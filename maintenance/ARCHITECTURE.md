@@ -79,7 +79,7 @@ src/decompnet/
 
 ## 7. Persistence, multi-user, platforms
 
-- **State:** SQLite via `store.py` (WAL, migrations inline) in `~/Decomp` (`$DECOMP_HOME`). Logs in `.decomp/logs/decomp.log`.
+- **State:** SQLite via `store.py` (WAL; additive migrations inline, the format version in `PRAGMA user_version`, a backup kept before the first migration, a newer database refused) in `~/Decomp` (`$DECOMP_HOME`). Logs in `.decomp/logs/decomp.log`.
 - **Team rooms:** `app/collab.py` and `forkroom.py`. One host hands out functions, verifies every match against its own copy, and shares only names, structs and notes. No ROM bytes or assembly cross the wire. Exposure is via a Cloudflare quick tunnel (`cloudflared` is a pinned toolchain) or your own address.
 - **Platforms:** GameCube/Wii and N64 are "recommended". PS1, PS2, GBA and DS are beta. Windows runs inside its own WSL2 distro. macOS is unsupported.
 - **Toolchains:** 25 registry entries (`toolchains.toml`) with sha256 pins on every download part. Proprietary ones (IDO 5.3/7.1, mwcc, mwccarm) are installed only after explicit license acceptance. Old 32-bit compilers run on a pinned i386 glibc runtime inside the sandbox.
@@ -153,6 +153,10 @@ Verified by running the code (0.10.7 baseline, see `baseline/README.md`):
 14. **A relocation inside undecodable x86 bytes crashed scoring** (fixed in 0.10.22). `scoring.disassemble` reads
     `ins.disp_size` on capstone's SKIPDATA pseudo-instructions, which raises, so `diff(f, f)` itself fails. Fails closed; x86 and
     x86-64 only.
+15. **The database format was never versioned** (fixed in 0.10.31). Upstream wrote `PRAGMA user_version` = 0 into every database and migrated
+    by adding columns in place, so code could not tell a database from the future from one it knew, and the first migration of an old
+    database changed real work with no copy kept. Now: `SCHEMA_VERSION = 1`; a newer database is refused untouched; an older one is
+    copied to `<file>.bak-v0` first. Opening an old database stays reversible: upstream's 0.10.6 opens a stamped one fine (verified).
 
 Still open (needs your machine or a later change):
 

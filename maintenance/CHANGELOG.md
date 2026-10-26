@@ -13,6 +13,43 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.31] - 2026-10-21
+
+**Fix, Test.** The database format is versioned, an old database is backed up before its first migration, and a database from a
+newer version is refused untouched. (Plan Phase 2: schema migrations.) Touches `src/decompnet/store.py` and one `try` in
+`src/decompnet/app/cli.py`; the migration steps themselves are unchanged and only moved into `Store._migrate`.
+
+- The problem: upstream wrote `PRAGMA user_version` = 0 into every database and migrated by adding columns in place. Code therefore
+  could not tell a database written by a newer version from one it knew, and **opened it anyway and rewrote its file**
+  (shown by hand with the previous `store.py`: a version-99 database opened without complaint and the file changed). And the first
+  migration of an old database runs `UPDATE` and `DELETE` statements on real work with no copy kept.
+- Now: `SCHEMA_VERSION = 1` (0 = never stamped: upstream, or this fork before this version). **A newer database is refused before
+  anything touches the file** (switching to WAL rewrites the header, so the check comes first) with "was written by a newer
+  decomp.wtf: its database format is version N, and this one understands up to 1. Update decomp.wtf, or use a different database.
+  The file has not been touched." The file is byte for byte unchanged, with no `-wal`, `-shm` or backup beside it. `decomp` shows that
+  as one `error:` line and exits 1, not a traceback.
+- **An older database is copied first**, to `<file>.bak-v<its version>` (so `decomp.db.bak-v0`) in the same folder, using SQLite's
+  backup API (a consistent snapshot even mid-write), written under a temporary name and renamed so a copy that dies midway never
+  looks complete. An existing backup is never overwritten. A new or empty database gets none. The copy holds exactly the same rows
+  (not the same bytes: the backup API rewrites pages); restoring it is renaming it back, and it opens. **It is as large as the
+  database, once; delete it when you are satisfied.**
+- Migrations are unchanged and still repeatable, so one cut short finishes on the next open (tested).
+- Fixture: `maintenance/tests/fixtures/db-0.10.6.sqlite`, a **real database written by upstream 0.10.6's own code** (the untouched
+  `upstream-0.10.6` tree: 13 functions, 1 matched, an agent, attempts, notes, events, two header versions; `user_version` 0), with the
+  generator and instructions beside it. No personal data.
+- Tests: 24 in `maintenance/tests/test_maint_schema.py`. An upstream database opens, migrates and **keeps every row and column it
+  had**; the backup is complete, passes `integrity_check` and restores; a failed backup stops the migration and leaves nothing that
+  looks complete; each of the **eleven column migrations** works on a table that already holds rows and gives existing rows their
+  default; the one-time recount of `abandons` runs once and is not repeated; a half-finished migration completes; and the app, through
+  the real `Network` class, can register an agent against the migrated upstream database and claim a function, with the function upstream
+  matched still matched. Verified by hand: the real `decomp` command against a version-42 database prints the error and exits 1.
+  **Whole suite with every tool: 449 passed and the changelog test this entry satisfies, 0 failed**; test by test, nothing dropped, the 24
+  new tests pass, and nothing regressed (three tests show as skipped only because the run started from a cleaned tree).
+- **Reversible, verified:** a database stamped by this version opens and works in upstream's own 0.10.6 (it does not read the version).
+- One thing you will notice: the first time an existing database is opened, `decomp.db.bak-v0` appears beside it in `~/Decomp/.decomp/`.
+- Not covered: two programs opening an old database at the same instant during its first migration (not a case this app creates).
+- Nothing for users to do.
+
 ## [0.10.30] - 2026-10-21
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.

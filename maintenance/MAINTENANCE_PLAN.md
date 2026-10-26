@@ -4,7 +4,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.10.30
+## Status as of 0.10.31
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 | 1.5 `mcp` bound, lock in CI | done | 0.10.12, .13 | |
 | 1.6 CI | **written, not yet run on GitHub** | 0.10.13, .18 | Push, enable Actions, read the first runs. The `sandbox` and `toolchain-urls` jobs are `continue-on-error` until then. The plan's "green badge" is not met yet; ruff covers serious errors only (428 style findings remain). |
 | 1.7 toolchain URL check | done | 0.10.18 | Run it where the four blocked hosts resolve. Does not cover `m2c` (git revision). |
-| Phase 2 | **started** | 0.10.20 to .29 | Done: the matching-integrity tests (invariant 1 is now guarded), which found and fixed two real defects in the core (a hash that was not an identity, an x86 crash); the **legacy hosted-network layer, deleted** (the website, the coordinator server, signup, donated compute, the `decompnet` CLI); and `luvdis_run.py`, which now refuses a luvdis it was not written for (0.10.27); and the `except Exception` audit, with a test that keeps any broad handler from hiding a bug (0.10.29). **Open:** schema migrations, refactors, and whether to remove the now client-less hash-only mode. Invariants 2 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
+| Phase 2 | **started** | 0.10.20 to .31 | Done: the matching-integrity tests (invariant 1 is now guarded), which found and fixed two real defects in the core (a hash that was not an identity, an x86 crash); the **legacy hosted-network layer, deleted** (the website, the coordinator server, signup, donated compute, the `decompnet` CLI); and `luvdis_run.py`, which now refuses a luvdis it was not written for (0.10.27); and the `except Exception` audit, with a test that keeps any broad handler from hiding a bug (0.10.29); and schema versioning with a migration test from a real 0.10.6 database (0.10.31). **Open:** refactors, and whether to remove the now client-less hash-only mode. Invariants 2 to 6 have only upstream's tests. Windows/WSL is frozen: the Windows installer refuses (0.10.15). |
 | Phases 3 and 4 | not started | | |
 
 **Your next steps:** (1) push this work to `main` (the updater compares against that branch; until then the app is rightly
@@ -64,7 +64,7 @@ Nothing else is trustworthy until this is green.
   4. A fork edit that breaks an earlier match is rolled back, and agents never write build files or asm.
   5. Nothing is pushed upstream automatically.
   6. No ROM bytes or assembly cross a team-room connection.
-- **Schema migrations:** `store.py` migrates inline. Add a `schema_version` table and a migration test from a 0.10.6 DB fixture.
+- **Schema migrations** *(Done in 0.10.31: `PRAGMA user_version`, a backup before the first migration, a newer database refused untouched, and a test from a real 0.10.6 database made by upstream's own code.)*
 - **Refactor, low priority:** split `forkengine.py` (2.4k lines) and `engine.py` (1.7k) along their existing seams (claiming, import, export, autopilot). Only with the tests green first.
 - **Windows/WSL:** upstream labels it unstable. As a Linux user, freeze it (no new work) and mark it unsupported unless someone needs it.
 

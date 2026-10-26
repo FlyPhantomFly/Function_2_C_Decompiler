@@ -120,6 +120,7 @@ def _restart_state() -> dict | None:
 def run(args) -> int:
     import uvicorn
 
+    from ..store import StoreError
     from .engine import RomNetwork
     from .server import build
 
@@ -146,7 +147,12 @@ def run(args) -> int:
         os.chmod(state_file, 0o600)
     except OSError:
         pass
-    net = RomNetwork(internal / "decomp.db", home)
+    try:
+        net = RomNetwork(internal / "decomp.db", home)
+    except StoreError as e:  # a database from a newer version: say so in a sentence, not a traceback
+        sock.close()
+        print(f"error: {e}", file=sys.stderr)
+        return 1
     mcp, manager, security = build(net, internal, port, secret)
     app = mcp.streamable_http_app(transport_security=security, max_request_body_size=80 * 1024 * 1024, host="127.0.0.1")
     url = f"http://127.0.0.1:{port}/?k={secret}"
