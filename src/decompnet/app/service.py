@@ -1,4 +1,4 @@
-"""Run decomp.wtf in the background, starting with the computer: for a home PC or a server that hosts a team's room.
+"""Run Function_2_C_Decompiler in the background, starting with the computer: for a home PC or a server that hosts a team's room.
 
 Linux: a systemd user service. macOS: a launchd agent. Windows: a startup app of this user (the Run registry key:
 a log-on task would need an administrator), without a console window. The service runs `decomp --no-browser` for this
@@ -24,7 +24,7 @@ def _command() -> list[str]:
 
 
 def _windowless() -> list[str]:
-    """Windows: the app through decomp.wtf's own pythonw, which opens no console window (closing one would stop it)."""
+    """Windows: the app through Function_2_C_Decompiler's own pythonw, which opens no console window (closing one would stop it)."""
     pythonw = Path(sys.executable).with_name("pythonw.exe")
     return [str(pythonw if pythonw.exists() else sys.executable), "-m", "decompnet.app.cli", "--no-browser"]
 
@@ -46,7 +46,7 @@ def install() -> str:
         unit.parent.mkdir(parents=True, exist_ok=True)
         env = f"Environment=DECOMP_HOME={home}\n" if home else ""
         unit.write_text(f"""[Unit]
-Description=decomp.wtf (matching decompilation; serves your rooms)
+Description=Function_2_C_Decompiler (matching decompilation; serves your rooms)
 After=network-online.target
 
 [Service]
@@ -66,7 +66,7 @@ WantedBy=default.target
                                 encoding="utf-8", errors="replace")
         note = "" if linger.returncode == 0 else (
             "\nTo keep it running while you're logged out (a server), run once: sudo loginctl enable-linger $USER")
-        return f"decomp.wtf runs as a service now (systemd user unit {unit}); it starts with the computer.{note}"
+        return f"Function_2_C_Decompiler runs as a service now (systemd user unit {unit}); it starts with the computer.{note}"
     if sys.platform == "darwin":
         plist = _plist()
         plist.parent.mkdir(parents=True, exist_ok=True)
@@ -85,7 +85,7 @@ WantedBy=default.target
                              encoding="utf-8", errors="replace")
         if res.returncode != 0:
             raise RuntimeError(res.stderr.strip() or "launchctl failed")
-        return f"decomp.wtf runs in the background now (launchd agent {plist}); it starts when you log in."
+        return f"Function_2_C_Decompiler runs in the background now (launchd agent {plist}); it starts when you log in."
     if sys.platform == "win32":
         import winreg
 
@@ -94,7 +94,7 @@ WantedBy=default.target
             winreg.SetValueEx(key, RUN_NAME, 0, winreg.REG_SZ, subprocess.list2cmdline(cmd))
         subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                          creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP)
-        return "decomp.wtf runs in the background now and starts when you log in (Windows' startup apps)."
+        return "Function_2_C_Decompiler runs in the background now and starts when you log in (Windows' startup apps)."
     raise RuntimeError("running as a service isn't supported on this system")
 
 
@@ -115,7 +115,7 @@ def remove() -> str:
         except OSError:
             pass
         subprocess.run(["schtasks", "/Delete", "/F", "/TN", "decomp.wtf"], capture_output=True)  # older versions' task
-    return "decomp.wtf no longer runs as a service."
+    return "Function_2_C_Decompiler no longer runs as a service."
 
 
 def installed() -> bool:

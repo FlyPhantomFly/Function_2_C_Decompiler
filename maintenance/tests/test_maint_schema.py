@@ -261,5 +261,5 @@ def test_the_app_says_one_clear_line_and_stops_for_a_database_from_a_newer_versi
     con.close()
     assert cli.run(SimpleNamespace(port=0, no_browser=True)) == 1
     err = capsys.readouterr().err
-    assert err.startswith("error: ") and "newer decomp.wtf" in err and "Traceback" not in err
+    assert err.startswith("error: ") and "newer Function_2_C_Decompiler" in err and "Traceback" not in err
     assert version_of(db) == 42  # untouched

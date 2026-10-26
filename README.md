@@ -1,7 +1,10 @@
 ## About this fork
 
 This is a maintained fork of [decomp.wtf](https://github.com/i12bp8/decomp.wtf) (MIT, by Sam Wolfs), maintained by
-PhantomThreads. It is not affiliated with upstream, and its installers and updater fetch nothing from upstream's website
+PhantomThreads. In this fork the project is called **Function_2_C_Decompiler**; that is the name in the app and in these docs. The
+Python package is still `decompnet` and the command is still `decomp`, and the on-disk names that existing projects depend on
+(`.decomp.wtf.json`, the `decomp-wtf` git branch and Docker and WSL names) are unchanged, so nothing you have breaks.
+It is not affiliated with upstream, and its installers and updater fetch nothing from upstream's website
 or repository. What was changed, and why, is in [`maintenance/CHANGELOG.md`](maintenance/CHANGELOG.md).
 
 The notice below is upstream's author's, kept as he wrote it. What it asks of users still applies here: only use this on
@@ -27,7 +30,7 @@ Thanks to everyone who tried it, reported bugs and sent fixes.
   <a href="https://github.com/FlyPhantomFly/Function_2_C_Decompiler">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.png">
-      <img alt="decomp.wtf: What the function? Your AI agent decompiles games you own into C that compiles to the exact same bytes." src=".github/assets/banner-light.png">
+      <img alt="Function_2_C_Decompiler: What the function? Your AI agent decompiles games you own into C that compiles to the exact same bytes." src=".github/assets/banner-light.png">
     </picture>
   </a>
 </p>
@@ -56,19 +59,19 @@ Thanks to everyone who tried it, reported bugs and sent fixes.
 <br>
 
 <p align="center">
-  <img alt="decomp.wtf at work: agents claim functions, their compile attempts drop to score 0, and the map of the game turns green." src=".github/assets/demo.webp" width="900">
+  <img alt="Function_2_C_Decompiler at work: agents claim functions, their compile attempts drop to score 0, and the map of the game turns green." src=".github/assets/demo.webp" width="900">
   <br>
   <sub>The simulation from <a href="https://github.com/i12bp8/decomp.wtf">upstream decomp.wtf</a>, on the demo ROM that ships with the app.</sub>
 </p>
 
 <br>
 
-Point the AI agent you already use at a game you own. **decomp.wtf** hands it the game one function at a time,
+Point the AI agent you already use at a game you own. **Function_2_C_Decompiler** hands it the game one function at a time,
 compiles every attempt with the game's **original compiler**, and checks the result **byte for byte**. Score 0, or
 it doesn't count. There are two ways in:
 
 - **Start from scratch.** Drop in a game for N64, PlayStation 1 or 2, GameCube, Wii, Game Boy Advance or DS: a
-  ROM, a disc image or the program file. decomp.wtf finds every function and your agents take it from there. The
+  ROM, a disc image or the program file. Function_2_C_Decompiler finds every function and your agents take it from there. The
   result is a project that rebuilds your game byte for byte: the base for ports and mods. GameCube, Wii and N64
   are the [recommended](#platforms) platforms; the rest are in beta.
 - **Continue a public decomp.** Pick one of the [245 projects on decomp.dev](https://decomp.dev) for GameCube, Wii,
@@ -106,10 +109,10 @@ To work on the code without installing it: `uv sync --locked`, then `uv run deco
 clone). The app checks only this repository for updates.
 
 One line sets up everything: [uv](https://docs.astral.sh/uv/), the app, the period compilers (pinned and
-checksum-verified) and the m2c draft decompiler. It then opens decomp.wtf in your browser. After that, start it any
+checksum-verified) and the m2c draft decompiler. It then opens Function_2_C_Decompiler in your browser. After that, start it any
 time from your apps menu (the Start menu on Windows) or by typing `decomp` in a terminal.
 
-**Updates** come by themselves: when there's a new version, decomp.wtf asks once, and one click installs it and
+**Updates** come by themselves: when there's a new version, Function_2_C_Decompiler asks once, and one click installs it and
 restarts the app in the same tab (helper agents carry on). Settings has "check now", "install updates by itself" and
 "don't look for updates".
 
@@ -119,7 +122,7 @@ restarts the app in the same tab (helper agents carry on). Settings has "check n
 
 ## Or just ask your agent
 
-Already living in Claude Code, Codex, Antigravity CLI or opencode? Give it decomp.wtf's tools once:
+Already living in Claude Code, Codex, Antigravity CLI or opencode? Give it Function_2_C_Decompiler's tools once:
 
 ```
 decomp connect
@@ -130,7 +133,7 @@ Then ask it, in your own terminal:
 > decompile my game at ~/roms/game.z64
 
 It confirms the game is your own copy, imports it, opens the live view so you can watch, and gets to work with every
-tool decomp.wtf has: the original compiler, the byte-for-byte judge, the autopilot, helper agents running in
+tool Function_2_C_Decompiler has: the original compiler, the byte-for-byte judge, the autopilot, helper agents running in
 parallel (`start_agents`) and the rebuildable export. Behind it is `decomp mcp`, an MCP server that starts the app
 when needed; you can also add it yourself (`claude mcp add decomp -- decomp mcp`).
 
@@ -148,7 +151,7 @@ when needed; you can also add it yourself (`claude mcp add decomp -- decomp mcp`
   </picture>
 </p>
 
-1. **Open a ROM.** splat and spimdisasm find every function and data symbol, and decomp.wtf recognises the
+1. **Open a ROM.** splat and spimdisasm find every function and data symbol, and Function_2_C_Decompiler recognises the
    compiler that built the game.
 2. **Add agents.** Each claims a different function and gets its assembly, the data it touches, who calls it, a
    machine-made first draft and notes from earlier attempts.
@@ -159,7 +162,7 @@ when needed; you can also add it yourself (`claude mcp add decomp -- decomp mcp`
 <summary><b>What a match looks like</b></summary>
 <br>
 
-The assembly decomp.wtf takes from the ROM:
+The assembly Function_2_C_Decompiler takes from the ROM:
 
 ```asm
 800007D0  slt     $v0, $a0, $a1
@@ -193,13 +196,13 @@ s32 clamp_s32(s32 v, s32 lo, s32 hi) {
 ## Continue a public decomp
 
 Most games people decompile already have a community project with its build set up and part of the code done.
-decomp.wtf plugs your agents into them as they are:
+Function_2_C_Decompiler plugs your agents into them as they are:
 
 1. **Browse** the decomp.dev catalog in the app (or paste any decomp repository's address) and **fork** it: it's
    cloned to your computer on a local `decomp-wtf` branch.
 2. **Add your copy of the game.** The app knows where common project layouts expect it (dtk-template for
    GameCube/Wii, configure.py + ninja, splat + make) and runs the project's own setup. Anything else you set up
-   by its README, and decomp.wtf picks it up once it builds.
+   by its README, and Function_2_C_Decompiler picks it up once it builds.
 3. **Add agents.** Each claims a function and gets the target assembly, objdiff's diff, the function's source
    file, matched look-alikes and a machine draft. Its code goes into the real source file, the project's build
    compiles it with the project's compilers, and [objdiff](https://github.com/encounter/objdiff) judges it.
@@ -209,7 +212,7 @@ decomp.wtf plugs your agents into them as they are:
 Guard rails, learned from people who ran agents on decomps before: agents write only C/C++ sources and headers,
 never targets, assembly or build scripts, and inline assembly is refused. A change that breaks any function that
 already matched is undone. The project's file layout (which code belongs to which source file) and which files are
-linked are changed by decomp.wtf itself, never typed by an agent, and kept only when the game still builds byte for
+linked are changed by Function_2_C_Decompiler itself, never typed by an agent, and kept only when the game still builds byte for
 byte.
 
 ### From matched to linked
@@ -217,7 +220,7 @@ byte.
 A function at 100% is matched. A file is **linked** when all of it, functions *and* data, matches: the project then
 builds the game from that C instead of from the original's code, and checks the whole game against its checksum.
 That's decomp.dev's "linked" measure, and it's what a decomp needs before the C can become a port. For
-GameCube and Wii projects (dtk-template) decomp.wtf takes care of the steps between:
+GameCube and Wii projects (dtk-template) Function_2_C_Decompiler takes care of the steps between:
 
 - **Every function gets a source file.** Most projects still have code no file covers: in Mario Party 6, 17,923
   functions. **Give them source files** gives each stretch of that code a file of its own (starting agents does it too),
@@ -225,7 +228,7 @@ GameCube and Wii projects (dtk-template) decomp.wtf takes care of the steps betw
 - **Files closest to done come first.** When a match finishes a file's functions, the agent is shown the file's data
   next to the original's, with what to fix (a table that should be `const`, a static that belongs inside a
   function). `file_status` shows it any time.
-- **Finished files link themselves.** decomp.wtf marks the file Matching, builds the game and runs the project's
+- **Finished files link themselves.** Function_2_C_Decompiler marks the file Matching, builds the game and runs the project's
   checksum check, and keeps the change only if it passes. A linked file can't be changed in a way that alters the
   game. The app shows **% linked** next to % matched.
 
@@ -259,14 +262,14 @@ GameCube and Wii projects (dtk-template) decomp.wtf takes care of the steps betw
 | Agent | How it connects |
 | :-- | :-- |
 | **Claude Code** | Runs headless against the app's local MCP server. |
-| **Codex CLI** | Same, with approvals limited to decomp.wtf's tools. |
+| **Codex CLI** | Same, with approvals limited to Function_2_C_Decompiler's tools. |
 | **Antigravity CLI** | Same, through the workspace's own MCP config. Google's successor to Gemini CLI (`agy`), which it retired in June 2026. |
 | **opencode** | Same, with any provider you've set up: DeepSeek, Qwen, Kimi and more. |
 | **API key** | A built-in agent loop for any OpenAI-compatible API: DeepSeek, OpenRouter, OpenAI, or a model on your own computer with llama.cpp, Ollama or LM Studio. It keeps the conversation within the model's context. |
-| **The agent you talk to** | `decomp connect` (or the Claude Code plugin above): it drives decomp.wtf from your own terminal and can start helpers. |
+| **The agent you talk to** | `decomp connect` (or the Claude Code plugin above): it drives Function_2_C_Decompiler from your own terminal and can start helpers. |
 | **Anything else** | Point any MCP client (Cursor, Claude Desktop, your own) at `decomp mcp`, or at the app with **Connect another agent**. |
 
-Agents only get decomp.wtf's tools: no shell, and no access to your files beyond a fork's own source tree. The app installs missing agents for you
+Agents only get Function_2_C_Decompiler's tools: no shell, and no access to your files beyond a fork's own source tree. The app installs missing agents for you
 and tells you how to sign in. You pay your own provider; in our tests a small function cost Claude Code about 8 cents.
 Big functions take many more attempts, and cheaper models often get stuck on them on register allocation, so expect
 the easy part of a game to go fast and the rest to take real time.
@@ -281,7 +284,7 @@ need a strong model.
 
 A whole team, any size, each on their own computer with their own copy of the game and their own agents, working on
 one game. One computer is the room's **host**: it hands out functions so nobody does the same one twice, checks every
-match against its own copy, and shares names, structs and notes with everyone. Nothing goes through decomp.wtf's
+match against its own copy, and shares names, structs and notes with everyone. Nothing goes through Function_2_C_Decompiler's
 website: the people who decompile together host their room and decide who's in.
 
 **On a home PC:** open the project, click **Decompile together**, **Open the room**. Send the link.
@@ -293,7 +296,7 @@ git clone https://github.com/FlyPhantomFly/Function_2_C_Decompiler && cd Functio
 decomp host mygame.z64 --own-copy --address http://my-server:6481 --service
 ```
 
-That runs decomp.wtf in the background (starting with the computer), imports your copy, opens the room and prints the
+That runs Function_2_C_Decompiler in the background (starting with the computer), imports your copy, opens the room and prints the
 link. **Joining:** paste the link into **Join a team's room** in the app, or `decomp join <link> <your copy> --name you`.
 
 | | |
@@ -341,7 +344,7 @@ needs. Public decomps of any platform run in their own project's build, so their
 **From scratch.** splat and spimdisasm split MIPS games, decomp-toolkit analyses GameCube and Wii programs inside a
 generated [dtk-template](https://github.com/encounter/dtk-template) project, [ds-decomp](https://github.com/AetiasHax/ds-decomp)
 analyses DS ROMs (ARM9, ITCM, DTCM, overlays) inside a generated project of the same kind, and Game Boy Advance
-ROMs are split by [luvdis](https://github.com/aarant/luvdis) plus decomp.wtf's own pass for code nothing calls.
+ROMs are split by [luvdis](https://github.com/aarant/luvdis) plus Function_2_C_Decompiler's own pass for code nothing calls.
 Code beyond the main program is found too: N64 code the game loads later (placed at its address from its own
 calls, including code run through the TLB and code Rare and Nintendo shipped compressed), and the PlayStation 1 and
 2 overlays in a disc's other files. Every attempt is
@@ -354,7 +357,7 @@ GameCube and Wii projects are dtk-template projects and DS projects are ds-decom
 every build, and GameCube and Wii files are linked as they're finished. Game code and data stay out of git: they're regenerated from your own copy, so the tree can be shared
 and continued with any tool or agent.
 
-**C and C++.** GameCube, Wii and DS games are often C++, and decomp.wtf handles it there: code with C++ symbol
+**C and C++.** GameCube, Wii and DS games are often C++, and Function_2_C_Decompiler handles it there: code with C++ symbol
 names goes into `.cpp` files, drafts come out as C++, and agents get a guide to classes, vtables, constructors,
 inlines and name mangling. On N64, PlayStation, PS2 and GBA, functions started from scratch are written in C for
 now; C++ there (mostly PS2 games) is coming. Public decomps use whatever language the project does.
@@ -363,7 +366,7 @@ now; C++ there (mostly PS2 games) is coming. Public decomps use whatever languag
 tools run with a memory cap, so a runaway analysis can't take your computer down.
 
 **Windows.** Several of the compilers (KMC GCC, the PlayStation GCCs, EE-GCC, agbcc) only exist as Linux programs,
-so on Windows decomp.wtf runs in its own WSL 2 distribution. The installer sets that up; you use the app in your
+so on Windows Function_2_C_Decompiler runs in its own WSL 2 distribution. The installer sets that up; you use the app in your
 browser as usual, and the results are byte-identical to Linux. macOS isn't supported.
 
 **When something goes wrong.** A failed import stays on screen with the reason and what happened, and **Copy for a
@@ -390,9 +393,9 @@ uv run pytest
 | `src/decompnet/forks/` | Fork mode: the decomp.dev catalog, project detection and setup, objdiff, source editing, m2c and Ghidra drafts, linking and file splits for dtk-template projects (`project.py`, `dtksplits.py`), and data diffs (`datadiff.py`). |
 | `src/decompnet/network.py` | The coordination core the engine builds on: claims, attempts, notes, the shared header. |
 | `src/decompnet/toolchains.py` | The pinned compilers: verified downloads and installs. |
-| `src/decompnet/hostenv.py`, `app/updates.py` | Where decomp.wtf runs (Linux itself, its WSL 2 distribution on Windows, Docker on a server) and what crosses to the computer around it; updates. |
+| `src/decompnet/hostenv.py`, `app/updates.py` | Where Function_2_C_Decompiler runs (Linux itself, its WSL 2 distribution on Windows, Docker on a server) and what crosses to the computer around it; updates. |
 | `src/decompnet/app/twins.py`, `app/permute.py` | Free matches: identical code from its matched twin, and the background permuter for near misses. |
-| `site/public/install.sh`, `install.ps1`, `linux-base.sh`, `Dockerfile` | The installers: decomp.wtf's own Linux (WSL on Windows, Docker on a server) is made by `linux-base.sh` on Debian. |
+| `site/public/install.sh`, `install.ps1`, `linux-base.sh`, `Dockerfile` | The installers: Function_2_C_Decompiler's own Linux (WSL on Windows, Docker on a server) is made by `linux-base.sh` on Debian. |
 | `projects/demo-rom/` | Builds Demo Quest 64. `tests/test_rom.py` proves the matcher on it: every function of the original source matches. |
 | `projects/demo-psx/` | The same game as a PlayStation executable, for `tests/test_psx.py`. |
 | `projects/demo-fork/` | A small decomp project in the community's shape (objdiff.json, ninja), for `tests/test_forks.py`. |
@@ -423,17 +426,17 @@ ROMs, [objdiff](https://github.com/encounter/objdiff) judges forks, [m2c](https:
 [coddog](https://github.com/ethteck/coddog); [decomp-toolkit](https://github.com/encounter/decomp-toolkit),
 [maspsx](https://github.com/mkst/maspsx) and [wibo](https://github.com/decompals/wibo) are in the pinned toolbelt
 (`decomp toolchain install <name>`). Thanks to everyone in the decomp community whose tools and ideas made this
-possible. decomp.wtf isn't affiliated with any of these projects.
+possible. Function_2_C_Decompiler isn't affiliated with any of these projects.
 
 ## Use it responsibly
 
-decomp.wtf contains no game code and doesn't provide ROMs. Use games you own, don't use it to get around copy
+Function_2_C_Decompiler contains no game code and doesn't provide ROMs. Use games you own, don't use it to get around copy
 protection, and don't publish decompiled code of games whose rights you don't hold. When you continue a public
 decomp, follow that project's license and contribution rules; forking runs its build scripts on your computer, so
 fork projects you trust.
 
 Many community decomps don't accept AI-written contributions, and the ones that do expect a person to stand behind
-every line. decomp.wtf never sends anything upstream: your agents' work stays on your local branch. Before you open a
+every line. Function_2_C_Decompiler never sends anything upstream: your agents' work stays on your local branch. Before you open a
 pull request, read the project's CONTRIBUTING (or ask its maintainers), review the code yourself, and say how it
 was made.
 

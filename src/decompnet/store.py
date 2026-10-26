@@ -108,8 +108,8 @@ class Store:
         try:
             version = self.conn.execute("PRAGMA user_version").fetchone()[0]
             if version > SCHEMA_VERSION:  # before anything else touches the file (switching to WAL rewrites its header)
-                raise StoreError(f"{location} was written by a newer decomp.wtf: its database format is version {version}, and this "
-                                 f"one understands up to {SCHEMA_VERSION}. Update decomp.wtf, or use a different database. "
+                raise StoreError(f"{location} was written by a newer Function_2_C_Decompiler: its database format is version {version}, and this "
+                                 f"one understands up to {SCHEMA_VERSION}. Update Function_2_C_Decompiler, or use a different database. "
                                  "The file has not been touched.")
             if version < SCHEMA_VERSION and location != ":memory:" and self._has_tables():
                 _backup(self.conn, Path(location), version)

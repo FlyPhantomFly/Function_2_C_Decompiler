@@ -1,4 +1,4 @@
-"""Add decomp.wtf to the apps menu: a .desktop entry (Linux), an app bundle (macOS), a Start Menu
+"""Add Function_2_C_Decompiler to the apps menu: a .desktop entry (Linux), an app bundle (macOS), a Start Menu
 and desktop shortcut (Windows). Each just runs `decomp`, which opens the app in the browser."""
 
 from __future__ import annotations
@@ -29,11 +29,11 @@ def install_launcher() -> str:
         apps = Path.home() / ".local" / "share" / "applications"
         apps.mkdir(parents=True, exist_ok=True)
         entry = apps / "decomp-wtf.desktop"
-        entry.write_text("[Desktop Entry]\nType=Application\nName=decomp.wtf\n"
+        entry.write_text("[Desktop Entry]\nType=Application\nName=Function_2_C_Decompiler\n"
                          "Comment=What The Function: your AI agent decompiles your games, byte for byte\n"
                          f"Exec=\"{exe}\"\nIcon=decomp-wtf\nTerminal=false\nCategories=Development;\n", encoding="utf-8")
         os.chmod(entry, 0o755)
-        return f"added decomp.wtf to your apps menu ({entry})"
+        return f"added Function_2_C_Decompiler to your apps menu ({entry})"
     if sys.platform == "darwin":
         app = Path.home() / "Applications" / "decomp.wtf.app"
         macos = app / "Contents" / "MacOS"
@@ -41,7 +41,7 @@ def install_launcher() -> str:
         (app / "Contents" / "Info.plist").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" '
             '"http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict>'
-            "<key>CFBundleName</key><string>decomp.wtf</string>"
+            "<key>CFBundleName</key><string>Function_2_C_Decompiler</string>"
             "<key>CFBundleIdentifier</key><string>wtf.decomp.app</string>"
             "<key>CFBundleExecutable</key><string>decomp-wtf</string>"
             "<key>CFBundlePackageType</key><string>APPL</string>"
@@ -49,7 +49,7 @@ def install_launcher() -> str:
         script = macos / "decomp-wtf"
         script.write_text(f'#!/bin/sh\nexec "{exe}" >/dev/null 2>&1\n', encoding="utf-8")
         os.chmod(script, 0o755)
-        return f"added decomp.wtf to {app.parent}"
+        return f"added Function_2_C_Decompiler to {app.parent}"
     if sys.platform == "win32":
         # Windows says where the Start menu and the desktop are (a desktop is often in OneDrive); a path with an
         # apostrophe in it (a user name) is quoted for PowerShell
@@ -57,7 +57,7 @@ def install_launcher() -> str:
         ps = ("[Console]::OutputEncoding=[Text.Encoding]::UTF8;$ws=New-Object -ComObject WScript.Shell;"
               "foreach($d in @([Environment]::GetFolderPath('Programs'),[Environment]::GetFolderPath('Desktop'))){"
               "if($d -and (Test-Path $d)){$l=Join-Path $d 'decomp.wtf.lnk';$s=$ws.CreateShortcut($l);"
-              f"$s.TargetPath='{target}';$s.WindowStyle=7;$s.Description='decomp.wtf';$s.Save();Write-Output $l}}}}")
+              f"$s.TargetPath='{target}';$s.WindowStyle=7;$s.Description='Function_2_C_Decompiler';$s.Save();Write-Output $l}}}}")
         res = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps], capture_output=True, text=True,
                              encoding="utf-8", errors="replace")
         made = [line.strip() for line in res.stdout.splitlines() if line.strip().endswith(".lnk")]

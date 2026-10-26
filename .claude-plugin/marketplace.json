@@ -1,7 +1,7 @@
 {
   "name": "decomp-wtf",
   "owner": {"name": "PhantomThreads", "url": "https://github.com/FlyPhantomFly"},
-  "metadata": {"description": "decomp.wtf: matching decompilation of games you own, with your AI agent."},
+  "metadata": {"description": "Function_2_C_Decompiler: matching decompilation of games you own, with your AI agent."},
   "plugins": [
     {
       "name": "decomp-wtf",

@@ -9,7 +9,7 @@ The fix rewrites luvdis's source, so it is only right for the luvdis it was writ
 Anything else is refused with a message, instead of going on with the bug still in: `patched` insists on finding the code to
 replace exactly once.
 
-Standard library only: this runs in luvdis's environment, not decomp.wtf's.
+Standard library only: this runs in luvdis's environment, not Function_2_C_Decompiler's.
 """
 
 import importlib.util
@@ -32,7 +32,7 @@ def patched(source: str) -> str:
     found = source.count(PUSH)
     if found != 1:
         sys.exit(f"luvdis_run: expected the stack code it fixes exactly once in luvdis/analyze.py, found it {found} times. "
-                 "This is not the luvdis commit decomp.wtf pins (toolchains.toml), or luvdis has fixed the bug itself: "
+                 "This is not the luvdis commit Function_2_C_Decompiler pins (toolchains.toml), or luvdis has fixed the bug itself: "
                  "update luvdis_run.py together with that pin.")
     return source.replace(PUSH, SAFE_PUSH, 1)
 

@@ -45,23 +45,23 @@ def _readme(tmp_path: Path) -> str:
 def test_an_exported_n64_or_psx_readme_links_this_fork_and_says_where_to_get_the_tool(tmp_path):
     export._write_docs(tmp_path, "Demo Quest", "n64", "baserom.z64", 3, 10, [])
     text = _readme(tmp_path)
-    assert f"started with [decomp.wtf]({HOME})" in text
-    assert f"needs decomp.wtf installed from {HOME}" in text
+    assert f"started with [Function_2_C_Decompiler]({HOME})" in text
+    assert f"needs Function_2_C_Decompiler installed from {HOME}" in text
     assert "https://decomp.wtf" not in text
 
 
 def test_an_exported_gba_readme_links_this_fork_and_says_where_to_get_the_tool(tmp_path):
     export_gba._docs(tmp_path, "Demo Quest", 3, 10, [])
     text = _readme(tmp_path)
-    assert f"started with [decomp.wtf]({HOME})" in text
-    assert f"needs decomp.wtf installed from {HOME}" in text
+    assert f"started with [Function_2_C_Decompiler]({HOME})" in text
+    assert f"needs Function_2_C_Decompiler installed from {HOME}" in text
     assert "https://decomp.wtf" not in text
 
 
 @pytest.mark.parametrize("name", ["scratch_dtk.py", "scratch_dsd.py"])
 def test_the_fork_mode_scratch_readmes_link_this_fork(name):
     text = (SRC / "forks" / name).read_text(encoding="utf-8")
-    assert "Started from scratch with [decomp.wtf]({HOME_URL})" in text and "from .. import HOME_URL" in text
+    assert "Started from scratch with [Function_2_C_Decompiler]({HOME_URL})" in text and "HOME_URL" in text
 
 
 def _python_without_decompnet() -> str | None:
@@ -83,7 +83,7 @@ def test_the_build_script_tells_a_stranger_where_to_get_the_tool(name, tmp_path)
     (tmp_path / "build.json").write_text("{}", encoding="utf-8")  # ...beside the build.json it reads before it checks for the tool
     done = subprocess.run([exe, "-I", str(script)], capture_output=True, text=True, timeout=60, cwd=tmp_path)
     assert done.returncode != 0
-    assert f"install decomp.wtf first ({HOME})" in done.stderr
+    assert f"install Function_2_C_Decompiler first ({HOME})" in done.stderr
     assert "https://decomp.wtf" not in done.stderr
 
 

@@ -8,7 +8,7 @@ build. So the result is the base for ports and mods from the first minute, and t
 decomps on decomp.dev.
 
 Each module's code gets source files (src/auto/<module>_<address>.c, about 4 KiB of functions each) for agents to
-write into; decomp.wtf's fork engine then works on it like on any community project, judged by objdiff.
+write into; Function_2_C_Decompiler's fork engine then works on it like on any community project, judged by objdiff.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from .. import HOME_URL, toolchains
+from .. import HOME_URL, NOREPLY_EMAIL, PRODUCT, toolchains
 from .project import ForkError, ForkProject
 
 DS_DEFAULT = "2.0/sp1p5"
@@ -73,7 +73,7 @@ def versions() -> list[str]:
 
 
 def tool_args() -> list[str]:
-    """configure.py arguments pointing at decomp.wtf's pinned tools."""
+    """configure.py arguments pointing at Function_2_C_Decompiler's pinned tools."""
     toolchains.ensure("dsd", log=lambda *_: None)
     if toolchains.installed("mwccarm") is None:
         raise ForkError("DS games are built with CodeWarrior for DS, which is proprietary: install it in Setup "
@@ -242,7 +242,7 @@ def create(root: Path, game: Path, *, compiler: str | None = None, log=print) ->
                                      ".ninja_*\nobjdiff.json\n__pycache__/\n.decomp-wtf/\n", encoding="utf-8")
     (root / "README.md").write_text(f"""# {info['title']} ({info['id']}) decompilation
 
-Started from scratch with [decomp.wtf]({HOME_URL}) on [ds-decomp](https://github.com/AetiasHax/ds-decomp),
+Started from scratch with [Function_2_C_Decompiler]({HOME_URL}) on [ds-decomp](https://github.com/AetiasHax/ds-decomp),
 the toolkit DS decomps use. Every build rebuilds the ROM and checks it against your copy, byte for byte.
 
 1. Put your own copy of the game here as `extract/baserom.nds` (never commit it).
@@ -254,8 +254,8 @@ Compiler: CodeWarrior for DS {compiler} (change `MWCC_VERSION` in tools/configur
 """, encoding="utf-8")
     if shutil.which("git"):
         for cmd in (["git", "init", "-q", "-b", "main"], ["git", "add", "-A"],
-                    ["git", "-c", "user.name=decomp.wtf", "-c", "user.email=noreply@decomp.wtf", "commit", "-q", "-m",
-                     f"Start the {info['id']} decompilation (decomp.wtf, ds-decomp)"]):
+                    ["git", "-c", f"user.name={PRODUCT}", "-c", f"user.email={NOREPLY_EMAIL}", "commit", "-q", "-m",
+                     f"Start the {info['id']} decompilation (Function_2_C_Decompiler, ds-decomp)"]):
             subprocess.run(cmd, cwd=root, capture_output=True)
     return {"platform": "nds", "id": info["id"], "title": info["title"], "compiler": f"DS/{compiler}",
             "sources": len(sources), "sha1": info["sha1"], "rebuild": rebuild}

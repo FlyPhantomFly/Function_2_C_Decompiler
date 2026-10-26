@@ -1,7 +1,7 @@
 {
   "name": "decomp-wtf",
   "version": "0.9.9",
-  "description": "Decompile games you own into C that rebuilds them byte for byte, with decomp.wtf: the original compilers, a byte-for-byte judge, free matches from machine drafts, helper agents and a live view.",
+  "description": "Decompile games you own into C that rebuilds them byte for byte, with Function_2_C_Decompiler: the original compilers, a byte-for-byte judge, free matches from machine drafts, helper agents and a live view.",
   "author": {"name": "PhantomThreads", "url": "https://github.com/FlyPhantomFly"},
   "homepage": "https://github.com/FlyPhantomFly/Function_2_C_Decompiler",
   "repository": "https://github.com/FlyPhantomFly/Function_2_C_Decompiler",

@@ -110,14 +110,14 @@ def _docs(out: Path, title: str, matched: int, total: int, fallback) -> None:
     notes = "".join(f"\n- `{n}`: kept as assembly, {why}" for n, why in fallback)
     (out / "README.md").write_text(f"""# {title} (decompilation)
 
-A matching decompilation of {title} for the Game Boy Advance, started with [decomp.wtf]({HOME_URL}).
+A matching decompilation of {title} for the Game Boy Advance, started with [Function_2_C_Decompiler]({HOME_URL}).
 {matched} of {total} functions are C that agbcc compiles to exactly the original code; the rest is still assembly.
 `build.py` rebuilds the ROM from this tree and checks it against your original, byte for byte.
 
 ## Build
 
 1. Put your own copy of the game here as `baserom.gba` (it is in `.gitignore`; never commit it).
-2. `python build.py` (needs decomp.wtf installed from {HOME_URL}, for agbcc, luvdis and the Arm GNU toolchain).
+2. `python build.py` (needs Function_2_C_Decompiler installed from {HOME_URL}, for agbcc, luvdis and the Arm GNU toolchain).
 
 The first build disassembles your copy with [luvdis](https://github.com/aarant/luvdis) into `asm/`, one file per
 function, using the names in `functions.cfg`.

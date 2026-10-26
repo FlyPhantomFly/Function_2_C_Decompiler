@@ -199,7 +199,7 @@ def install(found: dict, log=print) -> dict:
     if not _spec_is_ours(str(found.get("spec") or "")):
         raise RuntimeError(f"refusing to install {str(found.get('spec'))[:80]!r}: it isn't from this build's update source")
     cur = found["current"]
-    log(f"installing decomp.wtf {found['latest'].get('version') or ''}".rstrip()
+    log(f"installing Function_2_C_Decompiler {found['latest'].get('version') or ''}".rstrip()
         + (f" ({cur.get('branch')} @ {found['latest']['commit'][:7]})" if cur["channel"] == "branch" else ""))
     cmd = [uv(), "tool", "install", "--force", "--python", "3.12", found["spec"]]
     _stream(cmd, log, "installing the update failed")
@@ -271,7 +271,7 @@ class Updater:
                 return
             found = self.last if self.last and self.last.get("available") else check()
             if not found.get("available"):
-                raise ValueError(found.get("error") or "decomp.wtf is up to date")
+                raise ValueError(found.get("error") or "Function_2_C_Decompiler is up to date")
             ok, why = can_apply()
             if not ok:
                 raise ValueError(why)
@@ -287,13 +287,13 @@ class Updater:
                 self.job.update(state="error", error=str(e))
                 return
             self.job["state"] = "restarting"
-            log("restarting decomp.wtf")
+            log("restarting Function_2_C_Decompiler")
             time.sleep(1)  # the page sees "restarting" before the server goes away
             try:
                 self.before_restart()
                 restart(self.port, self.secret)
             except OSError as e:  # still the old version: say so (`decomp` starts the new one)
                 self.job.update(state="error", error=f"the update is installed, but restarting failed ({e}): "
-                                                       "quit decomp.wtf and start it again")
+                                                       "quit Function_2_C_Decompiler and start it again")
 
         threading.Thread(target=run, daemon=True, name="update").start()

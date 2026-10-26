@@ -2,11 +2,15 @@
 
 import sys
 
-__version__ = "0.10.33"
+__version__ = "0.10.34"
 
-# Where this build of decomp.wtf comes from and is installed from, and the project it is a maintained fork of. What the app
+# Where this build of Function_2_C_Decompiler comes from and is installed from, and the project it is a maintained fork of. What the app
 # writes into other people's projects (READMEs, build scripts) links the first; the second is a credit.
 HOME_URL = "https://github.com/FlyPhantomFly/Function_2_C_Decompiler"
+PRODUCT = "Function_2_C_Decompiler"  # the name people see; the package stays `decompnet` and the command `decomp` (see ARCHITECTURE, "Names")
+# The identity of commits the app makes when git has none set up. `.invalid` can never resolve (RFC 2606), so no address at a
+# domain this project does not own ends up in anyone's history.
+NOREPLY_EMAIL = "noreply@function-2-c-decompiler.invalid"
 UPSTREAM_URL = "https://github.com/i12bp8/decomp.wtf"
 
 

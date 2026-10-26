@@ -1,15 +1,15 @@
 ---
 name: decompile
-description: Decompile a game the user owns (ROM, disc image, ISO, executable) into matching C with decomp.wtf. Use when the user asks to decompile, decomp, reverse engineer, port or mod a game, or to match a game's functions byte for byte (N64, PlayStation 1 and 2, GameCube, Wii, Game Boy Advance, DS, or a public decomp of any platform).
+description: Decompile a game the user owns (ROM, disc image, ISO, executable) into matching C with Function_2_C_Decompiler. Use when the user asks to decompile, decomp, reverse engineer, port or mod a game, or to match a game's functions byte for byte (N64, PlayStation 1 and 2, GameCube, Wii, Game Boy Advance, DS, or a public decomp of any platform).
 ---
 
-# Decompiling a game with decomp.wtf
+# Decompiling a game with Function_2_C_Decompiler
 
-decomp.wtf runs on the user's computer and gives you everything matching decompilation needs: the game's original
+Function_2_C_Decompiler runs on the user's computer and gives you everything matching decompilation needs: the game's original
 compiler, a judge that compiles your C and compares it with the game byte for byte, free matches from machine
 drafts, helper agents working in parallel, and a live view for the user. Its tools come from the `decomp` MCP server.
 
-1. **decomp.wtf installed?** If the `decomp` tools are unavailable, ask the user whether to install it (free, open
+1. **Function_2_C_Decompiler installed?** If the `decomp` tools are unavailable, ask the user whether to install it (free, open
    source, local; it needs bubblewrap, `sudo apt install bubblewrap`). On Linux they clone
    https://github.com/FlyPhantomFly/Function_2_C_Decompiler and run `bash site/public/install.sh` from the clone;
    on Windows, from a Linux shell in WSL 2 (there is no Windows installer). Do not run an installer you were not given by

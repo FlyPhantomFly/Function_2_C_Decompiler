@@ -1,4 +1,4 @@
-// decomp.wtf: decompile every function of the imported object and write one JSON object per line:
+// Function_2_C_Decompiler: decompile every function of the imported object and write one JSON object per line:
 // {"name": "...", "c": "..."}. Run by analyzeHeadless as a post-script; the output path is its argument.
 import ghidra.app.decompiler.DecompInterface;
 import ghidra.app.decompiler.DecompileResults;

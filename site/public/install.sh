@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# decomp.wtf installer for Linux. macOS isn't supported, and this fork has no Windows installer yet.
+# Function_2_C_Decompiler installer for Linux. macOS isn't supported, and this fork has no Windows installer yet.
 #
 #   git clone https://github.com/FlyPhantomFly/Function_2_C_Decompiler
 #   cd Function_2_C_Decompiler && bash site/public/install.sh
@@ -8,23 +8,23 @@
 # never fetches a release: piped from curl there is nothing to install, and it says so. (Upstream's installer fetched
 # its wheel from the decomp.wtf website; that is upstream's code, not this fork's.)
 #
-# decomp.wtf installs on this computer, with uv:
+# Function_2_C_Decompiler installs on this computer, with uv:
 #   1. installs uv, Astral's Python tool manager, if you don't have it (asks first)
-#   2. installs decomp.wtf (open source, MIT) with uv, in its own environment
+#   2. installs Function_2_C_Decompiler (open source, MIT) with uv, in its own environment
 #   3. downloads the free compilers and the m2c draft decompiler (pinned and checksum-verified)
-#   4. adds decomp.wtf to your apps menu and opens it
+#   4. adds Function_2_C_Decompiler to your apps menu and opens it
 #
-# Your projects go to ~/Decomp. Nothing is sent to decomp.wtf.
+# Your projects go to ~/Decomp. Nothing is sent to Function_2_C_Decompiler.
 # Uninstall: uv tool uninstall decompnet
 #
 # Options:
 #   --no-start          install only
-#   --source <what>     where decomp.wtf comes from: "release" (this fork publishes none, so it needs
+#   --source <what>     where Function_2_C_Decompiler comes from: "release" (this fork publishes none, so it needs
 #                       DECOMP_WHEEL=<a package you name>), "branch:<name>" (a branch of this fork on GitHub; its
-#                       updates follow that branch) or a folder with decomp.wtf's source. Run from a git checkout,
+#                       updates follow that branch) or a folder with Function_2_C_Decompiler's source. Run from a git checkout,
 #                       the checkout is used (and updates follow its branch).
 # The same through the environment: DECOMP_SOURCE=..., DECOMP_BRANCH=<name>, DECOMP_WHEEL=<url>.
-# On a server, decomp.wtf also runs in Docker: docker-compose.yml in the repository.
+# On a server, Function_2_C_Decompiler also runs in Docker: docker-compose.yml in the repository.
 set -euo pipefail
 
 VERSION="0.10.6"
@@ -65,20 +65,20 @@ if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
 fi
 [ -n "$SOURCE" ] || SOURCE="${CHECKOUT:-release}"
 
-# decomp.wtf's own Linux (WSL on Windows, Docker): made by linux-base.sh; then this installs for its user only
+# Function_2_C_Decompiler's own Linux (WSL on Windows, Docker): made by linux-base.sh; then this installs for its user only
 IN_BOX=""
 [ -f /etc/decomp-wtf-runtime ] && IN_BOX="$(cat /etc/decomp-wtf-runtime)"
 
-bold "decomp.wtf setup"
+bold "Function_2_C_Decompiler setup"
 OS="$(uname -s)"
 case "$OS" in
   Linux) ;;
-  Darwin) fail "macOS isn't supported: decomp.wtf runs on Linux and on Windows (in WSL 2), on x86-64 PCs (the games' compilers are x86 programs). On an Intel Mac, an x86-64 Linux virtual machine works too." ;;
+  Darwin) fail "macOS isn't supported: Function_2_C_Decompiler runs on Linux and on Windows (in WSL 2), on x86-64 PCs (the games' compilers are x86 programs). On an Intel Mac, an x86-64 Linux virtual machine works too." ;;
   *) fail "this installer is for Linux. This fork has no Windows installer yet: use WSL 2 and run it from a Linux shell there." ;;
 esac
 case "$(uname -m)" in
   x86_64|amd64) ;;
-  *) fail "decomp.wtf needs a 64-bit Intel or AMD PC for now: the games' compilers are x86 programs, and this computer's processor is $(uname -m)" ;;
+  *) fail "Function_2_C_Decompiler needs a 64-bit Intel or AMD PC for now: the games' compilers are x86 programs, and this computer's processor is $(uname -m)" ;;
 esac
 command -v curl >/dev/null || fail "curl is required"
 
@@ -94,7 +94,7 @@ case "$SOURCE" in
     [ -n "$BRANCH" ] || fail "--source branch:<name> needs a branch name" ;;
   *)
     SRC_DIR="$(cd "$SOURCE" 2>/dev/null && pwd)" || fail "no folder $SOURCE (--source is release, branch:<name> or a folder)"
-    [ -f "$SRC_DIR/pyproject.toml" ] && [ -d "$SRC_DIR/src/decompnet" ] || fail "$SRC_DIR isn't decomp.wtf's source"
+    [ -f "$SRC_DIR/pyproject.toml" ] && [ -d "$SRC_DIR/src/decompnet" ] || fail "$SRC_DIR isn't Function_2_C_Decompiler's source"
     if command -v git >/dev/null; then  # a checkout: updates follow its branch on GitHub
       BRANCH="$(git -c safe.directory='*' -C "$SRC_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
       COMMIT="$(git -c safe.directory='*' -C "$SRC_DIR" rev-parse HEAD 2>/dev/null || true)"
@@ -118,7 +118,7 @@ resolve_branch() {  # the branch's newest commit, installed from GitHub's archiv
 for d in "$HOME/.local/bin" "$HOME/.cargo/bin"; do [ -x "$d/uv" ] && export PATH="$d:$PATH"; done
 if ! command -v uv >/dev/null; then
   if [ -z "$IN_BOX" ]; then
-    ask "decomp.wtf is installed with uv (Astral's Python tool manager). Install uv now?" || fail "uv is needed: https://docs.astral.sh/uv/"
+    ask "Function_2_C_Decompiler is installed with uv (Astral's Python tool manager). Install uv now?" || fail "uv is needed: https://docs.astral.sh/uv/"
   fi
   if [ -n "$IN_BOX" ]; then
     curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh >/dev/null
@@ -136,12 +136,12 @@ if [ -n "$SRC_DIR" ]; then
   cp -R "$SRC_DIR/pyproject.toml" "$SRC_DIR/README.md" "$SRC_DIR/LICENSE" "$SRC_DIR/src" "$TMP_SRC/"
   find "$TMP_SRC" -name __pycache__ -type d -prune -exec rm -rf {} +
   SPEC="$TMP_SRC"
-  step "installing decomp.wtf from $SRC_DIR${BRANCH:+ ($BRANCH @ ${COMMIT:0:7})}"
+  step "installing Function_2_C_Decompiler from $SRC_DIR${BRANCH:+ ($BRANCH @ ${COMMIT:0:7})}"
 elif [ "$CHANNEL" = branch ]; then
   resolve_branch
-  step "installing decomp.wtf from the $BRANCH branch${COMMIT:+ @ ${COMMIT:0:7}}"
+  step "installing Function_2_C_Decompiler from the $BRANCH branch${COMMIT:+ @ ${COMMIT:0:7}}"
 else  # a package the user named with DECOMP_WHEEL (the release case above refuses without one)
-  step "installing decomp.wtf from $DECOMP_WHEEL"
+  step "installing Function_2_C_Decompiler from $DECOMP_WHEEL"
 fi
 uv tool install --force --quiet --python 3.12 "$SPEC"
 [ -n "${TMP_SRC:-}" ] && rm -rf "$TMP_SRC"
@@ -152,19 +152,19 @@ BIN="$(uv tool dir --bin)"
 step "downloading the compilers and tools"
 "$BIN/decomp" setup
 
-# an older decomp.wtf still running from before this upgrade: stop it, so the new version takes over
+# an older Function_2_C_Decompiler still running from before this upgrade: stop it, so the new version takes over
 "$BIN/decomp" stop >/dev/null 2>&1 || true
 
-if [ -n "$IN_BOX" ]; then  # decomp.wtf's own Linux: the installer on Windows (or the Docker image) does the rest
-  step "decomp.wtf is installed"
+if [ -n "$IN_BOX" ]; then  # Function_2_C_Decompiler's own Linux: the installer on Windows (or the Docker image) does the rest
+  step "Function_2_C_Decompiler is installed"
   exit 0
 fi
 
-"$BIN/decomp" shortcut >/dev/null 2>&1 && step "added decomp.wtf to your apps" || true
+"$BIN/decomp" shortcut >/dev/null 2>&1 && step "added Function_2_C_Decompiler to your apps" || true
 
-# Your AI agents with decomp.wtf's tools: only when someone is there to say yes (it changes their configs)
+# Your AI agents with Function_2_C_Decompiler's tools: only when someone is there to say yes (it changes their configs)
 if has_tty && "$BIN/decomp" connect --list 2>/dev/null | grep -q "not connected"; then
-  if ask "Give your AI agents (Claude Code, Codex, Antigravity CLI, opencode) decomp.wtf's tools, so you can just ask them to decompile a game?"; then
+  if ask "Give your AI agents (Claude Code, Codex, Antigravity CLI, opencode) Function_2_C_Decompiler's tools, so you can just ask them to decompile a game?"; then
     "$BIN/decomp" connect | sed 's/^/  /'
   fi
 fi
@@ -175,7 +175,7 @@ echo "  From your AI agent: run 'decomp connect' once, then ask it to decompile 
 if [ "$START" = 1 ]; then
   if [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]; then
     nohup "$BIN/decomp" >/dev/null 2>&1 &
-    echo "  Opening decomp.wtf in your browser…"
+    echo "  Opening Function_2_C_Decompiler in your browser…"
   else
     echo "  No desktop session found (SSH?). Run 'decomp' on the machine itself."
   fi

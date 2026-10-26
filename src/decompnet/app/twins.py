@@ -563,7 +563,7 @@ class Twins:
         return (res.get("text") or "").splitlines()[0][:300] if res.get("text") else f"score {res.get('score')}"
 
     def _attempt_twin(self, agent, proj, a, b, source: str) -> tuple[str, str]:
-        note = f"/* identical to {a['name']} (matched), with its names changed by decomp.wtf */\n"
+        note = f"/* identical to {a['name']} (matched), with its names changed by Function_2_C_Decompiler */\n"
         try:
             if self.net.fork_slug(proj["slug"]):
                 forks, slug, src, prelude = self.net.forks, proj["slug"], source, ""

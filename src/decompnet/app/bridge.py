@@ -1,11 +1,11 @@
-"""`decomp mcp`: decomp.wtf for the agent you talk to.
+"""`decomp mcp`: Function_2_C_Decompiler for the agent you talk to.
 
 Add it once to Claude Code, Codex, Antigravity CLI or opencode (`claude mcp add decomp -- decomp mcp`, ...). When that
-agent uses it, this starts decomp.wtf in the background if it isn't running, gets the agent its own identity, and
+agent uses it, this starts Function_2_C_Decompiler in the background if it isn't running, gets the agent its own identity, and
 passes the app's tools through over stdio: the agent can import your game, work on it, start helper agents and open
 the live view, and everything it does shows up in the app as it happens.
 
-Started by an agent decomp.wtf runs itself (a helper session whose agent only loads the MCP servers in the user's own
+Started by an agent Function_2_C_Decompiler runs itself (a helper session whose agent only loads the MCP servers in the user's own
 settings, like Antigravity CLI), it works as that session's agent instead (DECOMP_SESSION_TOKEN): the same identity,
 tools and instructions the session would get connecting directly.
 
@@ -46,7 +46,7 @@ def ensure_app(home: Path) -> dict:
     if replace_older(state, log=_log) and (info := _running(state)):  # this version or newer; an older one restarts
         return info
     internal.mkdir(parents=True, exist_ok=True)
-    _log("starting decomp.wtf in the background")
+    _log("starting Function_2_C_Decompiler in the background")
     kwargs = {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS} \
         if sys.platform == "win32" else {"start_new_session": True}
     with open(internal / "app.log", "ab") as out:
@@ -56,7 +56,7 @@ def ensure_app(home: Path) -> dict:
         time.sleep(0.2)
         if (info := _running(state)):
             return info
-    raise SystemExit(f"decomp mcp: decomp.wtf didn't start; see {internal / 'app.log'}")
+    raise SystemExit(f"decomp mcp: Function_2_C_Decompiler didn't start; see {internal / 'app.log'}")
 
 
 def mint(info: dict, name: str) -> str:
@@ -110,16 +110,16 @@ async def proxy(info: dict, token: str, name: str, helper: bool = False) -> None
                 if conn["gen"] == 0:
                     raise  # never connected: main says why
                 failures += 1
-                _log(f"connection to decomp.wtf lost ({e}); retrying")
+                _log(f"connection to Function_2_C_Decompiler lost ({e}); retrying")
                 await anyio.sleep(min(10, failures))
-            _log("decomp.wtf restarted: connecting again")
+            _log("Function_2_C_Decompiler restarted: connecting again")
             try:
                 fresh = await asyncio.to_thread(ensure_app, home_dir())
                 if not helper and (fresh["port"], fresh["secret"]) != (conn["info"]["port"], conn["info"]["secret"]):
                     conn["token"] = await asyncio.to_thread(mint, fresh, name)  # a new app: a new identity
                 conn["info"] = fresh
             except (OSError, ValueError, KeyError, SystemExit) as e:
-                _log(f"decomp.wtf isn't answering yet ({e})")
+                _log(f"Function_2_C_Decompiler isn't answering yet ({e})")
                 await anyio.sleep(2)
 
     def lost(e: Exception) -> bool:
@@ -154,7 +154,7 @@ async def proxy(info: dict, token: str, name: str, helper: bool = False) -> None
         async def call_tool(ctx, params):
             return await remote_call(lambda r: r.call_tool(params.name, params.arguments or {}))
 
-        server = Server("decomp", version=__version__, title="decomp.wtf",
+        server = Server("decomp", version=__version__, title="Function_2_C_Decompiler",
                         instructions=("" if helper else CHAT_INSTRUCTIONS + "\n") + (conn["remote"].instructions or ""),
                         on_list_tools=list_tools, on_call_tool=call_tool)
         async with stdio_server() as (read, write):
@@ -163,15 +163,15 @@ async def proxy(info: dict, token: str, name: str, helper: bool = False) -> None
 
 
 def main(name: str = "chat") -> int:
-    session = os.environ.get("DECOMP_SESSION_TOKEN", "").strip()  # a helper session decomp.wtf started
+    session = os.environ.get("DECOMP_SESSION_TOKEN", "").strip()  # a helper session Function_2_C_Decompiler started
     try:
         info = ensure_app(home_dir())
         token = session or mint(info, name)
     except (OSError, ValueError, KeyError) as e:
-        _log(f"couldn't connect to decomp.wtf: {e}. Try `decomp stop`, then use this again.")
+        _log(f"couldn't connect to Function_2_C_Decompiler: {e}. Try `decomp stop`, then use this again.")
         return 1
     if session:
-        _log("connected as the helper session decomp.wtf started")
+        _log("connected as the helper session Function_2_C_Decompiler started")
     try:
         asyncio.run(proxy(info, token, name, helper=bool(session)))
     except KeyboardInterrupt:

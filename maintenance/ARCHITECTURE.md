@@ -168,3 +168,33 @@ Still open (needs your machine or a later change):
 ## 11. Responsible-use constraints worth keeping
 
 The upstream README says to use only games you own, not to publish decompiled code, and to follow each public project's contribution rules, since many reject AI-written contributions. The code enforces part of this by never sending anything upstream. MIT covers the code. It does not cover the **name, domain or branding** "decomp.wtf", so a distributed fork should rename. Keep the LICENSE copyright notice.
+
+## 12. Names
+
+The product is called **Function_2_C_Decompiler** (owner's decision, 0.10.34). It was `decomp.wtf` upstream, and the original project keeps that
+name wherever this fork credits it. What is called what:
+
+| Thing | Name | Why it is what it is |
+| --- | --- | --- |
+| The product, wherever a person reads it | `Function_2_C_Decompiler` | The UI, messages, READMEs, agent prompts, generated files, commit messages, installer text. |
+| Python package, import name | `decompnet` | Renaming it breaks every import, the lock file and every installed copy. |
+| The command | `decomp` | The documented way to run it, in the agent skill and the installers. |
+| Original project | `decomp.wtf` | Credit links to `github.com/i12bp8/decomp.wtf`, "upstream decomp.wtf", and its author's own notice in the README. |
+
+Kept **on purpose** because existing projects and installs depend on the exact string (each is pinned by `maintenance/tests/test_maint_naming.py`):
+the project manifest `.decomp.wtf.json`; the `.decomp-wtf/` state folder and the `decomp-wtf` git branch the app creates in a fork; the WSL distro,
+Docker container and volume, `/etc/decomp-wtf-runtime`, the systemd unit `decomp-wtf.service`; the Windows task `decomp.wtf` and the shortcut and
+app-bundle file names (an uninstall must find what an old install made); the `/health` answer `"app": "decomp-wtf"` that processes recognise each other
+by; the browser `localStorage` keys (renaming them resets every user's saved settings); the logger name `decomp.wtf`; and the plugin and marketplace
+name `decomp-wtf` (`/plugin install decomp-wtf@decomp-wtf`). Renaming any of these is possible, but it is a migration (read the old name, write the new,
+keep both working for a release) and not a find-and-replace.
+
+How it was done: `maintenance/tools/rename_product.py` replaces the name in the files people read and **protects** the identifiers and credits above (a dry
+run lists every change; a self-check refuses to run if its protection ever damages them). It does not touch `projects/`, because the demo builders write
+a credit string into fixed-width ROM header fields (`b"...".ljust(40)` does not truncate, so a longer name would overflow the field and corrupt the
+demo executable), nor the PowerShell installers (they refuse to run), nor `maintenance/` (history and documentation about upstream).
+
+Known gaps: the README's banner images (`.github/assets/*.png`) still show the old wordmark (they are pictures, not text); the demo ROMs carry the old
+name in their embedded credit; and the sidebar layout for the longer name was made tolerant in CSS (smaller type, wrapping allowed) but **not viewed in a
+browser** (none was available when it was made), so look at it once.
+

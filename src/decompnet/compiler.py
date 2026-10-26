@@ -6,7 +6,7 @@ every match is produced here, on the coordinator, with the project's pinned tool
 The compiler is a 1990s program fed text an AI wrote, so it only ever runs inside the sandbox (bubblewrap, Docker or
 WSL). Without one, compiling is refused and the user is told how to fix it: it does NOT fall back to running the
 compiler as the user. The ways around that are all explicit: DECOMP_UNSAFE_NO_SANDBOX=1, or running in the dedicated
-Linux that decomp.wtf's own installers build (a WSL distro or Docker image marked in /etc/decomp-wtf-runtime) or in any
+Linux that Function_2_C_Decompiler's own installers build (a WSL distro or Docker image marked in /etc/decomp-wtf-runtime) or in any
 container, where the VM is the boundary. `trusted` does not change this: it only skips the source filter (exports pass
 it for matched code), and that code is still agent-written.
 """
@@ -85,7 +85,7 @@ class CompileResult:
 
 
 def _unsandboxed_allowed() -> bool:
-    """Someone said so (the environment variable), or this is decomp.wtf's own Linux or a container: there the virtual
+    """Someone said so (the environment variable), or this is Function_2_C_Decompiler's own Linux or a container: there the virtual
     machine is the boundary, as upstream designed it. A user's own general-purpose WSL distro is not: hostenv.runtime()
     says "wsl" for any Linux that can see Windows, so only the marker upstream's linux-base.sh writes counts."""
     if os.environ.get(UNSAFE_ENV, "").strip().lower() in ("1", "true", "yes"):
@@ -164,7 +164,7 @@ def _exec(cfg: CompilerConfig, work: Path, argv: list[str], timeout: float, cwd:
     if _sandbox_mode(cfg) == "wsl":
         return wsl.run(argv, cwd or work, timeout, **stage)
     # in the work folder, never in the app's own: KMC GCC's assembler (binutils 2.6) can't read its input when the
-    # current directory is / ("Bad file descriptor"), which it is for decomp.wtf started by a service or in Docker
+    # current directory is / ("Bad file descriptor"), which it is for Function_2_C_Decompiler started by a service or in Docker
     return subprocess.run(_wrap(cfg, work, argv), cwd=cwd or work, capture_output=True, text=True, encoding="utf-8",
                           errors="replace", timeout=timeout)
 

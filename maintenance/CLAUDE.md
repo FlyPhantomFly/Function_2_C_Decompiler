@@ -1,6 +1,7 @@
 # Working on this repository
 
-This is a maintained fork of `decomp.wtf` (Python package `decompnet`, upstream 0.10.6, MIT, by sam wolfs). It
+This is a maintained fork of `decomp.wtf` (upstream 0.10.6, MIT, by sam wolfs), now called **Function_2_C_Decompiler** (Python package
+`decompnet`, command `decomp`: see ARCHITECTURE section 12, "Names"). It
 orchestrates LLM agents that write C which a period compiler builds and a judge compares byte for byte. Read
 `maintenance/ARCHITECTURE.md` for how it works and `maintenance/MAINTENANCE_PLAN.md` for what to do next.
 `maintenance/CHANGELOG.md` is the record of what has been done.
@@ -77,6 +78,8 @@ updater or the installers fetch.
   before (`test_maint_schema.py`; the 0.10.6 fixture was made by upstream's own code).
 - Add a module nothing reaches: `test_maint_legacy_removed.py` fails unless it is imported from `app/` or listed as a script.
 - Bypass a sha256 pin to make a download work. A pin that fails means the file is not the one that was reviewed.
-- Rename `.decomp.wtf.json` or other on-disk names as part of a branding change; they are file formats, and renaming
-  them breaks existing projects. Classify each `decomp.wtf` reference (network endpoint, file-format name, comment,
-  marketing copy) before replacing it; plan item 1.1 is a staged rebrand, not a global find-and-replace.
+- Rename an identifier (`.decomp.wtf.json`, anything hyphenated `decomp-wtf`, the logger, Windows task and shortcut names) or
+  use a global find-and-replace on the name. They are file formats and install state, and renaming them orphans what users already
+  have. Use `python3 maintenance/tools/rename_product.py` (dry run by default); `test_maint_naming.py` fails if an identifier
+  moves, if the original author's notice or a credit link is rewritten, or if the old name is left where a person reads it.
+- Make a string longer in `projects/*/build.py`: they pad credits into fixed-width ROM header fields.

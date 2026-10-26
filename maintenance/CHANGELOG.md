@@ -13,6 +13,50 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.34] - 2026-10-21
+
+**Rename.** The product is called **Function_2_C_Decompiler** wherever a person reads it (owner's decision). Its identifiers, and the
+original project's own name, are left exactly as they were. (Plan item 1.1, the staged rebrand.) 64 files changed, 715 insertions, 377 deletions.
+
+- Why this was not a find-and-replace: the string `decomp.wtf` appeared in about 700 places and they were three different things: **the product's
+  name** (renamed), **identifiers existing projects and installs depend on** (kept), and **the name of the original project** wherever this fork
+  credits it (kept). The new `maintenance/tools/rename_product.py` does the renaming with the other two protected (dry run by default, a
+  self-check that refuses to run if its protection ever damages what it protects). It changed 352 lines in 54 files: the app, the GUI and its
+  page title and wordmark, CLI help and messages, agent prompts, the MCP server's title, generated READMEs and commit messages, installer text,
+  the plugin and its skill, the README.
+- **Kept on purpose** (pinned by tests): the project manifest `.decomp.wtf.json`; the `.decomp-wtf/` folder and `decomp-wtf` git branch the app
+  creates in forks; the WSL distro, Docker container, `/etc/decomp-wtf-runtime` and systemd unit names; the Windows task and shortcut file names; the
+  `/health` answer `"app": "decomp-wtf"` that processes recognise each other by; the browser `localStorage` keys (renaming resets everyone's saved
+  settings); the logger name; the plugin and marketplace name. The package stays `decompnet` and the command `decomp`. See ARCHITECTURE section 12.
+- Things a rename tool would have broken, found by reviewing its output before applying it (I reviewed all of it in two passes):
+  1. **The original author's own notice** in the README ("I've decided to stop working on decomp.wtf and archive it") would have become Sam Wolfs
+     announcing the end of *this* project in the new name. Protected, and a test pins his words.
+  2. **A credit link would have been rewritten into a dead one**: my first protection pattern covered `[decomp.wtf](https://github.com/i12bp8` but
+     not the `/decomp.wtf)` after it, so the upstream URL would have become `.../i12bp8/Function_2_C_Decompiler`. Fixed, with a built-in check
+     and a test that no upstream URL is damaged.
+  3. **Demo ROM credits**: `projects/demo-psx/build.py` writes `b"Demo Quest PS1 - made for decomp.wtf".ljust(40)` into a 40-byte header field. The
+     new name makes it 49 bytes, and `ljust` does not truncate, so it would **overflow the field and corrupt the demo executable**. `projects/` is
+     out of the tool's scope, and a test fails if any padded literal is longer than its width.
+  4. "The decomp.wtf website" in `install.sh` means upstream's *domain*, not this product. Protected.
+- **Git identity.** The app signed commits it makes (when git has no identity) as `decomp.wtf <noreply@decomp.wtf>`: an address at a domain this fork does
+  not own, written into history people may publish. Now `Function_2_C_Decompiler <noreply@function-2-c-decompiler.invalid>` (`.invalid` can never
+  resolve, RFC 2606), defined once in the package (`PRODUCT`, `NOREPLY_EMAIL`) and used by all three places. A real commit in a repo with no git identity
+  shows it.
+- The wordmark was split across markup (`decomp<b>.wtf</b>`, in two places), which no text search finds; it is now `Function_2_C_<b>Decompiler</b>`.
+  **Layout: not viewed in a browser** (none was available). The name is 23 characters where it was 10 and the sidebar is 248 px, so `.brand` now
+  has smaller type (13 px), `min-width: 0` and `overflow-wrap`; please look at the sidebar once. Still showing the old name: the README's banner
+  images (they are pictures) and the demo ROMs' embedded credit.
+- Verified on the real app: it prints `Function_2_C_Decompiler 0.10.34 on http://127.0.0.1:...`, serves a page whose title, both wordmarks and labels
+  carry the new name with no old name left (apart from the credit links), and `/health` still answers `"app": "decomp-wtf"`.
+- Tests: 29 in `maintenance/tests/test_maint_naming.py` (the product name, **eighteen identifiers that must not change**, the author's notice, credit
+  links, the git identity, the wordmark, the demo-ROM field widths, and that re-running the tool changes nothing). One upstream test asserted the exact
+  text of a message that contains the name (`test_toolchains`), so its expected string moved with the message; seven of my own tests did the same.
+  **Whole suite with every tool: 481 passed and the changelog test this entry satisfies, 52 skipped, 0 failed**; test by test, nothing that passed in
+  upstream's baseline or in run G fails, nothing is gone, and the 29 new tests pass.
+- Not covered by the tool, on purpose: `maintenance/` (history and documentation about upstream, so the changelog keeps calling upstream's product by
+  the name it had), the PowerShell installers (frozen), `tests/`.
+- Nothing for users to do: the command is still `decomp`, and nothing on disk was renamed.
+
 ## [0.10.33] - 2026-10-21
 
 **Docs.** The hash-only mode is recorded as no longer functional. The owner decided to leave it in place. No behavior change.
