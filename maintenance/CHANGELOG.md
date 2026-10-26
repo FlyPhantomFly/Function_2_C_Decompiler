@@ -13,6 +13,19 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.11.5] - 2026-10-25
+
+**Fix, Docs.** The animation's caption now says what the animation is, and the test that required the original author's notice no longer does: the owner removed it, and the test was failing CI.
+
+- **The caption.** It read "The simulation from upstream decomp.wtf, on the demo ROM that ships with the app". The second half was wrong: the animation's title says Demo Quest 64, but the code it shows is zlib's, so it is not that ROM's functions. It now reads "A scripted simulation from upstream decomp.wtf: an illustration of the interface, not a recording of a real run", and the image's alt text begins "An illustration of ..." so that a screen reader is not told it is a real run either.
+- **The owner removed upstream's notice from the README** (two edits made on github.com): the "This project is discontinued" section and the sentence that introduced it. It announced that the original project was archived, which no longer describes this repository. The credit and links to the original project, the fork notice and the README's own usage section ("Use games you own, ...") are untouched. **That turned CI red:**
+  `test_the_original_authors_notice_is_exactly_as_he_wrote_it` required the notice to be present. It is now `test_the_original_authors_notice_is_either_gone_or_exactly_as_he_wrote_it`: what it protects is that his words are never rewritten to mean something about this fork, so if any of the notice is in the README it must be all there, as he wrote it. `ARCHITECTURE.md` says the notice was removed.
+  To put it back, revert those two commits (`git revert` them; the text is also in upstream's repository).
+- **Decisions the owner gave, recorded:** private vulnerability reporting is enabled; **release signing is left as it is** (checksums only; the updater verifies nothing); **the shiftable export stays as it is**, experimental and verified on the demo ROM only, which the README says.
+- **How changes arrive from now on.** The GitHub repository is the source of truth. Changes are made on a clone of it and delivered as a patch to apply on top (`git am`), not as a new zip of everything; the old `maintenance/patches` series and its zips described the history before the repository existed.
+- Verified: the CI checks job's own commands, run on a clone of the live repository with the optional tools hidden as on a bare runner: **719 passed, 170 skipped, 0 failed**, `compileall` and the lint clean, and the wheel builds and checks clean (127 files). The test that was red on the owner's push (`test_the_original_authors_notice_...`) passes, and so do the tests that read the README (naming, links, banner, release hygiene).
+- Nothing for users to do.
+
 ## [0.11.4] - 2026-10-24
 
 **Fix, Docs.** The N64 checker now covers the start-up stub, the one piece of code it skipped; and the README's animated demo carries the product's name instead of the original's.

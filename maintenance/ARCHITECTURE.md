@@ -183,7 +183,7 @@ name wherever this fork credits it. What is called what:
 | The product, wherever a person reads it | `Function_2_C_Decompiler` | The UI, messages, READMEs, agent prompts, generated files, commit messages, installer text. |
 | Python package, import name | `decompnet` | Renaming it breaks every import, the lock file and every installed copy. |
 | The command | `decomp` | The documented way to run it, in the agent skill and the installers. |
-| Original project | `decomp.wtf` | Credit links to `github.com/i12bp8/decomp.wtf`, "upstream decomp.wtf", and its author's own notice in the README. |
+| Original project | `decomp.wtf` | Credit links to `github.com/i12bp8/decomp.wtf`, "upstream decomp.wtf", and (until the owner removed it in 0.11.5) its author's own notice in the README; his words are never rewritten. |
 
 Kept **on purpose** because existing projects and installs depend on the exact string (each is pinned by `maintenance/tests/test_maint_naming.py`):
 the project manifest `.decomp.wtf.json`; the `.decomp-wtf/` state folder and the `decomp-wtf` git branch the app creates in a fork; the WSL distro,

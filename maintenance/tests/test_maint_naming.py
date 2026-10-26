@@ -174,10 +174,13 @@ def test_an_identifier_other_things_depend_on_is_unchanged(path, needle, why):
 # ---- the original project keeps its name --------------------------------------------------------------------------------------------
 
 
-def test_the_original_authors_notice_is_exactly_as_he_wrote_it():
+def test_the_original_authors_notice_is_either_gone_or_exactly_as_he_wrote_it():
+    """The owner removed upstream's discontinuation notice from the README (0.11.5): it announced that the original project was archived, which no longer describes this repository.
+    The credit links and the fork notice stay (tests below). What this still protects is that his words are never rewritten: if any of the notice is in the README, it is all there, as he wrote it."""
     readme = read("README.md")
-    assert "I've decided to stop working on decomp.wtf and archive it." in readme
-    assert "I didn't make decomp.wtf to do any harm" in readme
+    if "I've decided to stop working on decomp.wtf" in readme:
+        assert "I've decided to stop working on decomp.wtf and archive it." in readme
+        assert "I didn't make decomp.wtf to do any harm" in readme
     assert "stop working on Function_2_C_Decompiler" not in readme  # his words about his project are not rewritten
 
 

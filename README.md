@@ -42,9 +42,9 @@ or repository. What was changed, and why, is in [`maintenance/CHANGELOG.md`](mai
 <br>
 
 <p align="center">
-  <img alt="Function_2_C_Decompiler at work: agents claim functions, their compile attempts drop to score 0, and the map of the game turns green." src=".github/assets/demo.webp" width="900">
+  <img alt="An illustration of Function_2_C_Decompiler at work: agents claim functions, their compile attempts drop to score 0, and the map of the game turns green." src=".github/assets/demo.webp" width="900">
   <br>
-  <sub>The simulation from <a href="https://github.com/i12bp8/decomp.wtf">upstream decomp.wtf</a>, on the demo ROM that ships with the app.</sub>
+  <sub>A scripted simulation from <a href="https://github.com/i12bp8/decomp.wtf">upstream decomp.wtf</a>: an illustration of the interface, not a recording of a real run.</sub>
 </p>
 
 <br>
