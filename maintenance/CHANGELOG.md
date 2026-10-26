@@ -13,6 +13,26 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.22] - 2026-10-21
+
+**Fix.** A relocation inside bytes capstone cannot decode no longer crashes scoring on x86 and x86-64. Fixes defect 2 from
+0.10.20. Touches `scoring.py` (review-first), as one self-contained version.
+
+- The problem: capstone's SKIPDATA mode turns undecodable bytes into pseudo-instructions (`id == 0`) with no operand
+  details. `scoring._symbolize` read `ins.disp_size` on them whenever a relocation fell inside one, which raises
+  `CsError`, so `diff(f, f)` itself failed and the function could never be scored. Minimal case: `86 0d` (a truncated
+  instruction) with a relocation at offset 1. It failed closed (no false match) and affected only x86 and x86-64; the
+  MIPS, PPC, ARM and Thumb paths never read those details (tested). It would bite wherever x86 code embeds data with
+  relocations, such as jump tables in `.text`.
+- The fix: one condition. The x86 detail-reading branch of `_symbolize` now requires `ins.id`; a placeholder falls
+  through to the generic symbolization the other architectures use, so the listing shows `.byte <a+0x1>` for the byte the
+  relocation covers. Instructions that decode are untouched (`id` is non-zero), so nothing changes for real code.
+- Verified: the xfail test now passes and its marker is removed; a control shows such a function still matches only itself
+  (a different symbol or byte scores > 0); the 600-pair random sweep, which tolerated these crashes in 0.10.20, is now
+  strict and passes; the other four architectures are tested explicitly. 184 tests pass across the maintenance tests and
+  the x86 network suites; ruff is clean on the touched files including unused names.
+- Nothing for users to do.
+
 ## [0.10.21] - 2026-10-21
 
 **Security (correctness of the core).** A function is only a match for the function it really is. Fixes defect 1 from

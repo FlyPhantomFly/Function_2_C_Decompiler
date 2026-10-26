@@ -22,7 +22,6 @@ import subprocess
 import tomllib
 from pathlib import Path
 
-import capstone
 import pytest
 
 from decompnet import scoring
@@ -124,21 +123,16 @@ def _mutate(rng: random.Random, f: FunctionObj) -> FunctionObj:
 
 def test_a_score_of_zero_happens_exactly_when_the_functions_are_the_same():
     rng = random.Random(0xDEC0)
-    zero = nonzero = crashed = 0
+    zero = nonzero = 0
     for _ in range(600):
         a = _random_function(rng)
         b = _mutate(rng, a)
-        try:
-            d = scoring.diff(a, b)
-        except capstone.CsError:  # a relocation inside undecodable bytes: its own known bug, pinned by the xfail below
-            crashed += 1
-            continue
+        d = scoring.diff(a, b)
         want = same_function(a, b)
         assert (d.score == 0) == want and d.bytes_match == want, (a, b)
         zero += want
         nonzero += not want
-    assert zero > 50 and nonzero > 250  # the sweep really exercised both outcomes
-    assert crashed < 120
+    assert zero > 50 and nonzero > 300  # the sweep really exercised both outcomes
 
 
 # ---- relocations: normalization ignores exactly what a linker fills in ------------------------------------------
@@ -349,15 +343,23 @@ def test_diff_does_not_call_a_longer_function_a_match_for_a_shorter_one():
 # ---- a function that cannot be scored at all -------------------------------------------------------------------
 
 
-@pytest.mark.xfail(strict=True, raises=capstone.CsError,
-                   reason="x86 only: a relocation inside bytes capstone cannot decode raises instead of scoring (fixed in a later version)")
 def test_a_relocation_inside_undecodable_bytes_is_scored_not_a_crash():
-    """`86 0d` is a truncated instruction, so capstone's SKIPDATA mode yields `.byte` pseudo-instructions; _symbolize then
-    reads `ins.disp_size`, which capstone refuses for them. Fails closed (no false match), but the function can never be
-    scored, not even against itself. Data in code with relocations (jump tables in .text) would do the same."""
+    """`86 0d` is a truncated instruction, so capstone's SKIPDATA mode yields `.byte` pseudo-instructions, which have no
+    operand details; _symbolize used to read `ins.disp_size` on them and raise, so such a function could not be scored,
+    not even against itself. Data in code with relocations (jump tables in .text) would do the same."""
     f = FunctionObj("f", "x86_64", False, bytes.fromhex("860d"), [Reloc(1, 2, "a", 0)])
     d = scoring.diff(f, f)
     assert d.score == 0 and d.bytes_match
+    assert "<a" in scoring.asm_text(f)  # the relocation is still shown, in the byte it covers
+
+
+def test_such_a_function_still_only_matches_itself():
+    f = FunctionObj("f", "x86_64", False, bytes.fromhex("860d"), [Reloc(1, 2, "a", 0)])
+    other_symbol = FunctionObj("f", "x86_64", False, f.code, [Reloc(1, 2, "b", 0)])
+    other_byte = FunctionObj("f", "x86_64", False, bytes.fromhex("860e"), f.relocs)
+    for other in (other_symbol, other_byte):
+        d = scoring.diff(f, other)
+        assert d.score > 0 and not d.bytes_match
 
 
 @pytest.mark.parametrize("arch, big, code, rtype", [("mips", True, "ffffffff", 5), ("ppc", True, "ffffffff", 10),

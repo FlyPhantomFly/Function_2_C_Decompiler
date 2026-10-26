@@ -125,7 +125,7 @@ def _mips_symbolize(ops: str, name: str) -> str:
 
 def _symbolize(ins, ops: str, rel_at: int, target: str, arch: str) -> str:
     """Put a relocation's symbol into the operand it actually patches (the field is zeroed)."""
-    if arch in ("x86_64", "x86"):
+    if arch in ("x86_64", "x86") and ins.id:  # id 0 is capstone's SKIPDATA stand-in for undecodable bytes: no operand details
         if ins.disp_size and ins.disp_offset == rel_at and "[" in ops:
             lb, rb = ops.index("["), ops.index("]")
             inner = re.sub(r"\s*[+-]\s*(0x[0-9a-f]+|\d+)$", "", ops[lb + 1 : rb])

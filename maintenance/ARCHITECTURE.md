@@ -120,7 +120,7 @@ Verified by running the code (0.10.7 baseline, see `baseline/README.md`):
     spells out the relocations' text was credited as a match (demonstrated through the real code; not reachable from C source compiled
     by the real toolchain). Now `same_as` compares directly, and hash-only paths also check the stored size. The relocation mask table
     (17 entries, 2,176 bit flips), the penalty ladder, and real gcc output (1,212 flips) were tested and are exact.
-14. **A relocation inside undecodable x86 bytes crashes scoring** (open, fixed in the next version). `scoring.disassemble` reads
+14. **A relocation inside undecodable x86 bytes crashed scoring** (fixed in 0.10.22). `scoring.disassemble` reads
     `ins.disp_size` on capstone's SKIPDATA pseudo-instructions, which raises, so `diff(f, f)` itself fails. Fails closed; x86 and
     x86-64 only.
 
