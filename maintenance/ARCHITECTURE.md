@@ -218,3 +218,22 @@ What a result is, and is not:
   (so a broken harness is told apart from a bad model). A test makes it fail on purpose to prove the check can fail.
 - Not yet done: a run against a real provider (it needs a key and money; the first one should be small, e.g. `--functions 3 --max-usd 1`).
 
+## 14. Releasing
+
+Written for a person who has never done it here. Nothing in this section has run on GitHub yet; the workflow's logic was rehearsed locally and `actionlint` passes.
+
+1. Make the change on a branch, with its test. Bump the version with `python3 maintenance/tools/bump_version.py X.Y.Z` (it moves `pyproject.toml`, `__init__.py` and `uv.lock` together) and write the `## [X.Y.Z] - date`
+   entry at the top of `maintenance/CHANGELOG.md`. That entry becomes the release notes word for word, so write it for a reader who was not here.
+2. CI (`.github/workflows/ci.yml`) must be green. Among its checks, a step builds the wheel and `maintenance/tools/check_wheel.py` rejects an incomplete one (package data outside the package is the
+   classic way to publish a wheel that installs and has no GUI) or one that ships tests, databases or settings.
+3. Push a tag `vX.Y.Z` that matches the version exactly (`git tag vX.Y.Z && git push origin vX.Y.Z`). `.github/workflows/release.yml` then runs, and only on a tag (which only someone with write access can push): the `build` job
+   (read-only token) checks the tag against the code and that the changelog has an entry, runs the tests, builds the wheel and the source distribution, checks the wheel, installs it into a clean environment from outside the
+   checkout and runs it, and writes `SHA256SUMS`; the `publish` job (the only one with write access, and one that runs none of the repository's code) creates the release with the files, the checksums and the notes.
+4. Anyone can check a download against the checksums: put `SHA256SUMS` beside the files and run `sha256sum -c SHA256SUMS`.
+
+What a checksum does and does not give: it detects a damaged or truncated download. It does **not** prove who made the files, since someone who can replace the wheel can replace `SHA256SUMS` beside it. Proving that
+needs signing with a key the owner holds. The plan keeps an update channel waiting for that, and `decomp update` (which installs from this repository) is unchanged. The first release's name is the owner's decision:
+`0.10.x` continues as it is, and the plan's `0.11.0-fork.1` is not valid under PEP 440 as written (`0.11.0+fork.1` would be).
+
+One-time setup for the repository: switch on **private vulnerability reporting** (Settings, Code security), because the issue template's security link goes to that page and is a 404 until then.
+

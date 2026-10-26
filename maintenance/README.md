@@ -9,7 +9,7 @@ Everything generated while taking over and maintaining this fork lives here, apa
 | `MAINTENANCE_PLAN.md` | The phased plan: what to do next and why. |
 | `CLAUDE.md` | Instructions for Claude Code sessions (commands, release rule, invariants, review gates). |
 | `baseline/` | The Phase 0 test baseline on upstream 0.10.6: raw output, classified summaries, a script that rebuilds the test environment. |
-| `tools/` | Scripts: `bump_version.py`, `summarize_junit.py`, `check_toolchains.py` (dead links and changed files in the pinned compiler downloads), `rename_product.py` (the product name, with identifiers and credits protected), `make_patches.sh`, `screenshot_ui.py` (see the GUI at two widths with a headless browser), `eval_agent.py` (measure a model on the demo ROM; `--oracle` checks the harness itself). |
+| `tools/` | Scripts: `bump_version.py`, `summarize_junit.py`, `check_toolchains.py` (dead links and changed files in the pinned compiler downloads), `rename_product.py` (the product name, with identifiers and credits protected), `make_patches.sh`, `screenshot_ui.py` (see the GUI at two widths with a headless browser), `eval_agent.py` (measure a model on the demo ROM; `--oracle` checks the harness itself), `check_wheel.py` (is a built wheel complete and clean?), `release_notes.py` (one version's changelog entry). |
 | `tests/` | Tests we added (`test_maint_*.py`). Upstream's tests stay in `tests/`. |
 | `patches/` | Each change as a patch against the `upstream-0.10.6` tag, for review. Derived from git history; not edited by hand. |
 

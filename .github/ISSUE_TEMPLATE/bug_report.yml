@@ -1,0 +1,72 @@
+name: Bug report
+description: Something broke, or a game would not import.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting it. **Please do not attach or paste a game, a ROM, a disc image or code from a commercial game.** A report does not need them.
+
+        If an import failed, the app shows a button, **Copy for a bug report**. Press it and paste the result into the first box below: it already holds the version, the platform it runs on, and the end of the log.
+  - type: textarea
+    id: report
+    attributes:
+      label: The report from the app
+      description: |
+        The text from **Copy for a bug report**. If the clipboard is not available, open **What happened** on the same screen, select the text there and paste that instead.
+        For anything that is not an import error, give the version (it is at the bottom of the sidebar) and say what it is running on (Linux, macOS, WSL, Docker).
+      placeholder: |
+        Function_2_C_Decompiler <version> (<build>) · <what it runs on>
+        Importing: <the file>
+        Error: <what went wrong>
+
+        Log:
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect, and what happened instead?
+      description: What you were doing, what you thought would happen, and what did.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of game was it?
+      options:
+        - Nintendo 64
+        - GameCube or Wii
+        - PlayStation
+        - PlayStation 2
+        - Game Boy Advance
+        - Nintendo DS
+        - A public decomp from decomp.dev (fork mode)
+        - Not about a game
+        - I don't know
+    validations:
+      required: true
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Which agent was working, if any?
+      options:
+        - Claude Code
+        - Codex
+        - Antigravity CLI
+        - opencode
+        - A model through an API (the built-in agent)
+        - Only the built-in editor
+        - None, or not about agents
+    validations:
+      required: true
+  - type: checkboxes
+    id: before-you-submit
+    attributes:
+      label: Before you submit
+      options:
+        - label: I have not attached or pasted a game file, a disc image, or a commercial game's code.
+          required: true
+        - label: I removed anything private from what I pasted (API keys, tokens, personal paths).
+          required: true

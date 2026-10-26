@@ -13,6 +13,41 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.45] - 2026-10-22
+
+**Tooling, CI.** A release workflow with checksums, a wheel checker, and a bug-report issue template that matches the app. (Plan Phase 4: "release wheels built by CI, with
+checksums published next to them" and "an issue template that matches the app's Copy for a bug report output".) Nothing under `src/` changed.
+
+- **`.github/workflows/release.yml`**: pushing a tag such as `v0.10.45` builds the wheel and the source distribution, checks them, and publishes a GitHub release whose notes are that version's
+  changelog entry, with a `SHA256SUMS` file beside the downloads (`sha256sum -c SHA256SUMS`). Two jobs so the one that runs code is read-only: `build` (read-only token) checks that the tag equals the
+  version in the code and that the changelog has an entry for it, runs the tests, builds, checks the wheel, **installs the wheel in a clean environment from outside the checkout and runs it**, and writes
+  the checksums; `publish` is the only job with write access and runs no code from the repository: it downloads what `build` made and runs `gh release create --verify-tag`. Nothing else triggers it.
+  All four actions are pinned by full SHA (`download-artifact` v8.0.1, seven months old, chosen over the 15-day-old v8.0.2 for a workflow that holds release-writing permission; the SHA CI already pins for
+  `upload-artifact` v7.0.1 was confirmed against GitHub's real tag). **Not run on GitHub** (I cannot): `actionlint` is clean, and I rehearsed the build job here by running its `run:` steps in order, from the YAML itself, with GitHub's variables and its default `bash -e` (the lock install and the full suite skipped, as they are run separately). With a good tag every step passed and `release/` held the wheel, the source distribution, `SHA256SUMS` (listing both, and verifying) and the notes; **a wrong tag stopped it at the first step** with the `::error::` line; **a missing changelog entry stopped it** with exit 2. The clean-environment install fetched the wheel's dependencies from PyPI and ran. Adding one byte to the wheel makes `sha256sum --check` fail.
+- **The existing CI guard narrowed, not weakened.** `test_maint_ci_workflow.py` forbade `contents: write` in every workflow. Now exactly one file, `release.yml`, may have it, and
+  `test_maint_release_workflow.py` pins how (8 tests): triggers only on a pushed tag; read-only default token; write permission on the `publish` job alone, which has no checkout and runs only
+  `gh release create`; no unpinned action; credentials not persisted; the tag/tests/wheel/checksum steps all present; the wheel installed from outside the checkout. Six dangerous edits (write access
+  on `build`, a checkout in `publish`, a `pull_request` trigger, the wheel check dropped, a movable tag, write access in `ci.yml`) were each applied in turn: **every one turns a test red.**
+- **`maintenance/tools/check_wheel.py`** (also a new CI step, so a broken wheel shows up on every push and not at release time): what a wheel must contain and must not. It lists the files the app cannot
+  run without (the GUI page and scripts, the compiler registry, the demo ROM, the Ghidra script, 20+ agent guides), the `decomp` entry point, the LICENSE and the metadata (name and version), and rejects
+  tests, docs, projects, caches, databases, settings and env files. The real wheel built from this tree passes (121 files, 644 KB), and **installed alone into a clean virtual environment it runs from outside
+  the source tree**: `decomp --help` works and the package finds its own GUI, 21 guides, registry and demo ROM. 25 tests (a broken wheel for each defect: a missing GUI file, a stray `tests/`, a wrong
+  version, no entry point, no license, too few guides, not a zip); one builds the real wheel and runs when `BUILD_WHEEL=1` (it passes).
+- **`maintenance/tools/release_notes.py`**: prints one version's changelog entry for the release notes, and exits 2 with nothing on stdout if there is none, so a release can never go out with
+  someone else's notes or none. (A test also checks the real changelog has notes for the version in `pyproject.toml`.)
+- **`.github/ISSUE_TEMPLATE/bug_report.yml` and `config.yml`.** The app has one bug-report flow: when an import fails it shows **Copy for a bug report**, which copies `Importing:`, `Error:` and a fenced `Log:`.
+  The form tells people to press exactly that button, to fall back to the **What happened** text if the clipboard is unavailable (the same fallback the app's own message gives), requires the report, and asks
+  for the kind of game and the agent. It does not set `render:` on the report field, because the report contains its own code fence and GitHub would wrap the paste in a second one. It requires two boxes
+  (no game file, disc image or commercial code attached; nothing private pasted), in line with the responsible-use constraint. `config.yml` points security reports at a private page of this repository
+  (that page is a 404 until you switch on **private vulnerability reporting** in the repository settings). 9 tests read the app's own HTML and JS and hold the template in step in both directions; five edits to
+  the app and the template (renaming the button, adding `render:`, dropping the `Error:` line, the app dropping its `Log:` line, making the no-game box optional) each turn one red.
+- Verified here: the release-tool, workflow and template tests; `actionlint` on both workflows; the wheel built and installed. The whole suite runs at the next version.
+- **For you:** this does nothing until it is on GitHub: push, then to release, bump the version (`maintenance/tools/bump_version.py`), write the changelog entry, commit, and push a tag `v<version>`. Switch on
+  private vulnerability reporting for the security link. Version numbers stay as they are (`0.10.x`); whether the first public release should be named differently (the plan suggested `0.11.0-fork.1`, which
+  PEP 440 does not allow as written) is yours to decide.
+- Not done: signing the releases. Checksums beside the downloads tell you the files were not corrupted; they do not prove who made them, because an attacker who can replace the wheel can replace
+  `SHA256SUMS` too. Signing needs a key you hold and a decision on where it lives, and the plan rightly makes an update channel wait for it. `decomp update` is unchanged.
+
 ## [0.10.44] - 2026-10-22
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.

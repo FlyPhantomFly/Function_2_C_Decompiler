@@ -4,7 +4,7 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.10.44
+## Status as of 0.10.45
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
@@ -81,9 +81,9 @@ Ranked by value for effort. Pick with me before building.
 
 ## Phase 4: Release and operations
 
-- Semantic versioning starting at the fork's first release (for example `0.11.0-fork.1`). A changelog. Release wheels built by CI, with checksums published next to them.
+- Semantic versioning starting at the fork's first release (for example `0.11.0-fork.1`). A changelog. Release wheels built by CI, with checksums published next to them. *(Status, 0.10.45: **the workflow, the wheel check and the release notes tool are done** (ARCHITECTURE section 14), rehearsed locally and not yet run on GitHub. `0.11.0-fork.1` is not valid under PEP 440 as written; the first release's number is your decision.)*
 - An update channel only after the update path is signed or checksummed. Until then, "git pull and `uv sync`" is the update story.
-- An issue template that matches the app's "Copy for a bug report" output.
+- An issue template that matches the app's "Copy for a bug report" output. *(Done in 0.10.45, with tests that read the app's own button and report text. The security link needs private vulnerability reporting switched on in the repository settings.)*
 
 ## Working agreement for Claude Code sessions
 

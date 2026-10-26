@@ -19,6 +19,7 @@ python3 maintenance/tools/bump_version.py --check        # do the three version 
 python3 maintenance/tools/check_toolchains.py            # does every pinned compiler download still exist? (--verify: hash them)
 CHROME=/path/to/chromium python3 maintenance/tools/screenshot_ui.py   # after any GUI change: look at maintenance/baseline/ui/*.png
 uv run python maintenance/tools/eval_agent.py --oracle                # the eval harness checking itself (exit 1 = the harness is broken)
+uv build --wheel --out-dir /tmp/w && python3 maintenance/tools/check_wheel.py /tmp/w/*.whl   # is what a release would ship complete? (ARCHITECTURE section 14)
 ```
 
 Entry point (from `pyproject.toml`): `decomp` is the local app (`decompnet.app.cli`); it is the only one since the hosted
@@ -80,6 +81,8 @@ updater or the installers fetch.
   and the judging code (`scoring`, `network`, `compiler`, `project`, `rom/match*`) must have none at all.
 - Change the database format (`store.py`) without raising `SCHEMA_VERSION` and adding a test that opens a database from the version
   before (`test_maint_schema.py`; the 0.10.6 fixture was made by upstream's own code).
+- Give any workflow write access, except the `publish` job of `release.yml` (which runs no repository code and only triggers on a pushed tag): `test_maint_ci_workflow.py` and
+  `test_maint_release_workflow.py` fail.
 - Add a module nothing reaches: `test_maint_legacy_removed.py` fails unless it is imported from `app/` or listed as a script.
 - Bypass a sha256 pin to make a download work. A pin that fails means the file is not the one that was reviewed.
 - Rename an identifier (`.decomp.wtf.json`, anything hyphenated `decomp-wtf`, the logger, Windows task and shortcut names) or

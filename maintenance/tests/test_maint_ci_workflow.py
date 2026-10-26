@@ -49,12 +49,14 @@ def test_no_workflow_runs_untrusted_code_with_a_privileged_trigger():
         assert "workflow_run" not in names, path.name
 
 
-def test_no_workflow_uses_secrets_or_writes_to_the_repository():
+def test_no_workflow_uses_secrets_or_pushes_and_only_the_release_workflow_may_write_at_all():
+    """The one exception to "read-only" is `release.yml`, which must create a GitHub release. It is pinned tightly in test_maint_release_workflow.py."""
     for path in _files():
         text = path.read_text(encoding="utf-8")
         assert "secrets." not in text, path.name
-        assert "contents: write" not in text, path.name
         assert not re.search(r"git\s+push", text), path.name
+        if path.name != "release.yml":
+            assert "contents: write" not in text, path.name
 
 
 def test_checkout_does_not_leave_the_token_in_the_workspace():
@@ -68,5 +70,5 @@ def test_checkout_does_not_leave_the_token_in_the_workspace():
 
 def test_the_workflow_runs_the_checks_this_fork_relies_on():
     text = "\n".join(p.read_text(encoding="utf-8") for p in _files())
-    for needed in ("uv sync --locked", "uv lock --check", "bump_version.py --check", "compileall", "E9,F63,F7,F82", "pytest", "check_toolchains.py", "git archive HEAD"):
+    for needed in ("uv sync --locked", "uv lock --check", "bump_version.py --check", "compileall", "E9,F63,F7,F82", "pytest", "check_toolchains.py", "git archive HEAD", "check_wheel.py"):
         assert needed in text, f"CI no longer runs: {needed}"
