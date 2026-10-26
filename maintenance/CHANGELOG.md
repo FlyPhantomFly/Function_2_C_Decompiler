@@ -13,6 +13,34 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.41] - 2026-10-22
+
+**Tooling.** An eval harness: measure how well a model, or a prompt change, does on the demo ROM. (Plan Phase 3, item 1, the rest of it.) New
+`maintenance/tools/eval_agent.py`; nothing under `src/` changed. ARCHITECTURE section 13 says what it does and, more to the point, what a result is not.
+
+- How it measures: imports the demo into a throwaway home, runs the autopilot for the **free baseline (20 of 95 functions, the same 20 on both runs I made, and
+  the same first functions chosen after it)**, then gives the first N open functions, smallest first, each to the model in a fresh session told to work on that one
+  function only. Per function it records matched, tool steps, tokens, dollars (when the provider reports a cost), seconds and any error. `--max-usd` is a hard cap
+  built on the 0.10.39 budget check; functions skipped for it are reported as skipped, never as misses. `--compare A.json B.json` shows what a change gained and lost.
+- **It checks itself.** `--oracle` runs a scripted model that knows two answers through the *real* compiler and the real byte-for-byte judge: it must match both
+  (2 steps each, exit 0), and it exits 1, saying the harness is broken and not a model, if it does not. A test makes it fail on purpose (a compiling but wrong answer)
+  and asserts the failure is that, not a crash. No key and no network are needed for any of this.
+- Bugs found by running it, all fixed (each is now pinned by a test): a capital-W/lower-case mismatch made the first oracle run answer "I don't know" to everything (the
+  self-check caught it on its first run); `--functions`' default shadowed the oracle's own set; the baseline line printed "autopilot matched 0" when it had not been run;
+  a spending-cap message read "$0.00" for a $0.0025 cap; a function skipped for the cap was being counted as a miss by the exit rule; and, worst, **the scripted model was
+  installed by patching `httpx.Client` globally and never removed**, so a second call in one process wrapped the first and threw. That also meant my first "the self-check
+  can fail" test passed *because of that crash*, not because of the wrong answer it was written to detect. Now the patch is scoped to the run, the test asserts the
+  wrong answer was compiled and judged a miss (steps 2, no error), and a mutation check (putting the leak back) makes the relevant tests fail.
+- A key can never be given on the command line: argparse accepts an unambiguous prefix, so `--api-key sk-...` had been read as `--api-key-env sk-...`, and the pasted
+  secret was **printed back in an error message** as a missing variable's name. Abbreviations are off, `--api-key` is refused outright without repeating its value, and the key is
+  read from `EVAL_API_KEY`. The result file keeps the endpoint's host only: a test feeds it a URL with a password and a `?key=` and checks neither appears.
+- Tests: 18 in `maintenance/tests/test_maint_eval_harness.py`: the ordering, the oracle's script, the summary and report (a summary of nothing does not divide by zero), `--compare`,
+  the key rules, and, where the compiler and sandbox exist (they do here), the oracle matching 2 of 2, the deliberate failure, a miss, the cap, an unknown function, and
+  two runs in one process leaving no patch behind. Verified here: those 18 pass.
+- **Not done, and not claimable:** a run against a real provider. That needs your key and costs money, and provider behaviour (tool-call formats, cost reporting,
+  rate limits) is exactly what a scripted model cannot show. Start small: `EVAL_API_KEY=... uv run python maintenance/tools/eval_agent.py --base-url ... --model ... --functions 3 --max-usd 1`.
+- Nothing for users to do.
+
 ## [0.10.40] - 2026-10-22
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.

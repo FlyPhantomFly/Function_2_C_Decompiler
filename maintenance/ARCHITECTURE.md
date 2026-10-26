@@ -199,3 +199,20 @@ name in their embedded credit; and the sidebar layout for the longer name was ma
 (0.10.37): `baseline/ui/desktop.png` and `phone.png` show the wordmark fitting at 1280 and 420 px. The README banner shows the old `decomp.wtf`
 wordmark and the tagline "What the function?": artwork, so replacing it is the owner's design call.
 
+## 13. Evaluating a model
+
+`maintenance/tools/eval_agent.py` measures how well a model (or a prompt change) does on the bundled Demo Quest 64 ROM, through the same built-in API agent
+the app uses. It imports the demo into a throwaway home, runs the autopilot (machine drafts from m2c matched for free: **20 of 95 functions**, the same 20 on every run),
+then gives the first N still-open functions, smallest first, each to the model in its own fresh session told to work on that one function. It records per function: matched,
+tool steps, tokens, dollars (only when the provider reports a cost), seconds, and any error. `--max-usd` is a hard cap (it reuses the project budget); functions skipped
+for the cap are reported as skipped, not as failures. `--compare A.json B.json` shows what a change gained and lost.
+
+What a result is, and is not:
+- **One run is one sample.** Models are not deterministic; the function set and the free baseline are (verified: two runs gave the same 20 and the same functions), the model's
+  answers are not. Repeat a run and look at the spread before believing a small difference.
+- It measures matching the demo's functions, which are small. It says little about a 500-instruction function in a real game.
+- The key is read from `EVAL_API_KEY` in the environment, never the command line (a `--api-key` is refused without echoing it), and never written to the result file.
+- **The harness checks itself.** `--oracle` runs a scripted model that knows two answers through the real compiler and judge; it must match both, and exits 1 if it does not
+  (so a broken harness is told apart from a bad model). A test makes it fail on purpose to prove the check can fail.
+- Not yet done: a run against a real provider (it needs a key and money; the first one should be small, e.g. `--functions 3 --max-usd 1`).
+

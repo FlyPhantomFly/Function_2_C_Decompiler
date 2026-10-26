@@ -18,6 +18,7 @@ python3 maintenance/tools/summarize_junit.py junit.xml   # needs: pytest --junit
 python3 maintenance/tools/bump_version.py --check        # do the three version places agree?
 python3 maintenance/tools/check_toolchains.py            # does every pinned compiler download still exist? (--verify: hash them)
 CHROME=/path/to/chromium python3 maintenance/tools/screenshot_ui.py   # after any GUI change: look at maintenance/baseline/ui/*.png
+uv run python maintenance/tools/eval_agent.py --oracle                # the eval harness checking itself (exit 1 = the harness is broken)
 ```
 
 Entry point (from `pyproject.toml`): `decomp` is the local app (`decompnet.app.cli`); it is the only one since the hosted
