@@ -21,6 +21,7 @@ CHROME=/path/to/chromium python3 maintenance/tools/screenshot_ui.py   # after an
 uv run python maintenance/tools/eval_agent.py --oracle                # the eval harness checking itself (exit 1 = the harness is broken)
 decomp shift-audit PROJECT_OR_SOURCE_FOLDER                           # what an exported N64 tree pins to absolute addresses (SHIFTABLE_EXPORT.md)
 decomp shift-prep PROJECT_OR_SOURCE_FOLDER [--apply]                   # make its jump tables symbolic; previews unless --apply; the tree must still rebuild identical
+decomp shift-prep PROJECT_OR_SOURCE_FOLDER --layout                    # a layout in which code can grow (refused unless the references are ready); an unchanged tree must still say `identical`
 uv build --wheel --out-dir /tmp/w && python3 maintenance/tools/check_wheel.py /tmp/w/*.whl   # is what a release would ship complete? (ARCHITECTURE section 14)
 ```
 

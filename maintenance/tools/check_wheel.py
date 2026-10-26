@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 REQUIRED = [
-    "decompnet/__init__.py", "decompnet/toolchains.toml", "decompnet/checksum.py", "decompnet/app/cli.py", "decompnet/app/server.py", "decompnet/app/backup.py", "decompnet/app/autobackup.py", "decompnet/app/runs.py", "decompnet/rom/shiftaudit.py", "decompnet/rom/shiftprep.py",
+    "decompnet/__init__.py", "decompnet/toolchains.toml", "decompnet/checksum.py", "decompnet/app/cli.py", "decompnet/app/server.py", "decompnet/app/backup.py", "decompnet/app/autobackup.py", "decompnet/app/runs.py", "decompnet/rom/shiftaudit.py", "decompnet/rom/shiftprep.py", "decompnet/rom/n64crc.py", "decompnet/rom/export_build.py",
     "decompnet/app/static/index.html", "decompnet/app/static/app.js", "decompnet/app/static/app.css",
     "decompnet/app/static/demo/demo-quest-64.z64", "decompnet/forks/ghidra_scripts/DecompWtfExport.java",
 ]

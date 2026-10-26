@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from pathlib import Path
 
 from . import shiftaudit
@@ -96,3 +97,25 @@ def prepare(tree: Path, apply: bool = False) -> dict:
     manifest_path.write_text(json.dumps(manifest, indent=1), encoding="utf-8")
     plan["applied"] = True
     return plan
+
+
+def enable_layout(tree: Path) -> dict:
+    """Switch an export to the shifting layout: give it the current build.py (the old one is kept as build.py.before-shift) and mark build.json. Refuses unless every reference the audit can see is
+    a symbol: a shifting layout over numbers that still point at the old places would build a ROM that is wrong without saying so."""
+    tree = Path(tree)
+    report = shiftaudit.audit(tree)
+    if not report["verdict"]["references_ready"]:
+        raise shiftaudit.AuditError("the references are not ready for a shifting layout: " + "; ".join(report["verdict"]["blockers"]) + " (run `decomp shift-prep --apply` first)")
+    changed = []
+    template, current = Path(__file__).with_name("export_build.py"), tree / "build.py"
+    if not current.exists() or current.read_bytes() != template.read_bytes():
+        if current.exists() and not (tree / "build.py.before-shift").exists():
+            shutil.copyfile(current, tree / "build.py.before-shift")
+        shutil.copyfile(template, current)
+        changed.append("build.py")
+    build = json.loads((tree / "build.json").read_text(encoding="utf-8"))
+    if build.get("layout") != "shift":
+        build["layout"] = "shift"
+        (tree / "build.json").write_text(json.dumps(build, indent=1), encoding="utf-8")
+        changed.append("build.json")
+    return {"layout": "shift", "changed": changed}

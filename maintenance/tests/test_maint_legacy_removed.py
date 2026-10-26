@@ -25,7 +25,8 @@ SITE_KEEP = {"install.sh", "install.ps1", "dev.sh", "dev.ps1", "linux-base.sh", 
 
 # Reached by no import, on purpose: scripts the exporter copies into generated projects, a tool run as a subprocess, and
 # the DS template's tools (copied into a fork). A pure import graph cannot see these, so they are listed here.
-NOT_IMPORTED = {"decompnet.rom.export_build", "decompnet.rom.export_gba_build", "decompnet.rom.luvdis_run"}
+# n64crc: the exported build.py imports it when the tree uses the shifting layout (decompnet.rom.export_build is that file); the app itself never needs it
+NOT_IMPORTED = {"decompnet.rom.export_build", "decompnet.rom.export_gba_build", "decompnet.rom.luvdis_run", "decompnet.rom.n64crc"}
 NOT_IMPORTED_PREFIX = ("decompnet.forks.ds_template.",)
 
 

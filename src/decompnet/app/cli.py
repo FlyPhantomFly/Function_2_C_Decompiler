@@ -387,6 +387,11 @@ def shift_prep_cmd(args) -> int:
     if not (tree / "build.json").exists() and (tree / "source" / "build.json").exists():
         tree = tree / "source"
     try:
+        if args.layout and not args.apply:
+            done = shiftprep.enable_layout(tree)
+            print(f"The layout is now a shifting one ({', '.join(done['changed']) or 'nothing needed changing'}). The old build.py, if it was replaced, is kept as build.py.before-shift.")
+            print("Now run `python build.py` in the tree: a tree you have not changed must still say `identical`; after you grow some code it says what moved and fixes the header checksums.")
+            return 0
         plan = shiftprep.prepare(tree, apply=args.apply)
     except shiftaudit.AuditError as e:
         print(f"error: {e}", file=sys.stderr)
@@ -645,6 +650,7 @@ def main(argv: list[str] | None = None) -> int:
     sp.add_argument("tree", help="the export: a project folder, or its `source` folder (the one with build.json)")
     sp.add_argument("--apply", action="store_true", help="make the changes (without it, only say what would change)")
     sp.add_argument("--json", action="store_true", help="print the plan as JSON")
+    sp.add_argument("--layout", action="store_true", help="switch the build to the shifting layout (only once the references are ready: run --apply first)")
     rn = sub.add_parser("run", help="work on a project until N%% of it is matched (or a budget is spent); --resume carries on a stopped run")
     rn.add_argument("project", nargs="?", help="the project (default: the only one)")
     rn.add_argument("--until", metavar="N%", help="stop once this share of the functions open at the start is matched, 1 to 100")

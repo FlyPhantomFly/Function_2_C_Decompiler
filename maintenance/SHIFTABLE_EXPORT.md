@@ -1,6 +1,6 @@
 # The N64 shiftable export: what it needs, what was measured, how it will be verified
 
-Status: **steps 1 and 2 of 6 done: the audit and the symbolic references** (`decomp shift-audit` 0.11.1, `decomp shift-prep` 0.11.2). The layout itself is still fixed: code cannot grow yet. Everything under "measured" was counted on the exported demo ROM (Demo Quest 64, 96 functions); the audit now reproduces the numbers by itself.
+Status: **steps 1 to 5 of 6 done for a demo-class ROM: the audit, the symbolic references, the shifting layout, the checksum fix and the growth test** (`decomp shift-audit` 0.11.1, `decomp shift-prep` 0.11.2, `decomp shift-prep --layout` 0.11.3). **Verified on the demo ROM only.** Nothing here has been run on a real game, and the limits below are real limits. Everything under "measured" was counted on the exported demo ROM (Demo Quest 64, 96 functions); the audit now reproduces the numbers by itself.
 
 ## What "shiftable" means here
 
@@ -47,6 +47,19 @@ thing most likely to be wrong in a real game too (switch statements are everywhe
 3. **Growth test:** insert code at the start of the main segment and rebuild. Check that it links, that the checksums are valid, and that a normalized comparison holds: every function, with its calls, data references and jump-table
    entries mapped through the old-to-new addresses, equals the original. A reference the build failed to relocate shows up as a mismatch.
 4. **Execution test** where possible: run functions in a MIPS emulator (Unicorn) before and after the shift and compare results. Not available in this project's dependencies, so a test that needs it would skip without it.
+
+## What exists now (0.11.3), and what it was verified against
+
+`decomp shift-prep --layout` (after `--apply`) gives a tree the current `build.py` and marks `build.json` with `"layout": "shift"`. In that layout each segment follows the one before it, the code and data inside follow each other in their original order, the bss follows
+the data, a raw segment after the code follows the code, and the segment-end symbols are computed by the linker. The build refuses, with the reasons, unless the audit says every reference is a symbol, and refuses games with a global pointer, symbols pinned inside the program, or C functions
+that keep data of their own. After a link that differs from the original (a tree changed on purpose) it reports what moved and recomputes the header checksums: the family is found by reproducing the original's stored checksums, so a checksum is never written for a boot chip that was not verified
+(only the 6102/7101 family, which the demo ROM is, is supported).
+
+On the demo: an unchanged tree rebuilds the **identical** ROM in the shifting layout (also with a function written in C); growing the first function by 16 bytes grows the ROM by exactly 16, and an independent checker that reads the old ROM, the new ROM, the linker's symbol table and the assembly listing
+accounts for **all 8,084 instructions** of the 96 functions (each call, jump and address load must hold where its symbol now is, and every other word must be unchanged) and for every data word after the code; the header checksums are valid. Growing by one instruction moves everything by exactly four bytes.
+
+**What the demo cannot tell you:** its functions are packed back to back, with no padding at all. The rule for padding (rebuilt as alignment where the original was aligned, otherwise as a count of bytes) is tested only on hand-computed cases and on the original-size rule, never on a game that has padding, and the C-function case is
+tested for one function with no data of its own. **A tree changed on purpose cannot be compared with the original**, so the build can only say what moved, not that it is right: what stands between you and a silently wrong ROM is the refusal above, and the tests that an unchanged tree is identical.
 
 ## Out of scope for a first version (and the docs must say so)
 

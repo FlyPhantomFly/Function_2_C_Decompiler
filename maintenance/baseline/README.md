@@ -1,10 +1,10 @@
 # Phase 0 baseline (upstream 0.10.6 code, measured for the 0.10.7 release)
 
 Runs A to C below were made against the untouched upstream tree (git tag `upstream-0.10.6`), so they say what the code
-did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31), H (0.10.34), I (0.10.39), J (0.10.41), K (0.10.43), L (0.10.45), M (0.10.49), N (0.10.52), O (0.11.0), P (0.11.1) and Q (0.11.2) are the maintained code, for comparison. The raw pytest output and
+did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31), H (0.10.34), I (0.10.39), J (0.10.41), K (0.10.43), L (0.10.45), M (0.10.49), N (0.10.52), O (0.11.0), P (0.11.1), Q (0.11.2) and R (0.11.3) are the maintained code, for comparison. The raw pytest output and
 JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
 
-## The seventeen runs
+## The eighteen runs
 
 | Run | State of the machine | Result (269 test items) | Summary |
 | --- | --- | --- | --- |
@@ -25,6 +25,7 @@ JUnit XML for each run are in `raw/` exactly as captured (they contain the sandb
 | **O** | The first release, 0.11.0 "ROMday", same machine, with `CHROME` and `BUILD_WHEEL=1` | **782 passed, 0 failed, 52 skipped** (834 items) | [summary-O.md](summary-O.md) |
 | **P** | 0.11.1 (`decomp shift-audit`), same machine, with `CHROME` and `BUILD_WHEEL=1` | **795 passed, 0 failed, 52 skipped** (847 items) | [summary-P.md](summary-P.md) |
 | **Q** | 0.11.2 (`decomp shift-prep`), same machine, with `CHROME` and `BUILD_WHEEL=1` | **811 passed, 0 failed, 52 skipped** (863 items) | [summary-Q.md](summary-Q.md) |
+| **R** | 0.11.3 (the shifting layout), same machine, with `CHROME` and `BUILD_WHEEL=1` | **832 passed, 0 failed, 52 skipped** (884 items) | [summary-R.md](summary-R.md) |
 
 Test machine: Ubuntu 24.04 container, Python 3.12.3, uv 0.11.7, gcc 13.3, bubblewrap 0.9.0 (it does create a sandbox
 in that container), lld and llvm 18.1.3. Toolchains installed through the project's own installer
@@ -141,6 +142,11 @@ code, without those switches: 674 passed, 155 skipped, 0 failed.
 
 863 items against 847: 16 new (the shift-prep tests and the audit's verdict tests; all pass), none gone. **Nothing that passed in P, or in upstream's run C, fails in Q.** The bare-machine CI commands on the same code, without the browser and wheel switches:
 703 passed, 160 skipped, 0 failed.
+
+## Run R against run Q
+
+884 items against 863: 21 new (the layout and checksum tests; all pass), none gone. **Nothing that passed in Q, or in upstream's run C, fails in R.** The first full run of this version had one failure, a guard test that found a new module the app does not import (by design: see the changelog); this is the run after that fix. The bare-machine CI commands on the same code, without the browser and wheel switches:
+717 passed, 167 skipped, 0 failed.
 
 ## What the 50 skips in run C need
 

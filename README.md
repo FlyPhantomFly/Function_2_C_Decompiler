@@ -336,7 +336,8 @@ full decomp you can port and mod:
 - **Nintendo 64** imports are tested on Super Mario 64, GoldenEye and Perfect Dark, including code loaded later and
   code shipped compressed, and the export rebuilds the ROM byte for byte. For now the export puts every function at
   its original address: right for matching and for a port, while a mod that makes code bigger needs a shiftable
-  build, which is coming.
+  build. An **experimental** one exists (`decomp shift-prep --layout`; see `maintenance/SHIFTABLE_EXPORT.md`): it is
+  verified on the demo ROM only, not on those games.
 
 **Beta: PlayStation, PlayStation 2, Game Boy Advance and DS.** They work end to end and are tested on homemade
 games, much less on real ones so far. Expect rough edges, and please
