@@ -3,7 +3,7 @@ and tiny libc as the N64 demo (CC0, ../demo-rom/src, ../demo-n64/original) and z
 with CodeWarrior for GameCube 1.3.2 (-O4,p, dtk-template's usual flags) and linked by CodeWarrior's linker with its
 standard DOL layout, like GameCube games.
 
-CodeWarrior is proprietary: this needs the `mwcc` toolchain (decompnet toolchain install mwcc --accept-license).
+CodeWarrior is proprietary: this needs the `mwcc` toolchain (decomp toolchain install mwcc --accept-license).
 
     uv run python projects/demo-gc/build.py    ->  build/main.dol (+ build/demoq_gc.elf with symbols)
 """

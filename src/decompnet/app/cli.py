@@ -227,6 +227,28 @@ def install_info(args) -> int:
     return 0
 
 
+def toolchain_cmd(args) -> int:
+    """`decomp toolchain list | install ID | path ID`: one pinned compiler or tool at a time (setup installs the free set).
+    Ported from the hosted-network CLI, which is gone; it is the way to install a proprietary one, with --accept-license."""
+    from .. import toolchains
+    try:
+        if args.tc_cmd == "list":
+            print(f"{'id':16} {'platform':9} {'license':18} {'state':10} name")
+            for r in toolchains.status():
+                state = "installed" if r["installed"] else "-"
+                pin = "" if r["pinned"] else "  (pinned on first install)"
+                print(f"{r['id']:16} {r['platform'] or r['kind']:9} {r['license']:18} {state:10} {r['name']}{pin}")
+            print(f"\ninstall dir: {toolchains.root()}")
+        elif args.tc_cmd == "install":
+            toolchains.install(args.id, accept_license=args.accept_license, force=args.force)
+        elif args.tc_cmd == "path":
+            print(toolchains.require(args.id))
+    except toolchains.ToolchainError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+    return 0
+
+
 def setup(args) -> int:
     """Install what decomp.wtf needs on this computer: the free compilers and the draft decompiler."""
     from .. import toolchains
@@ -434,6 +456,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-browser", action="store_true", help="don't open the browser")
     sub = ap.add_subparsers(dest="cmd")
     sub.add_parser("setup", help="install the compilers and tools this computer needs")
+    tc = sub.add_parser("toolchain", help="list, install or locate one pinned compiler or tool (sha256-verified)")
+    tcsub = tc.add_subparsers(dest="tc_cmd", required=True)
+    tcsub.add_parser("list", help="show every toolchain and whether it is installed")
+    ti = tcsub.add_parser("install", help="download, verify and install a toolchain")
+    ti.add_argument("id")
+    ti.add_argument("--accept-license", action="store_true",
+                    help="required for proprietary toolchains: running them is your own licensing decision")
+    ti.add_argument("--force", action="store_true", help="reinstall even if present")
+    tp = tcsub.add_parser("path", help="print a toolchain's install directory")
+    tp.add_argument("id")
     sub.add_parser("stop", help="stop the running app")
     sub.add_parser("shortcut", help="add decomp.wtf to your apps menu / desktop")
     sub.add_parser("url", help="print the address that opens the app (starts it if needed)")
@@ -476,7 +508,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp":
         from .bridge import main as bridge
         return bridge(args.name)
-    return {"setup": setup, "stop": stop, "shortcut": shortcut, "connect": connect_agents, "share": share,
+    return {"setup": setup, "toolchain": toolchain_cmd, "stop": stop, "shortcut": shortcut, "connect": connect_agents, "share": share,
             "host": host, "join": join, "service": service_cmd, "url": url_cmd, "update": update_cmd,
             "install-info": install_info}.get(args.cmd, run)(args)
 

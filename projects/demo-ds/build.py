@@ -4,7 +4,7 @@ CodeWarrior for DS 2.0 (the flags DS decomps use) and linked by CodeWarrior's li
 layout (crt0.s, demo.lcf) so that the community's ds-decomp reads it like a real game. The ROM itself is written here, then rebuilt by ds-decomp's own
 `rom extract` and `rom build` so it's in the exact form the tools produce.
 
-CodeWarrior is proprietary: this needs the `mwccarm` toolchain (decompnet toolchain install mwccarm --accept-license).
+CodeWarrior is proprietary: this needs the `mwccarm` toolchain (decomp toolchain install mwccarm --accept-license).
 
     uv run python projects/demo-ds/build.py    ->  build/demoquest.nds (+ build/demoq_ds.elf with symbols)
 """

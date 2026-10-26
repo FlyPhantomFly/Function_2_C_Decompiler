@@ -34,14 +34,14 @@ fi
 
 step "free toolchains the tests use (all sha256-pinned in src/decompnet/toolchains.toml)"
 for tc in gcc-2.7.2-kmc gcc-2.7.2-psx binutils-mips m2c objdiff-cli; do
-  try uv run --locked decompnet toolchain install "$tc"
+  try uv run --locked decomp toolchain install "$tc"
 done
 
 step "zlib 1.1.4 source for the demo ROM (downloaded from zlib.net, checked against a pinned sha256)"
 try python3 -I projects/zlib-n64/prepare.py
 
 step "summary"
-uv run --locked decompnet toolchain list 2>/dev/null | awk 'NR==1 || /installed/' || true
+uv run --locked decomp toolchain list 2>/dev/null | awk 'NR==1 || /installed/' || true
 if [ "${#failed[@]}" -gt 0 ]; then
   printf '\nThese steps did not succeed:\n'; printf '  - %s\n' "${failed[@]}"
   echo "Tests that need them will skip or error; see maintenance/baseline/README.md."

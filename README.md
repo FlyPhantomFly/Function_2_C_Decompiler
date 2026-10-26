@@ -423,7 +423,7 @@ ROMs, [objdiff](https://github.com/encounter/objdiff) judges forks, [m2c](https:
 [decomp.dev](https://decomp.dev) lists the public projects. The look-alike finder follows the idea of
 [coddog](https://github.com/ethteck/coddog); [decomp-toolkit](https://github.com/encounter/decomp-toolkit),
 [maspsx](https://github.com/mkst/maspsx) and [wibo](https://github.com/decompals/wibo) are in the pinned toolbelt
-(`decompnet toolchain install <name>`). Thanks to everyone in the decomp community whose tools and ideas made this
+(`decomp toolchain install <name>`). Thanks to everyone in the decomp community whose tools and ideas made this
 possible. decomp.wtf isn't affiliated with any of these projects.
 
 ## Use it responsibly

@@ -13,6 +13,27 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.24] - 2026-10-21
+
+**Tooling.** `decomp toolchain list | install ID | path ID`, ported from the hosted-network CLI so that CLI can be deleted next.
+First step of the legacy-layer removal the owner decided on; no code is deleted in this version.
+
+- Why first: `decompnet toolchain ...` was the only command line way to install or find one specific pinned compiler, and the
+  only way to install a proprietary one (`--accept-license`); `decomp setup` installs just the free default set. The old
+  command was also named in runtime messages: `toolchains.require` told a user missing a compiler to run it, and so did
+  `README.md`, `projects/demo-gc` and `demo-ds` build scripts, `seeds.py`, the registry's comments and several test skip
+  messages. Deleting the old CLI first would have left all of them pointing at a command that does not exist.
+- `app/cli.py`: new `toolchain` subcommand with `list`, `install ID [--accept-license] [--force]` and `path ID`, with the same
+  behavior and output as before (clean `error: ...` on stderr and exit 1 for an unknown id, a missing toolchain or a refused
+  license). Every reference above now says `decomp toolchain ...`, including `maintenance/baseline/setup-test-env.sh` and
+  `maintenance/CLAUDE.md`. The old `decompnet toolchain` still works until the next version.
+- Tests: 12 in `maintenance/tests/test_maint_toolchain_cli.py` (11 failed before): list and installed state, clean errors, the
+  flags reaching `install`, **a proprietary compiler is never installed without `--accept-license` and nothing is downloaded
+  before that is checked** (all four: `ido-7.1`, `ido-5.3`, `mwcc`, `mwccarm`), and a scan that fails if any file still tells
+  anyone to run the old command. Real runs: `list`, idempotent `install`, `path`, the license refusal (exit 1), and the
+  rewritten setup script, which now stops only at the zlib download this sandbox cannot reach.
+- Nothing for users to do beyond using `decomp toolchain` instead of `decompnet toolchain`.
+
 ## [0.10.23] - 2026-10-21
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.

@@ -10,8 +10,8 @@ orchestrates LLM agents that write C which a period compiler builds and a judge 
 ```sh
 uv sync --locked                                  # install exactly what uv.lock says
 uv run --locked pytest -q -rsfE                   # the suite (tests/ and maintenance/tests/)
-uv run --locked decompnet toolchain list          # which pinned compilers/tools are installed
-uv run --locked decompnet toolchain install ID    # install one (sha256-verified); ID from the list
+uv run --locked decomp toolchain list             # which pinned compilers/tools are installed
+uv run --locked decomp toolchain install ID       # install one (sha256-verified); ID from the list
 maintenance/baseline/setup-test-env.sh            # apt packages + free toolchains + zlib source, safe to re-run
 python3 maintenance/tools/summarize_junit.py junit.xml   # needs: pytest --junitxml=junit.xml
 python3 maintenance/tools/bump_version.py --check        # do the three version places agree?

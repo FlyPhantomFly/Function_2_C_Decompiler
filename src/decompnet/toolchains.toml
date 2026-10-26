@@ -5,7 +5,7 @@
 # (default ~/.local/share/decompnet/toolchains) and mounted read-only into the compile sandbox.
 #
 # license = "proprietary" entries are supported but never installed without
-# `decompnet toolchain install <id> --accept-license`: running them is the operator's decision.
+# `decomp toolchain install <id> --accept-license`: running them is the operator's decision.
 # An empty sha256 means "pin on first install" (trust on first use); the installer records it.
 #
 # Each part lists the platforms it is for (linux-x86_64, linux-aarch64, macos-x86_64, macos-arm64,
