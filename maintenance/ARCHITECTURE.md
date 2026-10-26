@@ -93,10 +93,11 @@ commits with credit), `local.py` (hash-only contributor tools) and `cli.py` (the
 `site/`, the redirect worker in `site-redirect/`, and the website's legal and privacy pages. The import graph showed `app/` needs
 none of it (it builds on `network.py`), so it was deleted; `decomp toolchain` (the one useful part of that CLI) was ported first.
 What was kept on purpose, because the app's core uses it: `network.py`, `policy.py` (reputation levels), `project.py`, and the
-installers in `site/public/`. What is left over and now has no client: **hash-only projects** (`verification = "hash"`, kept in
+installers in `site/public/`. What is left over and **no longer functional as a feature**: **hash-only projects** (`verification = "hash"`, kept in
 `network.py` and `project.py`, tested, but nothing can create one from the app), and the unused `registrations` and `jobs` tables
-in `store.py` (left in the schema so existing databases keep working). Removing the hash-only mode is possible as a later,
-separate decision.
+in `store.py` (left in the schema so existing databases keep working). **Decision (owner, 0.10.33): leave the hash-only mode in
+place and record that it no longer works as a feature.** Its code and tests remain (the matching-integrity fixes of 0.10.21 cover it);
+it was the contributor side of the hosted network, whose client tools are gone, and nothing in the app creates or serves such a project.
 
 ## 9. Security model (as implemented)
 

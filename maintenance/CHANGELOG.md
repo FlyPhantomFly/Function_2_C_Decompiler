@@ -13,6 +13,18 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.33] - 2026-10-21
+
+**Docs.** The hash-only mode is recorded as no longer functional. The owner decided to leave it in place. No behavior change.
+
+- Decision (owner): leave hash-only projects where they are, and note that they no longer work as a feature. They were the contributor
+  side of the retired hosted network (the coordinator kept a one-way fingerprint and the contributor worked against their own copy
+  with client tools); those tools were deleted in 0.10.25, and nothing in the app creates or serves such a project.
+- A comment on `Network._hash_only` says so where a maintainer will meet it. `ARCHITECTURE.md` section 8 and the plan record the
+  decision. The code paths and their tests stay (the 0.10.21 matching-integrity fixes cover them), and so does the unused
+  `registrations` and `jobs` schema in `store.py`.
+- Nothing for users to do.
+
 ## [0.10.32] - 2026-10-21
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.

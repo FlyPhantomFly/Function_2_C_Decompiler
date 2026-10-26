@@ -164,6 +164,10 @@ class Network:
 
     @staticmethod
     def _hash_only(fn) -> bool:
+        # NOT FUNCTIONAL AS A FEATURE since 0.10.25. Hash-only projects (`verification = "hash"` in project.toml) kept only a
+        # fingerprint of each function so contributors could work against their own copy with the hosted network's client
+        # tools, which were deleted. The code paths remain, tested, by decision (maintenance/ARCHITECTURE.md, section 8), but
+        # nothing in the app creates or serves such a project.
         return fn["target"] is None
 
     def _target_obj(self, fn, proj) -> FunctionObj:

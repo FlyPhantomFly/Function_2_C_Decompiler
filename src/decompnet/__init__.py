@@ -2,7 +2,7 @@
 
 import sys
 
-__version__ = "0.10.32"
+__version__ = "0.10.33"
 
 # Where this build of decomp.wtf comes from and is installed from, and the project it is a maintained fork of. What the app
 # writes into other people's projects (READMEs, build scripts) links the first; the second is a credit.
