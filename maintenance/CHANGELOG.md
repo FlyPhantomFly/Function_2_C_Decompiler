@@ -13,6 +13,23 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.11.6] - 2026-10-26
+
+**Fix, Feature.** The update channel is connected to the published release: the installer works without a clone, and installed apps can now be told about a release. Found while deciding whether to cut another one.
+
+- **The problem.** ROMday was published, and nothing could receive it. The updater's `release` channel reads the `VERSION=` line of `site/public/install.sh` on `main`, and that line was still upstream's `0.10.6`, which is never newer than anything installed, so no app could ever be offered ROMday or any later release.
+  And the installer piped from curl refused ("this fork has no published release yet"), so a release was a snapshot people had to install by hand. The maintenance notes said not to move `VERSION` "until a release is actually published"; that condition was met an hour after the tag.
+- **The installer.** Piped from curl it installs the published release: the tag `v$VERSION` of this fork, the same archive the updater uses, and records the `release` channel so its updates follow releases. `DECOMP_WHEEL=<url>` still wins; run from a checkout it still installs that checkout and follows its branch. `VERSION` is now `0.11.0`.
+  README: the Install section had said "it has no release downloads"; it now gives the `curl ... | bash` line and says how each kind of install updates.
+- **One guarded step moves `VERSION`** (`maintenance/tools/set_install_version.py X.Y.Z`), and the order is written down (`maintenance/README.md`, "Cutting a release"): tag first, advertise second. Otherwise, in the minutes between a push and the tag, every installed app would be pointed at a download that does not exist yet. It refuses unless the tag exists on GitHub (a real `git ls-remote`;
+  if GitHub cannot be asked it refuses rather than guesses), the changelog has an entry for it, it is not lower than the current one (an app never downgrades) and not ahead of the code, and it is a plain version.
+- **Tests:** the test that asserted the old refusal now asserts the new behaviour, with the stand-in `curl`, `uv` and `decomp` the installer tests already use: piped, with or without `--source release`, it installs only this fork's tag and fetches nothing else. A permanent invariant: the installer's `VERSION` is at least 0.11.0 (upstream's 0.10.6 cannot come back), not ahead of the code, and has a changelog entry.
+  Twelve cases (eight tests, five of them parameterized) for the tool, against a real local bare repository standing in for GitHub. Seven breakages (no tag check, going backwards, ahead of the code, no changelog check, installing `main` instead of the tag, `VERSION` back at 0.10.6, taking the release from upstream's repository) each turn a test red.
+- **Run for real, not stubbed:** the installer piped into a clean home with the real `uv` and the real network installed `0.11.0` from the tag (`installing Function_2_C_Decompiler 0.11.0, the published release (v0.11.0)`, exit 0), the app reports 0.11.0 with the `release` channel recorded for this repository, and it has `decomp run` but not the shift tools, which came after ROMday.
+- **What this does not do:** install from the published wheel, or verify a checksum while installing (it installs the tag's source archive, trusting GitHub's HTTPS); signing, which the owner has left as it is; or touch `install.ps1`, which is switched off and keeps 0.10.6. The updater is unchanged: it was already correct, it was being told the wrong version.
+- Verified: the CI checks job's own commands with the optional tools hidden, as on a bare runner: **733 passed, 170 skipped, 0 failed**, `compileall` and the lint clean, the wheel builds and checks clean (127 files), `actionlint` clean on both workflows.
+- Nothing for users to do. For the owner: after tagging a release, run the step in `maintenance/README.md` that advertises it.
+
 ## [0.11.5] - 2026-10-25
 
 **Fix, Docs.** The animation's caption now says what the animation is, and the test that required the original author's notice no longer does: the owner removed it, and the test was failing CI.

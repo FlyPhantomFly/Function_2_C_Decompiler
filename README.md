@@ -68,7 +68,7 @@ Everything runs on your computer. No account, no telemetry, nothing uploaded.
 
 ## Install
 
-This fork installs from a clone: it has no release downloads and no download site. It runs on **Linux** (x86-64); the
+This fork installs from a clone, or without cloning from its latest published release (the [Releases](https://github.com/FlyPhantomFly/Function_2_C_Decompiler/releases) page). It runs on **Linux** (x86-64); the
 compilers it runs are Linux programs. macOS isn't supported, and neither is Windows yet (upstream's Windows installer is
 switched off here, because it downloads and runs code from upstream's website). On Windows, use WSL 2 and follow the
 Linux steps in a Linux shell there.
@@ -81,6 +81,12 @@ cd Function_2_C_Decompiler
 bash site/public/install.sh
 ```
 
+Or, without cloning, which installs the latest published release:
+
+```
+curl -fsSL https://raw.githubusercontent.com/FlyPhantomFly/Function_2_C_Decompiler/main/site/public/install.sh | bash
+```
+
 Run from the clone, the installer installs *that* checkout with [uv](https://docs.astral.sh/uv/) (it asks before
 installing uv itself), downloads the free, checksum-verified compilers and opens the app. Agent-written C is compiled
 only inside [bubblewrap](https://github.com/containers/bubblewrap): install it first (`sudo apt install bubblewrap` on
@@ -88,7 +94,7 @@ Debian, Ubuntu and Parrot) or compiling is refused.
 
 To work on the code without installing it: `uv sync --locked`, then `uv run decomp`.
 
-**Updating:** `git pull`, then run `bash site/public/install.sh` again (or `uv sync --locked` when you run from the
+**Updating:** an app installed from a release is told about newer releases and updates itself on request (`decomp update`); one installed from a clone follows its branch: `git pull`, then run `bash site/public/install.sh` again (or `uv sync --locked` when you run from the
 clone). The app checks only this repository for updates.
 
 One line sets up everything: [uv](https://docs.astral.sh/uv/), the app, the period compilers (pinned and

@@ -28,5 +28,16 @@ together and `tests/test_maint_release_hygiene.py` fails if they drift or the ch
   entry and reproduced in `patches/`.
 - A dependency in the other direction: upstream's tests import `maintenance/testgates.py` (the shared skip
   conditions), so the folder cannot simply be deleted without editing those tests.
-- `site/public/install.sh` and `install.ps1` keep `VERSION="0.10.6"`: it names a wheel that has to exist on a server.
-  Do not move it until a release is actually published.
+- `site/public/install.sh` carries `VERSION="X.Y.Z"`: the newest **published** release. `main`'s copy of it is read by the installer (piped from curl it installs the tag `vX.Y.Z`) and by every installed app's updater, so
+  it only ever moves after that tag exists, and only through `maintenance/tools/set_install_version.py` (below). `install.ps1` keeps `VERSION="0.10.6"`: it is switched off.
+
+## Cutting a release
+
+In this order; each step needs the one before it.
+
+1. `python3 maintenance/tools/bump_version.py X.Y.Z`, and a changelog entry `## [X.Y.Z] - date` (add ` - Name` after the date to name it). It is written as the release notes: for a reader who was not here, and honest about what is not verified.
+2. Push, and wait for CI to be green.
+3. Tag that commit and push the tag: `git tag -a vX.Y.Z -m "Function_2_C_Decompiler X.Y.Z" && git push origin vX.Y.Z`. Wait for the **Release** workflow, then look at the Releases page: the wheel, the source archive and `SHA256SUMS`.
+4. **Only now** advertise it: `python3 maintenance/tools/set_install_version.py X.Y.Z` (it refuses unless the tag exists on GitHub, the changelog has the entry, and the version is not lower than the current one or ahead of the code), commit the one changed line, push. Moving it
+   earlier would point every installed app at a download that does not exist yet.
+5. Check it as a stranger would: in a scratch home, `curl -fsSL https://raw.githubusercontent.com/FlyPhantomFly/Function_2_C_Decompiler/main/site/public/install.sh | bash -s -- --no-start`, and look at the version it installed.

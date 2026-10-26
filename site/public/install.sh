@@ -3,10 +3,13 @@
 #
 #   git clone https://github.com/FlyPhantomFly/Function_2_C_Decompiler
 #   cd Function_2_C_Decompiler && bash site/public/install.sh
+# or, without cloning (this installs the latest published release):
+#   curl -fsSL https://raw.githubusercontent.com/FlyPhantomFly/Function_2_C_Decompiler/main/site/public/install.sh | bash
 #
-# Run from a checkout, this installs that checkout. This fork has no published release and no download site, so it
-# never fetches a release: piped from curl there is nothing to install, and it says so. (Upstream's installer fetched
-# its wheel from the decomp.wtf website; that is upstream's code, not this fork's.)
+# Run from a checkout, this installs that checkout. Piped from curl, it installs the latest published release of this
+# fork: the tag named by VERSION below, fetched from this fork's GitHub. VERSION is only moved once that tag exists
+# (maintenance/tools/set_install_version.py checks it; maintenance/README.md has the checklist). (Upstream's installer
+# fetched its wheel from the decomp.wtf website; that is upstream's code, not this fork's.)
 #
 # Function_2_C_Decompiler installs on this computer, with uv:
 #   1. installs uv, Astral's Python tool manager, if you don't have it (asks first)
@@ -19,15 +22,15 @@
 #
 # Options:
 #   --no-start          install only
-#   --source <what>     where Function_2_C_Decompiler comes from: "release" (this fork publishes none, so it needs
-#                       DECOMP_WHEEL=<a package you name>), "branch:<name>" (a branch of this fork on GitHub; its
+#   --source <what>     where Function_2_C_Decompiler comes from: "release" (the published release that VERSION
+#                       names, or the package you name with DECOMP_WHEEL=<url>), "branch:<name>" (a branch of this fork on GitHub; its
 #                       updates follow that branch) or a folder with Function_2_C_Decompiler's source. Run from a git checkout,
 #                       the checkout is used (and updates follow its branch).
 # The same through the environment: DECOMP_SOURCE=..., DECOMP_BRANCH=<name>, DECOMP_WHEEL=<url>.
 # On a server, Function_2_C_Decompiler also runs in Docker: docker-compose.yml in the repository.
 set -euo pipefail
 
-VERSION="0.10.6"
+VERSION="0.11.0"
 REPO="FlyPhantomFly/Function_2_C_Decompiler"
 START=1
 SOURCE="${DECOMP_SOURCE:-}"
@@ -84,11 +87,15 @@ command -v curl >/dev/null || fail "curl is required"
 
 # ------------------------------------------------------------------------------------------- where it comes from
 # CHANNEL/BRANCH/COMMIT are remembered (decomp install-info): the app's updates come from the same place.
-CHANNEL=release BRANCH="" COMMIT="" SPEC="" SRC_DIR=""
+CHANNEL=release BRANCH="" COMMIT="" SPEC="" SRC_DIR="" RELEASE_TAG=""
 case "$SOURCE" in
-  release)  # this fork publishes no release, so there is nothing to fetch unless the user names a package themselves
-    [ -n "${DECOMP_WHEEL:-}" ] || fail "this fork has no published release yet, so there is nothing to download. Clone https://github.com/$REPO and run site/public/install.sh from the checkout (it installs that checkout), or use --source branch:<name> to install a branch from GitHub."
-    SPEC="decompnet @ ${DECOMP_WHEEL}" ;;
+  release)  # a package the user names with DECOMP_WHEEL, or else the published release: the tag VERSION names, from this fork's GitHub
+    if [ -n "${DECOMP_WHEEL:-}" ]; then
+      SPEC="decompnet @ ${DECOMP_WHEEL}"
+    else
+      RELEASE_TAG="v$VERSION"
+      SPEC="decompnet @ https://github.com/$REPO/archive/refs/tags/$RELEASE_TAG.tar.gz"
+    fi ;;
   branch:*)
     CHANNEL=branch BRANCH="${SOURCE#branch:}"
     [ -n "$BRANCH" ] || fail "--source branch:<name> needs a branch name" ;;
@@ -140,7 +147,9 @@ if [ -n "$SRC_DIR" ]; then
 elif [ "$CHANNEL" = branch ]; then
   resolve_branch
   step "installing Function_2_C_Decompiler from the $BRANCH branch${COMMIT:+ @ ${COMMIT:0:7}}"
-else  # a package the user named with DECOMP_WHEEL (the release case above refuses without one)
+elif [ -n "$RELEASE_TAG" ]; then
+  step "installing Function_2_C_Decompiler $VERSION, the published release ($RELEASE_TAG)"
+else  # a package the user named with DECOMP_WHEEL
   step "installing Function_2_C_Decompiler from $DECOMP_WHEEL"
 fi
 uv tool install --force --quiet --python 3.12 "$SPEC"
