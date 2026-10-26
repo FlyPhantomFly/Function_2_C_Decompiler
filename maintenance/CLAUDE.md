@@ -47,13 +47,13 @@ Windows tests need compilers or platforms that may not be installed. Compare a r
 4. A fork-mode edit that breaks an earlier match is rolled back; agents never write build files or assembly.
 5. Nothing is ever pushed upstream, or to any remote, automatically.
 6. No ROM bytes or assembly cross a team-room connection.
+7. The app contacts no update host except this fork's repository (`updates.REPO`), installs nothing from anywhere else,
+   and with `REPO` empty contacts nothing. (True since 0.10.10.)
 
-Targets that are **not yet true of the code at 0.10.7** (tracked as plan items 1.4 and 1.2; this list shrinks as the
-changelog records each one landing):
+Targets that are **not yet true of the code** (this list shrinks as the changelog records each one landing):
 
-7. Agent-written C only ever compiles inside the sandbox. Today it falls back to no sandbox when `bwrap` is missing.
-8. The app contacts no update host unless an update source for this fork is configured. Today it contacts
-   upstream's, by default, 20 seconds after launch.
+8. Agent-written C only ever compiles inside the sandbox. Today it falls back to no sandbox when `bwrap` is missing
+   (plan item 1.4).
 
 ## Needs the owner's review before it merges
 

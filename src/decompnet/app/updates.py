@@ -1,9 +1,12 @@
-"""Updates: decomp.wtf finds out when there's a newer version of itself and, once the user says yes, installs it
+"""Updates: the app finds out when there's a newer version of itself and, once the user says yes, installs it
 and restarts in place (same port, same browser session; helper agents carry on afterwards).
 
-Where updates come from depends on how decomp.wtf was installed (install.json, written by the installer):
-- "release": the version on decomp.wtf (its install.sh says which one), installed from the wheel there
-- "branch":  the newest commit of a branch on GitHub (for testing a branch before it's released), installed from
+THIS BUILD UPDATES ONLY FROM ITS OWN REPOSITORY (REPO below). It never reads a repository recorded by some other
+installer, never installs a package from anywhere else, and with REPO empty it is off: nothing is contacted.
+Where updates come from depends on the channel in install.json:
+- "release": the VERSION line of site/public/install.sh on REPO's main branch (or on SITE, when a release site is
+             set), installed from that site's wheel or from REPO's tag archive
+- "branch":  the newest commit of a branch of REPO (for testing a branch before it's released), installed from
              GitHub's archive of that commit
 Installing is `uv tool install --force` of the new version, then its `decomp setup` (new pinned tools), then the
 running app becomes the new version with exec (the process, its console window and its port stay the same).
@@ -26,9 +29,16 @@ from pathlib import Path
 
 from .. import __version__, hostenv, toolchains
 
-REPO = "i12bp8/decomp.wtf"
-SITE = "https://decomp.wtf"
+REPO = "FlyPhantomFly/Function_2_C_Decompiler"  # "owner/name" on GitHub. Empty: updates are off, nothing is contacted.
+SITE = ""  # a release site serving install.sh and wheels. None yet: releases come from REPO's GitHub tags.
+VERSION_OK = r"\d+(?:\.\d+){1,3}(?:[.+-]?[0-9A-Za-z]+(?:\.[0-9A-Za-z]+)*)?"  # what a version from the network may look like
+OFF = "updates are off in this build (no update source is set): update with `git pull` and `uv sync`"
 RECHECK = {"release": 3 * 3600, "branch": 15 * 60}  # GitHub allows 60 unauthenticated API calls an hour
+
+
+def enabled() -> bool:
+    """Whether this build has an update source at all."""
+    return bool(REPO)
 
 
 def info_file() -> Path:
@@ -43,13 +53,14 @@ def installed() -> dict:
         data = {}
     if not isinstance(data, dict) or data.get("channel") not in ("release", "branch"):
         data = {"channel": "release"}
-    data.setdefault("repo", REPO)
+    data["repo"] = REPO  # never a repo recorded by another installer (upstream's wrote its own): this build trusts only REPO
     data["version"] = __version__
     return data
 
 
 def record(channel: str, branch: str = "", commit: str = "", repo: str = REPO) -> dict:
-    data = {"channel": channel if channel in ("release", "branch") else "release", "repo": repo or REPO,
+    """Remember how this copy was installed. `repo` is accepted because the installers pass one, and ignored."""
+    data = {"channel": channel if channel in ("release", "branch") else "release", "repo": REPO,
             "branch": branch, "commit": commit, "version": __version__, "t": time.time()}
     if data["channel"] == "release":
         data.update(branch="", commit="")
@@ -63,7 +74,7 @@ def version_key(v: str) -> tuple[int, ...]:
 
 
 def _get(url: str, timeout: float = 15) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": f"decomp.wtf/{__version__} (update check)",
+    req = urllib.request.Request(url, headers={"User-Agent": f"decompnet/{__version__} (update check)",
                                                "Accept": "application/vnd.github+json"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
@@ -78,15 +89,20 @@ def _first_line(message: str) -> str:
 
 
 def _check_release(cur: dict) -> dict:
-    try:
-        text, site = _get(f"{SITE}/install.sh").decode("utf-8", "replace"), True
-    except OSError:  # decomp.wtf can't be reached from here (a filter, an outage): the release on GitHub
-        text, site = _get(f"https://raw.githubusercontent.com/{cur['repo']}/main/site/public/install.sh").decode(
-            "utf-8", "replace"), False
+    text, site = "", False
+    if SITE:
+        try:
+            text, site = _get(f"{SITE}/install.sh").decode("utf-8", "replace"), True
+        except OSError:  # the release site can't be reached from here (a filter, an outage): the release on GitHub
+            pass
+    if not site:
+        text = _get(f"https://raw.githubusercontent.com/{cur['repo']}/main/site/public/install.sh").decode("utf-8", "replace")
     m = re.search(r'^VERSION="([^"]+)"', text, re.M)
     if not m:
-        raise ValueError("decomp.wtf didn't say which version is current")
+        raise ValueError("the update source didn't say which version is current")
     latest = m.group(1)
+    if not re.fullmatch(VERSION_OK, latest):  # it goes into a URL we then install from: nothing but a version may pass
+        raise ValueError(f"the update source gave a version that isn't one: {latest[:40]!r}")
     newer = version_key(latest) > version_key(cur["version"])
     spec = (f"decompnet @ {SITE}/dl/decompnet-{latest}-py3-none-any.whl" if site else
             f"decompnet @ https://github.com/{cur['repo']}/archive/refs/tags/v{latest}.tar.gz")
@@ -107,6 +123,8 @@ def _check_branch(cur: dict) -> dict:
     repo, branch, have = cur["repo"], cur.get("branch") or "main", cur.get("commit") or ""
     head = _json(f"https://api.github.com/repos/{repo}/commits/{urllib.parse.quote(branch, safe='')}")
     sha = head["sha"]
+    if not re.fullmatch(r"[0-9a-f]{40}", str(sha)):  # it goes into the archive URL we install from
+        raise ValueError(f"GitHub gave a commit id that isn't one: {str(sha)[:20]!r}")
     notes: list[str] = []
     available = bool(sha) and sha != have
     if available and have:
@@ -127,8 +145,11 @@ def _check_branch(cur: dict) -> dict:
 
 
 def check() -> dict:
-    """What's installed, what's newest, and whether that's an update (network: GitHub or decomp.wtf)."""
+    """What's installed, what's newest, and whether that's an update (network: REPO on GitHub, or SITE if one is set)."""
     cur = installed()
+    if not enabled():
+        return {"current": cur, "available": False, "latest": None, "notes": [], "link": None, "error": None,
+                "disabled": True, "checked": time.time(), "can_apply": False, "why_not": OFF}
     out = {"current": cur, "available": False, "latest": None, "notes": [], "link": None, "error": None,
            "checked": time.time(), "can_apply": can_apply()[0], "why_not": can_apply()[1]}
     try:
@@ -149,12 +170,19 @@ def uv() -> str | None:
 
 
 def can_apply() -> tuple[bool, str]:
+    if not enabled():
+        return False, OFF
     if sys.platform == "win32":
-        return False, ("decomp.wtf now runs in WSL 2 on Windows: run the installer again in PowerShell "
-                       "(irm https://decomp.wtf/install.ps1 | iex) to switch to it")
+        return False, "on Windows the app runs inside WSL 2: update the copy in there (`git pull`, then `uv sync`)"
     if not uv():
-        return False, "uv isn't installed here, so decomp.wtf can't update itself: run the installer again"
+        return False, "uv isn't installed here, so the app can't update itself: update with `git pull` and `uv sync`"
     return True, ""
+
+
+def _spec_is_ours(spec: str) -> bool:
+    """Only a package from this build's own update source may be installed, whatever check() was told."""
+    prefixes = [f"decompnet @ https://github.com/{REPO}/archive/"] + ([f"decompnet @ {SITE}/dl/"] if SITE else [])
+    return any(spec.startswith(p) for p in prefixes)
 
 
 def install(found: dict, log=print) -> dict:
@@ -162,6 +190,8 @@ def install(found: dict, log=print) -> dict:
     ok, why = can_apply()
     if not ok:
         raise RuntimeError(why)
+    if not _spec_is_ours(str(found.get("spec") or "")):
+        raise RuntimeError(f"refusing to install {str(found.get('spec'))[:80]!r}: it isn't from this build's update source")
     cur = found["current"]
     log(f"installing decomp.wtf {found['latest'].get('version') or ''}".rstrip()
         + (f" ({cur.get('branch')} @ {found['latest']['commit'][:7]})" if cur["channel"] == "branch" else ""))
@@ -173,7 +203,7 @@ def install(found: dict, log=print) -> dict:
         raise RuntimeError("the update was installed, but its decomp command isn't there")
     log("getting the tools this version needs")
     _stream([str(decomp), "setup"], log, "setting up the new version's tools failed")
-    data = {"channel": cur["channel"], "repo": cur.get("repo") or REPO, "branch": cur.get("branch") or "",
+    data = {"channel": cur["channel"], "repo": REPO, "branch": cur.get("branch") or "",
             "commit": found["latest"].get("commit") or "", "version": found["latest"].get("version") or "",
             "t": time.time()}
     info_file().write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
@@ -229,6 +259,8 @@ class Updater:
     def apply(self) -> None:
         """Install the update in the background, then restart into it."""
         with self._lock:
+            if not enabled():
+                raise ValueError(OFF)
             if self.job["state"] in ("installing", "restarting"):
                 return
             found = self.last if self.last and self.last.get("available") else check()

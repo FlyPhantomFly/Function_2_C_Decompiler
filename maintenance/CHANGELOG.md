@@ -13,6 +13,38 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.10] - 2026-10-21
+
+**Security.** The updater reads from and installs from this fork's repository only. (Plan items 1.1 and 1.2, the
+updater half.)
+
+- Before: the updater looked at `i12bp8/decomp.wtf` and `https://decomp.wtf`, 20 seconds after launch and every 5
+  minutes, on by default. An `install.json` written by upstream's installer pinned upstream's repo even if the
+  constant changed. A copy of this fork would have offered to replace itself with upstream's code.
+- Now, in `src/decompnet/app/updates.py`:
+  - `REPO = "FlyPhantomFly/Function_2_C_Decompiler"` and `SITE = ""` (no release site yet; releases come from the
+    repository's GitHub tags). An **empty `REPO` turns updates off entirely**: `check()` returns a `disabled` answer,
+    nothing is contacted, `install()` and `Updater.apply()` refuse.
+  - `installed()` always reports `REPO`, ignoring any repo recorded in `install.json`; `record()` never stores another.
+  - `install()` refuses any package that is not under `https://github.com/<REPO>/archive/` (or `SITE/dl/` when a site is
+    set), whatever `check()` produced. The version read from the network must look like a version, and a branch's
+    commit id must be 40 hex characters, because both are put into the URL that gets installed.
+  - The Windows and no-`uv` messages no longer tell users to run upstream's installer (`irm https://decomp.wtf/...`).
+  - The `User-Agent` of the check no longer says `decomp.wtf`.
+- `app/server.py`: the background watcher and the GUI endpoint honor "no update source".
+  `app/cli.py`: `decomp update` says updates are off and exits 1 instead of printing "up to date"; the installers'
+  `--repo` option is accepted and ignored.
+- Verified: 18 new tests in `maintenance/tests/test_maint_updater.py` (16 failed before the change); the 8 tests in
+  `tests/test_updates.py` were adapted to read `updates.REPO` / `updates.SITE` instead of hard-coding upstream's
+  values and still pass. **Live check:** the real updater, against the real network, opens exactly one URL,
+  `raw.githubusercontent.com/FlyPhantomFly/Function_2_C_Decompiler/main/site/public/install.sh`, and offers nothing
+  (that file says 0.10.6, older than this build); with `REPO` empty it opens none.
+- What this does not do: a copy already installed from *upstream's* installer still runs upstream's updater until it is
+  replaced with this code. `site/public/install.sh`, `install.ps1` and the README's install commands still fetch
+  upstream's wheel; the README and installers are a separate change. Updates stay manual-approval:
+  `auto_update` is off by default and was not touched.
+- Nothing for users to do. To switch updates off completely, set `REPO = ""` or `DECOMP_UPDATES=off`.
+
 ## [0.10.9] - 2026-10-21
 
 **Test.** On a machine without the optional tools the suite now skips with a reason instead of failing or erroring.

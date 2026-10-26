@@ -967,7 +967,8 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
         return JSONResponse(await call(lambda: updater.status(refresh)))
 
     def checking() -> bool:
-        return settings.data.get("check_updates", True) is not False and os.environ.get("DECOMP_UPDATES") != "off"
+        return (updates.enabled() and settings.data.get("check_updates", True) is not False
+                and os.environ.get("DECOMP_UPDATES") != "off")
 
     def watch_updates() -> None:
         """Check now and then; with "install updates automatically" on, install one while no helper is working."""
