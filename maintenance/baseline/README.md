@@ -20,7 +20,7 @@ in that container), lld and llvm 18.1.3. Toolchains installed through the projec
 
 | Items | What failed | Cause | Class | Fixed in |
 | ---: | --- | --- | --- | --- |
-| 21 | everything built on the `projects/demo` fixture (`test_network`, `test_http`, `test_phase23`: 19 errors, 2 failures) | `projects/demo/target/` is not in a fresh checkout. `.gitignore` hides `projects/*/target/*.o`, git does not keep empty directories, and `project.import_project` runs the `gcc ... -o target/game.o` build without creating the directory. Adding only the empty directory (run B) makes all 21 pass. | **Upstream bug** | see CHANGELOG |
+| 21 | everything built on the `projects/demo` fixture (`test_network`, `test_http`, `test_phase23`: 19 errors, 2 failures) | `projects/demo/target/` is not in a fresh checkout. `.gitignore` hides `projects/*/target/*.o`, git does not keep empty directories, and `project.import_project` runs the `gcc ... -o target/game.o` build without creating the directory. Adding only the empty directory (run B) makes all 21 pass. | **Upstream bug** | 0.10.8 |
 | 1 | `test_app_server::test_the_api_agent_stays_within_a_small_local_context` | Reads a project row that exists only if the preceding, compiler-gated test imported the demo. It is missing the `@needs_demo` mark its neighbours carry. | **Test bug** (missing gate) | see CHANGELOG |
 | 1 | `test_forks::test_near_miss_gets_a_diff_and_release_restores_the_best` | Its fixture runs the demo fork's `configure.py`, which needs `gcc-2.7.2-kmc`. No skip gate. | **Test bug** (missing gate) | see CHANGELOG |
 

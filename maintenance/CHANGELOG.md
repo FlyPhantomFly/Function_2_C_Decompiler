@@ -13,6 +13,22 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.8] - 2026-10-21
+
+**Fix.** A fresh checkout can import the `projects/demo` project.
+
+- `project.import_project` ran a project's `build` command (the demo's `gcc ... -o target/game.o`) without creating the
+  directory the output goes in. A clone has no `projects/demo/target/` (the `.o` files are gitignored and git does not
+  keep empty directories), so the first import died in gcc with "can't create target/game.o". It now creates each
+  output's parent directory first, as the neighbouring `build_from` path already did. Two lines in
+  `src/decompnet/project.py`.
+- This was 21 of the 23 non-passing items on a fresh checkout in the Phase 0 baseline (`test_network`, `test_http`,
+  `test_phase23`).
+- Verified: the new `maintenance/tests/test_maint_fresh_checkout.py` fails on 0.10.7 with the gcc error above and passes
+  now; `tests/test_network.py`, `tests/test_http.py` and `tests/test_phase23.py` (26 tests, 21 of them failing before)
+  pass with `target/` absent.
+- Nothing for users to do.
+
 ## [0.10.7] - 2026-10-21
 
 **Docs, Tooling, Test.** No change to the application's behavior.

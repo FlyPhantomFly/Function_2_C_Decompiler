@@ -135,6 +135,8 @@ def import_project(store: Store, root: Path, log=print) -> int:
         build_target(root, cfg, log)
     elif "build" in target and not all(o.exists() for o in objects):
         log(f"building target objects: {' '.join(target['build'])}")
+        for obj in objects:  # a fresh clone has no target/ (its .o files are gitignored), and the build doesn't make it
+            obj.parent.mkdir(parents=True, exist_ok=True)
         subprocess.run(target["build"], cwd=root, check=True)
 
     funcs = []
