@@ -183,7 +183,7 @@ def test_through_the_agent_loop_a_local_address_is_not_retried_but_a_remote_one_
 
 def make_manager():
     manager = agents.Manager.__new__(agents.Manager)
-    manager.net = SimpleNamespace(fork_slug=lambda slug: None, add_spend=lambda *a: None, spend=lambda slug: {})
+    manager.net = SimpleNamespace(fork_slug=lambda slug: None, add_spend=lambda *a, **k: None, spend=lambda slug: {})
     manager.prompt = lambda s: "decompile something"
     return manager
 

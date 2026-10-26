@@ -47,6 +47,11 @@ CREATE INDEX IF NOT EXISTS idx_symbols_addr ON symbols(project_id, address);
 CREATE TABLE IF NOT EXISTS twin_misses(
   function_id INTEGER NOT NULL, source_hash TEXT NOT NULL, project_id INTEGER, at REAL, why TEXT,
   PRIMARY KEY(function_id, source_hash));
+CREATE TABLE IF NOT EXISTS spend_log(
+  id INTEGER PRIMARY KEY, project_id INTEGER NOT NULL, at REAL NOT NULL,
+  provider TEXT NOT NULL, agent TEXT NOT NULL, model TEXT NOT NULL DEFAULT '',
+  usd REAL NOT NULL DEFAULT 0, tokens INTEGER NOT NULL DEFAULT 0);
+CREATE INDEX IF NOT EXISTS idx_spend_project ON spend_log(project_id, provider);
 """
 
 # Columns added after the first release; applied in place to existing databases.
@@ -68,11 +73,12 @@ MIGRATIONS = [
 # The database format, kept in `PRAGMA user_version`:
 #   0  never stamped: a database from upstream decomp.wtf (which never versioned it) or from this fork before 0.10.31
 #   1  upstream 0.10.6's tables plus every column in MIGRATIONS above
+#   2  adds `spend_log`: every charge, tagged with the provider, the agent and the model (0.10.47)
 # An older database is migrated in place, after a copy of it is kept beside it (`<file>.bak-v<old version>`). A newer one is
 # refused untouched: running this code on a format it does not know could corrupt the user's work. To change the schema, add
 # a column to MIGRATIONS (additive, so it can be repeated) or write a numbered step, raise SCHEMA_VERSION, and add a test that
 # opens a database from the version before (see maintenance/tests/test_maint_schema.py).
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 class StoreError(RuntimeError):

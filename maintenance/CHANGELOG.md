@@ -13,6 +13,35 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.47] - 2026-10-22
+
+**Feature.** A provider-aware budget (owner's decision): prices per endpoint, so OpenAI's and DeepSeek's spend counts; every charge logged by provider, agent and model; one global cap that
+counts everything together; subtotals in the app. (Plan Phase 3, item 1: the part I had left for you to decide.) Schema version 2.
+
+- **Prices on an endpoint.** Three optional fields on the agent form (and in the saved endpoint): input, output and cached-input price, in US dollars per million tokens. With an input and an output
+  price, a request's cost is computed from the token counts the provider reports; with only one, nothing is computed (the other half would silently be free). **Cached tokens are priced at their own rate**
+  because both providers discount them and report them differently: OpenAI in `prompt_tokens_details.cached_tokens`, DeepSeek in `prompt_cache_hit_tokens`; without a cached price they cost the input rate,
+  and a cached count larger than the prompt is capped so it cannot make the uncached count negative. **What the provider itself reports (OpenRouter's `cost`) still wins**, as in 0.10.39. A bad price
+  (text, negative, NaN, infinity, a boolean) is refused with "a price is a number of US dollars per million tokens, like 0.27" and changes nothing; 0 or empty clears it. No prices are built in: they change,
+  and a stale default would make the budget quietly wrong.
+- **A log, not just totals.** New table `spend_log` (project, time, **provider, agent, model**, dollars, tokens), in the same transaction as the project's running totals, so the log always adds up to them. The tags
+  are stored, so any later breakdown (by day, by model) needs no migration. A custom server is tagged by its name (`gpu-box`), not by the word "custom"; a command-line agent by its kind (`claude`, `codex`...).
+  `add_spend` keeps working without tags (upstream's own test calls it that way); such a charge, and everything spent before this version, shows as **untagged**, never hidden: the subtotals plus untagged always equal the total.
+- **One global cap.** The budget is still one number and `over_budget` still reads the total, so it crosses when the providers *together* do (0.6 on one plus 0.5 on another stops a 1.0 cap although neither is over).
+  Per-provider caps were not asked for and are not built.
+- **In the app.** The overview reads, for example, "$4.71 spent (Claude Code $2.20 · OpenAI $1.95 · DeepSeek $0.31 · earlier $0.25) · cost per match · budget $8.00" (checked in the real GUI with seeded data and a
+  screenshot of the Agents and models page showing the price fields filled in). The overview API carries `spend_by` (providers, each with its agents and models).
+- **Schema version 2** (`SCHEMA_VERSION = 2`): a version-1 database gains the empty table on open, keeping its `.bak-v1` copy first, as in 0.10.31; upstream's 0.10.6 database does too. Reversible: upstream's own code
+  opens a version-2 database and ignores the table.
+- Tests: 33 in `test_maint_spend_by_provider.py` (cost computation in both providers' styles, every unusable price and token count, provider's figure wins, the tagged log and its totals together, untagged charges, subtotals,
+  the global cap across providers, tag normalisation, price saving and refusal, session options, two priced sessions through the real agent loop giving the right subtotal each, a custom server's tag, a
+  command-line agent's tag, the GUI's fields). The schema tests' comparison helper now ignores tables a migration adds.
+- **A bug the Python tests could not see, found by running the real thing:** my first GUI edit declared `const names` twice in one function, which stops the whole GUI script from loading, and all 135 Python tests passed because they only read
+  `app.js` as text. `node --check` caught it. New `test_maint_gui_js.py` runs that syntax check on every script the GUI ships whenever Node is available, and is shown to fail on exactly that mistake.
+- Not done: per-provider caps; entering prices from a provider's own price list (they would go stale); a history chart. The first of these is a one-line change to compare a provider's subtotal if you want it.
+- Verified here: the spend, agent, server, bridge, schema and GUI tests; the whole suite runs at the next checkpoint.
+- Nothing for users to do. Prices are optional: add them on the Agents and models page.
+
 ## [0.10.46] - 2026-10-22
 
 **Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.

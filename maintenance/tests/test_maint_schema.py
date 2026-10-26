@@ -42,6 +42,8 @@ def dump(path: Path, columns_of: dict[str, list[str]] | None = None) -> dict[str
     try:
         out = {}
         for (table,) in con.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").fetchall():
+            if columns_of is not None and table not in columns_of:
+                continue  # a table a migration added: not part of "what the original had", which is what is being compared
             cols = columns_of[table] if columns_of else [r[1] for r in con.execute(f"PRAGMA table_info({table})")]
             out[table] = con.execute(f"SELECT {', '.join(cols)} FROM {table} ORDER BY rowid").fetchall()
         return out

@@ -270,7 +270,7 @@ wheels = [
 
 [[package]]
 name = "decompnet"
-version = "0.10.46"
+version = "0.10.47"
 source = { editable = "." }
 dependencies = [
     { name = "capstone" },

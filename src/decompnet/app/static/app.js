@@ -836,7 +836,9 @@ function renderAgentsKpi(ov) {
   const names = [...w.running.map((s) => s.label), ...w.outside];
   $("agSub").textContent = names.length ? names.slice(0, 4).join(", ") + (names.length > 4 ? ` +${names.length - 4}` : "") : "none working right now";
   const sp = ov.spend, n = ov.helper_matches || 0, budget = S.st?.settings?.budget_usd || 0;
-  $("spendSub").textContent = sp && sp.usd ? `${money(sp.usd)} spent${n ? ` · ${money(sp.usd / n)} per match` : ""}${budget ? ` · budget ${money(budget)}` : ""}`
+  const by = (ov.spend_by?.providers || []).filter((p) => p.usd > 0), providerNames = S.st?.api_presets || {};
+  const split = by.length > 1 || (by.length === 1 && ov.spend_by.untagged?.usd) ? ` (${by.map((p) => `${providerNames[p.provider]?.name || (S.st?.agents || []).find((a) => a.id === p.provider)?.name || p.provider} ${money(p.usd)}`).concat(ov.spend_by.untagged?.usd ? [`earlier ${money(ov.spend_by.untagged.usd)}`] : []).join(" · ")})` : "";
+  $("spendSub").textContent = sp && sp.usd ? `${money(sp.usd)} spent${split}${n ? ` · ${money(sp.usd / n)} per match` : ""}${budget ? ` · budget ${money(budget)}` : ""}`
     : sp && sp.tokens ? `${(sp.tokens / 1000).toFixed(0)}k tokens used` : budget ? `budget ${money(budget)}` : "";
 }
 
@@ -1638,7 +1640,11 @@ function endpointFields(e, compact = false) {
     <label class="field wide"><span>API key (stored only on this computer, sent only to this address)</span><input data-f="key" type="password" placeholder="${e.has_key ? esc(e.api_key) : "paste your key (none for local models)"}" autocomplete="off"></label>
     ${compact ? "" : `<label class="field"><span>Name</span><input data-f="name" value="${esc(e.id ? e.name : "")}" placeholder="${esc(e.id ? e.name : "e.g. gpu-box")}"></label>
     <label class="field"><span>Context size (tokens)</span><input data-f="ctx" class="mono" inputmode="numeric" placeholder="automatic" value="${esc(String(e.context_tokens || ""))}"></label>
-    <label class="field"><span>Sessions at once</span><input data-f="max" class="mono" inputmode="numeric" placeholder="no limit" value="${esc(String(e.max_sessions || ""))}"></label>`}`;
+    <label class="field"><span>Sessions at once</span><input data-f="max" class="mono" inputmode="numeric" placeholder="no limit" value="${esc(String(e.max_sessions || ""))}"></label>
+    <label class="field"><span>Input price ($ per million tokens)</span><input data-f="pin" class="mono" inputmode="decimal" placeholder="optional" value="${esc(String(e.price_in || ""))}"></label>
+    <label class="field"><span>Output price ($ per million tokens)</span><input data-f="pout" class="mono" inputmode="decimal" placeholder="optional" value="${esc(String(e.price_out || ""))}"></label>
+    <label class="field"><span>Cached input ($ per million tokens)</span><input data-f="pcached" class="mono" inputmode="decimal" placeholder="optional" value="${esc(String(e.price_cached || ""))}"></label>
+    <p class="muted small wide">Prices are optional. With both an input and an output price, this model's spend counts toward the budget and the per-provider totals (a provider that reports its own cost, like OpenRouter, doesn't need them). Cached input is only for providers that discount it, like OpenAI and DeepSeek.</p>`}`;
 }
 function wireEndpointFields(box) {
   box.querySelectorAll('[data-f="prov"]').forEach((sel) => {
@@ -1653,7 +1659,8 @@ function endpointData(scope, id = "") {
   const f = (k) => scope.querySelector(`[data-f="${k}"]`);
   const out = { provider: f("prov").value, base_url: f("base").value, model: f("model").value, api_key: f("key").value };
   if (id) out.id = id;
-  if (f("name")) Object.assign(out, { name: f("name").value, context_tokens: f("ctx").value, max_sessions: f("max").value });
+  if (f("name")) Object.assign(out, { name: f("name").value, context_tokens: f("ctx").value, max_sessions: f("max").value,
+    price_in: f("pin").value, price_out: f("pout").value, price_cached: f("pcached").value });
   return out;
 }
 
@@ -2526,7 +2533,7 @@ async function showSettingsPage() {
   const st = await loadState();
   $("setAgents").innerHTML = `
     <label class="field"><span>Functions per agent session (a fresh session keeps the agent's context small)</span><input id="perSession" type="number" min="1" max="20" value="${st.settings.per_session}"></label>
-    <label class="field"><span>Budget: stop helper agents when a project's agents have spent this much (US dollars, as the agents report it; 0 = no limit). An API model counts only if its provider reports a cost, as OpenRouter does</span><input id="budgetSet" type="number" min="0" step="0.5" value="${st.settings.budget_usd || 0}"></label>
+    <label class="field"><span>Budget: stop helper agents when a project's agents have spent this much (US dollars, one cap for every provider together; 0 = no limit). An API model counts if its provider reports a cost, as OpenRouter does, or if you gave it prices when you added it</span><input id="budgetSet" type="number" min="0" step="0.5" value="${st.settings.budget_usd || 0}"></label>
     <label class="check"><input type="checkbox" id="autopilotSet" ${st.settings.autopilot !== false ? "checked" : ""}><span><b>Autopilot after each import</b>: try every function's machine draft first, so free matches cost no agent time.</span></label>`;
   const theme = savedTheme();
   $("setComputer").innerHTML = `

@@ -42,7 +42,7 @@ class Ledger:
     def __init__(self):
         self.usd, self.tokens, self.calls = 0.0, 0, []
 
-    def add_spend(self, slug, usd, tokens):
+    def add_spend(self, slug, usd, tokens, **tags):
         self.usd += usd
         self.tokens += tokens
         self.calls.append((slug, usd, tokens))

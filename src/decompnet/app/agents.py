@@ -25,6 +25,7 @@ import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import urlparse
 
 import httpx
 
@@ -111,7 +112,7 @@ def endpoint_entry(e: dict) -> dict:
     out = {"id": str(e.get("id") or ""), "provider": provider, "base_url": base,
            "model": (e.get("model") or preset["model"]).strip(),
            "name": (e.get("name") or "").strip() or (host if moved and host else preset["name"]) or "API"}
-    for k in ("api_key", "context_tokens", "max_sessions"):
+    for k in ("api_key", "context_tokens", "max_sessions", "price_in", "price_out", "price_cached"):
         if e.get(k):
             out[k] = e[k]
     return out
@@ -656,7 +657,7 @@ class Manager:
         usd, tokens = float(usage.get("usd") or 0), int(usage.get("tokens") or 0)
         s.usd += usd
         s.tokens += tokens
-        self.net.add_spend(s.slug, usd, tokens)
+        self.net.add_spend(s.slug, usd, tokens, provider=provider_tag(s), agent=s.agent_name, model=str(s.options.get("model") or ""))
 
     def over_budget(self, slug: str) -> float | None:
         """The budget (USD) when the project's agents have spent it, else None."""
@@ -976,8 +977,10 @@ class Manager:
                 reply = r.json()
                 msg = reply["choices"][0]["message"]
                 usage = reply.get("usage") if isinstance(reply.get("usage"), dict) else {}
-                if usage.get("total_tokens") or _reported_cost(usage):
-                    self._account(s, {"tokens": usage.get("total_tokens") or 0, "usd": _reported_cost(usage)})
+                usd = request_cost(usage, s.options)
+                tokens = usage.get("total_tokens") or (_count(usage.get("prompt_tokens")) + _count(usage.get("completion_tokens")))
+                if tokens or usd:
+                    self._account(s, {"tokens": tokens, "usd": usd})
                 if msg.get("reasoning_content"):
                     s.push("think", msg["reasoning_content"][:2000])
                 if msg.get("content"):
@@ -1008,6 +1011,46 @@ def _reported_cost(usage: dict) -> float:
     if isinstance(cost, bool) or not isinstance(cost, (int, float)):
         return 0.0
     return float(cost) if math.isfinite(cost) and cost > 0 else 0.0
+
+
+def _price(options: dict, key: str) -> float:
+    """A configured price (US dollars per million tokens): a real, positive, finite number, else 0 (unset). A boolean is not a number here."""
+    v = options.get(key)
+    return float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and v > 0 else 0.0
+
+
+def _count(v) -> int:
+    return v if isinstance(v, int) and not isinstance(v, bool) and v > 0 else 0
+
+
+def computed_cost(usage: dict, options: dict) -> float:
+    """What a request cost, worked out from the endpoint's prices and the token counts the provider reported. Needs both an input and an output
+    price (with only one, the other half would be counted as free). Tokens read from the provider's prompt cache are charged at `price_cached`
+    when there is one (OpenAI reports them in `prompt_tokens_details.cached_tokens`, DeepSeek in `prompt_cache_hit_tokens`), else at the input
+    price; the cached count is capped at the prompt size so a wrong figure cannot make the uncached count negative."""
+    price_in, price_out = _price(options, "price_in"), _price(options, "price_out")
+    if not (price_in and price_out):
+        return 0.0
+    prompt, completion = _count(usage.get("prompt_tokens")), _count(usage.get("completion_tokens"))
+    details = usage.get("prompt_tokens_details") if isinstance(usage.get("prompt_tokens_details"), dict) else {}
+    cached = min(_count(usage.get("prompt_cache_hit_tokens")) or _count(details.get("cached_tokens")), prompt)
+    price_cached = _price(options, "price_cached") or price_in
+    return ((prompt - cached) * price_in + cached * price_cached + completion * price_out) / 1_000_000
+
+
+def request_cost(usage: dict, options: dict) -> float:
+    """The provider's own figure when it gives one (OpenRouter does), otherwise the computed one, otherwise 0."""
+    return _reported_cost(usage) or computed_cost(usage, options)
+
+
+def provider_tag(s) -> str:
+    """Whose bill a session's spend goes on: the API provider (a custom server by its name, not the word "custom"), or the agent's own kind."""
+    if s.kind != "api":
+        return s.kind
+    provider = str(s.options.get("provider") or "custom")
+    if provider != "custom":
+        return provider
+    return str(s.options.get("provider_name") or urlparse(str(s.options.get("base_url") or "")).hostname or "custom")
 
 
 RETRY_STATUS = frozenset({429, 500, 502, 503, 504})  # a busy or briefly broken server; 4xx other than 429 are the request's own fault

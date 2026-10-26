@@ -160,6 +160,17 @@ class Settings:
                 except ValueError:
                     raise ValueError("the context size is a number of tokens, like 16384" if k == "context_tokens"
                                      else "the session limit is a number, like 1") from None
+        prices: dict[str, float | None] = {}
+        for k in ("price_in", "price_out", "price_cached"):  # US dollars per million tokens: what lets the budget count this endpoint's spend
+            if k in data:
+                raw = str(data[k] if data[k] is not None else "").strip()
+                try:
+                    value = float(raw) if raw else 0.0
+                except ValueError:
+                    value = float("nan")
+                if value != value or value in (float("inf"), float("-inf")) or value < 0:
+                    raise ValueError("a price is a number of US dollars per million tokens, like 0.27")
+                prices[k] = value or None  # empty or 0 clears it
         current = self.endpoint(str(data.get("id") or ""))
         if current is None:  # ids are never reused: a session resumed later can't end up on another machine
             ids = {e["id"] for e in self.endpoints()}
@@ -177,6 +188,11 @@ class Settings:
                 current[k] = max(2048, n) if k == "context_tokens" else max(1, min(n, 32))
             else:
                 current.pop(k, None)
+        for k, price in prices.items():
+            if price is None:
+                current.pop(k, None)
+            else:
+                current[k] = price
         if data.get("api_key") and "•" not in str(data["api_key"]):
             current["api_key"] = str(data["api_key"]).strip()
         if data.get("clear_key"):
@@ -206,7 +222,7 @@ def _session_options(entry: dict) -> dict:
     """What a built-in agent session needs from its endpoint."""
     out = {"endpoint": entry.get("id") or "", "provider": entry["provider"], "base_url": entry["base_url"],
            "model": entry["model"], "provider_name": entry["name"]}
-    return out | {k: entry[k] for k in ("api_key", "context_tokens") if entry.get(k)}
+    return out | {k: entry[k] for k in ("api_key", "context_tokens", "price_in", "price_out", "price_cached") if entry.get(k)}
 
 
 def _spread(settings: Settings, manager, picked: list[str], count: int, given: dict) -> list[tuple[dict, int]]:

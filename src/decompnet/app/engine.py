@@ -1284,7 +1284,7 @@ class RomNetwork(Network):
                                              "twins": None if twins is None else {
                                                  k: getattr(twins, k) for k in ("state", "pairs", "tried", "matched", "asm")},
                                              "helper_matches": helpers,
-                                             "spend": cfg.get("spend"), "instructions": cfg.get("instructions") or "",
+                                             "spend": cfg.get("spend"), "spend_by": self.spend_breakdown(slug), "instructions": cfg.get("instructions") or "",
                                              "priority": cfg.get("priority", [])}
 
     def _overview(self, slug: str, proj) -> dict:
@@ -1364,13 +1364,43 @@ class RomNetwork(Network):
             db.execute("UPDATE projects SET config=? WHERE id=?", (json.dumps(cfg), proj["id"]))
         return cfg
 
-    def add_spend(self, slug: str, usd: float, tokens: int) -> None:
-        if usd or tokens:
-            def change(cfg):
-                sp = cfg.setdefault("spend", {"usd": 0.0, "tokens": 0})
-                sp["usd"] = round(sp.get("usd", 0) + usd, 6)
-                sp["tokens"] = sp.get("tokens", 0) + tokens
-            self._update_cfg(slug, change)
+    def add_spend(self, slug: str, usd: float, tokens: int, *, provider: str = "", agent: str = "", model: str = "") -> None:
+        """Add a charge to the project's totals (what the budget cap reads) and log it with who incurred it: the provider, the agent and
+        the model. Both in one transaction, so the log always adds up to the totals. A charge with no tags (an older caller) is
+        counted in the totals only, and shows as untagged."""
+        if not (usd or tokens):
+            return
+        proj = self._project(slug)
+        with self.store.tx() as db:
+            cfg = json.loads(db.execute("SELECT config FROM projects WHERE id=?", (proj["id"],)).fetchone()["config"])
+            sp = cfg.setdefault("spend", {"usd": 0.0, "tokens": 0})
+            sp["usd"] = round(sp.get("usd", 0) + usd, 6)
+            sp["tokens"] = sp.get("tokens", 0) + tokens
+            db.execute("UPDATE projects SET config=? WHERE id=?", (json.dumps(cfg), proj["id"]))
+            if provider.strip() or agent.strip():
+                db.execute("INSERT INTO spend_log(project_id, at, provider, agent, model, usd, tokens) VALUES (?,?,?,?,?,?,?)",
+                           (proj["id"], time.time(), provider.strip().lower()[:60] or "unknown", agent.strip()[:120], model.strip()[:120], round(usd, 6), tokens))
+
+    def spend_breakdown(self, slug: str) -> dict:
+        """What the project's agents have spent, by provider and within it by agent and model: subtotals that add up to `total`. Anything
+        spent before charges were tagged (or by a caller that gave no tags) is `untagged`: shown, never hidden."""
+        proj = self._project(slug)
+        providers: dict[str, dict] = {}
+        for r in self.store.all("SELECT provider, agent, model, COUNT(*) AS requests, SUM(usd) AS usd, SUM(tokens) AS tokens FROM spend_log "
+                                "WHERE project_id=? GROUP BY provider, agent, model", proj["id"]):
+            p = providers.setdefault(r["provider"], {"provider": r["provider"], "usd": 0.0, "tokens": 0, "requests": 0, "agents": []})
+            p["usd"] += r["usd"]
+            p["tokens"] += r["tokens"]
+            p["requests"] += r["requests"]
+            p["agents"].append({"agent": r["agent"], "model": r["model"], "usd": round(r["usd"], 6), "tokens": r["tokens"], "requests": r["requests"]})
+        for p in providers.values():
+            p["usd"] = round(p["usd"], 6)
+            p["agents"].sort(key=lambda a: (-a["usd"], a["agent"]))
+        total = self.spend(slug) or {"usd": 0.0, "tokens": 0}
+        loose_usd = round(max(0.0, total.get("usd", 0) - sum(p["usd"] for p in providers.values())), 6)
+        loose_tokens = max(0, total.get("tokens", 0) - sum(p["tokens"] for p in providers.values()))
+        return {"providers": sorted(providers.values(), key=lambda p: (-p["usd"], p["provider"])), "total": total,
+                "untagged": {"usd": loose_usd, "tokens": loose_tokens} if loose_usd or loose_tokens else None}
 
     def spend(self, slug: str) -> dict | None:
         return self.cfg(self._project(slug)).get("spend")
