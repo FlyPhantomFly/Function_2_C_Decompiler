@@ -39,6 +39,20 @@ def test_every_download_in_the_real_registry_is_https_and_pinned_by_sha256():
     assert tc.structural_problems(parts) == []
 
 
+def test_every_tool_installed_from_git_is_pinned_to_one_full_commit():
+    """m2c and luvdis are not archives with a hash: they are installed from a git commit, and a commit id is the pin. A
+    branch name or an abbreviated id is not one (a branch moves; an abbreviation can become ambiguous)."""
+    import re
+
+    from decompnet import toolchains
+
+    tools = {t.id: t for t in toolchains.registry().values() if t.git}
+    assert {"m2c", "luvdis"} <= set(tools)
+    for tid, tool in tools.items():
+        assert re.fullmatch(r"[0-9a-f]{40}", tool.commit or ""), (tid, tool.commit)
+        assert tool.git.startswith("https://github.com/"), tid
+
+
 def test_an_unpinned_or_malformed_entry_is_reported():
     P = tc.Part
     bad = [P("a", "https://x.test/a.tar.gz", ""), P("b", "https://x.test/b.tar.gz", "ABC"),

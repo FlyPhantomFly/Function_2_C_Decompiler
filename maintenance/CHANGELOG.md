@@ -13,6 +13,21 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.28] - 2026-10-21
+
+**Test, Docs.** A guard for the git-installed tools' pins, and a correction to a claim I got wrong. No change to the application.
+
+- **Correction.** The 0.10.18 entry said `m2c` is pinned by a 10-character commit id. That was false: the registry pins `m2c` to
+  the full 40-character commit `708d2d2cb2698f091a92492b328f73b24209f72d`, exactly as it pins `luvdis`. I had read the installer's
+  progress line, which prints `tc.commit[:10]`. The entry now carries a bracketed correction in place (the text is not rewritten
+  silently), and no other document repeated the claim (searched).
+- `maintenance/tests/test_maint_toolchain_check.py`: `test_every_tool_installed_from_git_is_pinned_to_one_full_commit`. `m2c` and
+  `luvdis` are installed from a git commit rather than a hashed archive, so the commit id is the pin, and a branch name or an
+  abbreviated id would not be one (a branch moves; an abbreviation can become ambiguous). Both pass today; the test is a guard
+  against a future registry edit, not a fix, so there was no failing state to show.
+- Also fixed: a grammar slip in the plan's Phase 2 status row from 0.10.27.
+- Nothing for users to do.
+
 ## [0.10.27] - 2026-10-21
 
 **Fix.** The luvdis stack fix refuses a luvdis it was not written for, instead of silently doing nothing. (Plan Phase 2:
@@ -260,7 +275,9 @@ are pinned as strict `xfail` tests and fixed in the next two versions. No change
   sha256 match their pins**. 7 tests, offline (a local HTTP server stands in for the hosts: live, 404, HEAD refused,
   file changed, unresolvable host, and the exit codes).
 - Not covered: tools installed from a git revision instead of a hashed archive (`m2c`: pinned by a 10-character commit
-  id), and the hosts above until run elsewhere.
+  id), and the hosts above until run elsewhere. **[Correction, 0.10.28: wrong. `m2c` is pinned by a full 40-character commit,
+  like `luvdis`; ten characters appear only in the installer's log line. The checker still does not cover git-installed
+  tools, but a test now pins that their commits are full.]**
 - Nothing for users to do.
 
 ## [0.10.17] - 2026-10-21
