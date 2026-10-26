@@ -13,6 +13,34 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.13] - 2026-10-21
+
+**CI.** GitHub Actions workflow `.github/workflows/ci.yml`. (Plan item 1.6.)
+
+- `checks` (every push to `main` and every pull request, bare machine): `uv sync --locked`, `uv lock --check`,
+  version agreement across the three places, `compileall` (including `site/` and `projects/`), `ruff` limited to
+  syntax errors, undefined names and bad comparisons (`E9,F63,F7,F82`), then the whole test suite. Skips are listed with
+  their reasons in the job summary and `junit.xml` is uploaded.
+- `sandbox` (every push and pull request): installs bubblewrap, checks it can really create a sandbox, and runs the
+  sandbox tests plus the tests that compile agent code inside it. **`continue-on-error: true` for now** (see below).
+- `toolchains` (nightly, and on demand): runs `maintenance/baseline/setup-test-env.sh` (free toolchains, zlib source)
+  and the whole suite with compilers.
+- Supply chain: the three actions are pinned to full commit SHAs, each resolved from the repository, not typed from
+  memory, and one release back for `setup-uv` (v10.2.0) and `upload-artifact` (v7.0.1) because the newest were under two
+  weeks old. The token is read-only, there are no secrets, no `pull_request_target`, and checkout does not persist
+  credentials. `maintenance/tests/test_maint_ci_workflow.py` (6 tests) fails if any of that is loosened.
+- Why not the default `ruff` rules: they report 428 style findings in the inherited code, and reformatting it would
+  mix a large refactor into this change. Revisit once the code is ours.
+- Verified here: `actionlint` passes the workflow (exit 0) and rejects a deliberately broken one (exit 1), so the check is
+  real; every command of `checks` ran in order on a machine with no `bwrap`, `lld`, `llvm-objcopy`, toolchains or
+  zlib source, ending **188 passed, 143 skipped, 0 failed in 12 s**; the `sandbox` job's commands ran with `bwrap`
+  (40 passed).
+- **Not verified, because it cannot run outside GitHub:** the workflow itself on a runner. Specifically (1) whether the
+  Ubuntu 24.04 runner allows bubblewrap to create namespaces after the `kernel.apparmor_restrict_unprivileged_userns=0`
+  step, which is why `sandbox` may fail without failing the build until its first run shows otherwise; (2) the nightly
+  job end to end (its script was run here; the runner was not). Look at the first runs and adjust.
+- Nothing for users to do. To use it, push this tree to the repository and enable Actions.
+
 ## [0.10.12] - 2026-10-21
 
 **Dependencies.** `mcp` is bounded to the 2.x API the app is built on. (Plan item 1.5, the bound.)

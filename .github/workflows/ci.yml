@@ -1,0 +1,98 @@
+name: CI
+
+# What runs where:
+#   checks     every push and pull request. The same commands as maintenance/CLAUDE.md, on a bare machine: no period
+#              compilers, so tests that need them skip (with their reason, in the job summary) and the rest must pass.
+#   sandbox    every push and pull request. Installs bubblewrap and runs the sandbox tests and the tests that compile
+#              agent code inside it. continue-on-error until it has run once on a GitHub runner (see the comment there).
+#   toolchains nightly and on demand. Installs the free compilers and runs the whole suite.
+# Nothing here has secrets or write access; maintenance/tests/test_maint_ci_workflow.py keeps it that way.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - name: Allow user namespaces (Ubuntu 24.04 restricts them; bubblewrap needs them if the image has it)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+      - name: Install exactly what uv.lock says
+        run: uv sync --locked
+      - name: The lock file matches pyproject.toml
+        run: uv lock --check
+      - name: The version agrees in pyproject.toml, __init__.py and uv.lock
+        run: python3 maintenance/tools/bump_version.py --check
+      - name: Everything compiles
+        run: uv run --locked python -m compileall -q src tests maintenance projects site
+      - name: Syntax errors, undefined names and bad comparisons (not style)
+        run: uvx ruff@0.17.1 check --select E9,F63,F7,F82 src tests maintenance projects
+      - name: Tests
+        run: uv run --locked pytest -q -rsfE --junitxml=junit.xml
+      - name: What ran and what was skipped
+        if: always()
+        run: python3 maintenance/tools/summarize_junit.py junit.xml >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: junit-checks
+          path: junit.xml
+
+  sandbox:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Unverified on a GitHub runner: whether it lets bubblewrap create namespaces even with the sysctl below. The first
+    # run decides. If it is green, delete the next line so a broken sandbox fails the build.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - run: sudo apt-get install -y bubblewrap gcc
+      - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+      - name: bubblewrap can really create a sandbox here
+        run: bwrap --ro-bind / / --unshare-all --die-with-parent -- true
+      - run: uv sync --locked
+      - name: Sandbox tests, and the tests that compile agent code inside the sandbox
+        run: uv run --locked pytest -q -rsfE maintenance/tests/test_maint_sandbox.py tests/test_network.py tests/test_http.py
+
+  toolchains:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+      - name: Install the free toolchains and the zlib source (maintenance/baseline/setup-test-env.sh)
+        run: maintenance/baseline/setup-test-env.sh
+      - name: The whole suite, with compilers
+        run: uv run --locked pytest -q -rsfE --junitxml=junit.xml
+      - name: What ran and what was skipped
+        if: always()
+        run: python3 maintenance/tools/summarize_junit.py junit.xml >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: junit-toolchains
+          path: junit.xml
