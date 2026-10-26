@@ -1,0 +1,207 @@
+...........sssssssssss.s..s..s.s.....F.s.s..ssssssssssssssssss.ss....... [ 26%]
+.....................ssssssssssssssssssssssssssssEsss...s.sss...s.s...ss [ 53%]
+sssssssss..s......s............................sssss....ss.sss....ss...s [ 80%]
+sssssssssssssssssssssssssssssssss..............ssssss                    [100%]
+==================================== ERRORS ====================================
+__ ERROR at setup of test_near_miss_gets_a_diff_and_release_restores_the_best __
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x7f32f35db110>, _basetemp=PosixPath('/tmp/pytest-of-root/pytest-2'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def fork(tmp_path_factory):
+        base = tmp_path_factory.mktemp("fork")
+        upstream = base / "upstream"
+        shutil.copytree(FORK_SRC, upstream)
+        _git(upstream, "init", "-q", "-b", "main")
+        _git(upstream, "add", "-A")
+        _git(upstream, "commit", "-q", "-m", "initial")
+        net = RomNetwork(base / "app.db", base / "work")
+        (base / "work").mkdir()
+        slug = net.forks.clone(str(upstream), name="Demo Quest decomp", platform="n64", log=lambda *_: None)
+        need = net.forks.needs(slug)
+        assert need["kind"] == "manifest" and need["path"] == "baserom.z64"
+        with pytest.raises(NetworkError, match="sha1"):
+            net.forks.setup(slug, b"\0" * 1024, "nope.z64", log=lambda *_: None)
+>       m = net.forks.setup(slug, ROM.read_bytes(), "demo.z64", log=lambda *_: None)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_forks.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/app/forkengine.py:510: in setup
+    fp.setup(cfg.get("version"), log=log)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <decompnet.forks.project.ForkProject object at 0x7f32ef522300>
+version = None, log = <function fork.<locals>.<lambda> at 0x7f32eedc85e0>
+
+    def setup(self, version: str | None = None, log=print) -> None:
+        self.unpack_disc(version, log=log)
+        for cmd in self.setup_commands(version):
+            ok, tail = self.run(cmd, log=log)
+            if not ok and cmd[0] != "make":  # a Makefile build often fails on purpose until things match
+>               raise ForkError(f"setup step failed: {' '.join(cmd)}\n{tail}")
+E               decompnet.forks.project.ForkError: setup step failed: /home/claude/baseline/pristine/.venv/bin/python configure.py
+E               Traceback (most recent call last):
+E                 File "/tmp/pytest-of-root/pytest-2/fork0/work/demo-quest-decomp/configure.py", line 44, in <module>
+E                   sys.exit(main())
+E                            ^^^^^^
+E                 File "/tmp/pytest-of-root/pytest-2/fork0/work/demo-quest-decomp/configure.py", line 20, in main
+E                   tc_dir = toolchains.require(tc.id)
+E                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E                 File "/home/claude/baseline/pristine/src/decompnet/toolchains.py", line 146, in require
+E                   raise ToolchainError(f"toolchain {tid!r} is not installed: run `decompnet toolchain install {tid}`")
+E               decompnet.toolchains.ToolchainError: toolchain 'gcc-2.7.2-kmc' is not installed: run `decompnet toolchain install gcc-2.7.2-kmc`
+
+src/decompnet/forks/project.py:354: ForkError
+=================================== FAILURES ===================================
+____________ test_the_api_agent_stays_within_a_small_local_context _____________
+
+app = (<starlette.testclient.TestClient object at 0x7f32ef217fb0>, <decompnet.app.engine.RomNetwork object at 0x7f32ef27c0b0>, <decompnet.app.agents.Manager object at 0x7f32ef4c3530>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f32ef03fe00>
+
+    def test_the_api_agent_stays_within_a_small_local_context(app, monkeypatch):
+        """A local llama.cpp model with a small context: the agent learns it from /props, trims older tool output to
+        fit, and when the server still says the request is too long, trims harder and sends it again."""
+        client, net, manager = app
+>       slug = net.store.one("SELECT slug FROM projects")["slug"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_app_server.py:309: TypeError
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_app_engine.py:58: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:63: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:70: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:84: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:95: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:112: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:119: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:135: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:145: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:164: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_engine.py:181: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_app_server.py:53: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_app_server.py:98: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_app_server.py:154: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_app_server.py:179: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_bridge.py:19: needs the demo ROM (projects/demo-rom)
+SKIPPED [1] tests/test_chd.py:19: needs a PlayStation CHD (the developer's own copy)
+SKIPPED [1] tests/test_collab.py:37: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:43: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:55: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:66: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:81: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:96: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:110: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:128: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:145: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:168: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:177: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:193: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:209: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_collab.py:220: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_ds.py:41: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds.py:55: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds.py:79: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds.py:93: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_ds_rom_check.py:34: needs the demo DS ROM (projects/demo-ds)
+SKIPPED [1] tests/test_ds_rom_check.py:47: needs the demo DS ROM (projects/demo-ds)
+SKIPPED [1] tests/test_export.py:79: needs the n64 toolchain and binutils-mips
+SKIPPED [1] tests/test_export.py:79: needs the psx toolchain and binutils-mips
+SKIPPED [1] tests/test_export.py:79: needs the ps2 toolchain and binutils-mips
+SKIPPED [1] tests/test_export.py:104: needs the n64 toolchain and binutils-mips
+SKIPPED [1] tests/test_fork_judge.py:117: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:125: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:131: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:144: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:150: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:160: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:175: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:186: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_judge.py:197: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_fork_link.py:140: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja
+SKIPPED [1] tests/test_fork_link.py:155: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja
+SKIPPED [1] tests/test_fork_link.py:167: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja
+SKIPPED [1] tests/test_fork_link.py:173: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja
+SKIPPED [1] tests/test_fork_rooms.py:54: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:66: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:76: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:86: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:114: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:131: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:156: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_fork_rooms.py:170: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp
+SKIPPED [1] tests/test_forks.py:61: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:72: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:87: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:124: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:153: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:165: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:199: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:215: needs m2c
+SKIPPED [1] tests/test_forks.py:237: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:249: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:331: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_forks.py:373: needs gcc-2.7.2-kmc, objdiff-cli and git
+SKIPPED [1] tests/test_gba.py:41: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:51: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:79: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:87: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:110: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gba.py:124: needs agbcc, the Arm GNU toolchain and luvdis
+SKIPPED [1] tests/test_gc.py:43: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:55: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:72: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:94: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_gc.py:128: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt
+SKIPPED [1] tests/test_handwritten.py:37: needs the GameCube binutils
+SKIPPED [1] tests/test_hostenv.py:70: needs gcc-2.7.2-kmc
+SKIPPED [1] tests/test_overlays.py:45: needs the PlayStation demo (projects/demo-psx)
+SKIPPED [1] tests/test_overlays.py:91: needs the PlayStation demo (projects/demo-psx)
+SKIPPED [1] tests/test_period_compilers.py:22: gcc-2.7.2-kmc not installed
+SKIPPED [1] tests/test_period_compilers.py:22: ee-gcc-2.96 not installed
+SKIPPED [1] tests/test_period_compilers.py:36: gcc-2.7.2-kmc or m2c not installed
+SKIPPED [1] tests/test_phase23.py:108: gcc-2.7.2-kmc not installed
+SKIPPED [1] tests/test_phase23.py:127: run projects/zlib-n64/prepare.py first
+SKIPPED [1] tests/test_platform.py:37: Windows only
+SKIPPED [1] tests/test_platform.py:48: Windows only
+SKIPPED [1] tests/test_platform.py:63: Windows only
+SKIPPED [1] tests/test_platform.py:126: Windows only
+SKIPPED [1] tests/test_platform.py:135: Windows only
+SKIPPED [1] tests/test_ps2.py:44: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_ps2.py:52: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_ps2.py:70: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_ps2.py:94: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo
+SKIPPED [1] tests/test_psx.py:44: needs gcc-2.7.2-psx and ld.lld to build the PS1 demo
+SKIPPED [1] tests/test_psx.py:51: needs gcc-2.7.2-psx and ld.lld to build the PS1 demo
+SKIPPED [1] tests/test_psx.py:75: needs gcc-2.7.2-psx and ld.lld to build the PS1 demo
+SKIPPED [1] tests/test_rom.py:70: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_rom.py:95: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_rom.py:123: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_rom.py:147: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_rom.py:164: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_rom_data.py:138: needs gcc-2.7.2-kmc and ld.lld
+SKIPPED [5] tests/test_rom_data.py:143: needs gcc-2.7.2-kmc and ld.lld
+SKIPPED [1] tests/test_rom_data.py:210: needs gcc-2.7.2-kmc and ld.lld
+SKIPPED [4] tests/test_rom_data.py:215: needs gcc-2.7.2-kmc and ld.lld
+SKIPPED [1] tests/test_speed.py:28: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:97: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:121: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:148: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:166: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:185: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:205: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:226: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:239: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:254: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_speed.py:268: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM
+SKIPPED [1] tests/test_wsl.py:42: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl.py:58: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl.py:64: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl.py:72: needs Linux and the EE-GCC archive in the local download cache
+SKIPPED [1] tests/test_wsl_windows.py:27: needs Windows
+SKIPPED [1] tests/test_wsl_windows.py:33: needs Windows
+FAILED tests/test_app_server.py::test_the_api_agent_stays_within_a_small_local_context
+ERROR tests/test_forks.py::test_near_miss_gets_a_diff_and_release_restores_the_best
+1 failed, 128 passed, 139 skipped, 1 error in 13.79s
+pytest exit=1

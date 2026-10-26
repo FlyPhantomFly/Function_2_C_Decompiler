@@ -1,6 +1,6 @@
 [project]
 name = "decompnet"
-version = "0.10.6"
+version = "0.10.7"
 description = "decomp.wtf (What The Function): your AI agent decompiles games you own into C that compiles to the exact same bytes, with a live view. Runs locally."
 readme = "README.md"
 license = "MIT"
@@ -41,5 +41,6 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
+testpaths = ["tests", "maintenance/tests"]  # maintenance/tests holds the tests added when this fork took over
 # the room tests drive the room server through Starlette's TestClient, which warns about the timeouts real clients use
 filterwarnings = ["ignore:You should not use the 'timeout' argument with the TestClient"]

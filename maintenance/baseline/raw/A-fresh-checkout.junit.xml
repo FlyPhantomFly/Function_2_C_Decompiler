@@ -1,0 +1,1907 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="20" failures="3" skipped="139" tests="269" time="14.900" timestamp="2026-10-21T15:58:14.491504+00:00" hostname="vm"><testcase classname="tests.test_agents" name="test_antigravity_stream_json_is_read" time="0.001" /><testcase classname="tests.test_agents" name="test_antigravity_refusing_decomps_tools_says_how_to_allow_them" time="0.001" /><testcase classname="tests.test_agents" name="test_opencode_errors_say_what_failed" time="0.001" /><testcase classname="tests.test_agents" name="test_prompts_go_in_on_stdin_never_the_command_line" time="0.006" /><testcase classname="tests.test_agents" name="test_opencode_free_models_keep_their_tools_but_never_get_to_use_them" time="0.003" /><testcase classname="tests.test_agents" name="test_gemini_cli_helpers_carry_on_as_antigravity" time="0.000" /><testcase classname="tests.test_agents" name="test_connect_antigravity" time="0.001" /><testcase classname="tests.test_agents" name="test_assembly_for_agents_is_compact" time="0.001" /><testcase classname="tests.test_agents" name="test_diffs_sum_up_and_shorten_long_runs" time="0.002" /><testcase classname="tests.test_agents" name="test_helpers_and_the_agent_you_talk_to_never_share_an_identity" time="0.136" /><testcase classname="tests.test_agents" name="test_antigravity_helpers_say_when_it_isnt_connected" time="0.002" /><testcase classname="tests.test_app_engine" name="test_import_needs_the_ownership_confirmation" time="0.001"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:58: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_import_is_idempotent_and_described" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:63: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_split_match_and_rename" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:70: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_struct_access_through_an_automatic_name" time="0.001"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:84: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_wrong_code_gets_a_diff_and_link_notes" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:95: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_read_data_and_lists" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:112: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_export_and_live" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:119: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_find_similar_on_the_rom" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:135: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_autopilot_matches_machine_drafts_for_free" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:145: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_steering_priority_instructions_spend" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:164: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_engine" name="test_stats_say_who_matched_what_and_how_fast" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_engine.py:181: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_app_server" name="test_gui_needs_the_secret_and_the_right_host" time="0.212" /><testcase classname="tests.test_app_server" name="test_import_demo_and_follow_it_live" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_server.py:53: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_app_server" name="test_settings_never_echo_the_api_key" time="0.014" /><testcase classname="tests.test_app_server" name="test_parse_agent_output" time="0.001" /><testcase classname="tests.test_app_server" name="test_builtin_api_agent_matches_a_function" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_server.py:98: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_app_server" name="test_an_agent_nobody_signed_in_to_stops_and_says_so" time="0.021" /><testcase classname="tests.test_app_server" name="test_an_agent_out_of_credit_stops_and_says_so" time="0.037" /><testcase classname="tests.test_app_server" name="test_builtin_api_agent_out_of_credit" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_server.py:154: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_app_server" name="test_agent_spend_is_read_from_their_output" time="0.001" /><testcase classname="tests.test_app_server" name="test_helpers_are_remembered_to_resume" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_app_server.py:179: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_app_server" name="test_an_older_app_still_running_after_an_upgrade_is_replaced" time="1.566" /><testcase classname="tests.test_app_server" name="test_an_older_bridge_never_stops_a_newer_app" time="0.002" /><testcase classname="tests.test_app_server" name="test_a_job_always_ends_and_says_why" time="0.057" /><testcase classname="tests.test_app_server" name="test_the_log_can_be_read_from_the_gui" time="0.009" /><testcase classname="tests.test_app_server" name="test_a_project_that_cant_be_read_is_listed_with_the_reason" time="0.018" /><testcase classname="tests.test_app_server" name="test_the_api_agent_stays_within_a_small_local_context" time="0.001"><failure message="TypeError: 'NoneType' object is not subscriptable">app = (&lt;starlette.testclient.TestClient object at 0x7f4a2236be60&gt;, &lt;decompnet.app.engine.RomNetwork object at 0x7f4a223201a0&gt;, &lt;decompnet.app.agents.Manager object at 0x7f4a225f3f50&gt;)
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f4a21f9b3e0&gt;
+
+    def test_the_api_agent_stays_within_a_small_local_context(app, monkeypatch):
+        """A local llama.cpp model with a small context: the agent learns it from /props, trims older tool output to
+        fit, and when the server still says the request is too long, trims harder and sends it again."""
+        client, net, manager = app
+&gt;       slug = net.store.one("SELECT slug FROM projects")["slug"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_app_server.py:309: TypeError</failure></testcase><testcase classname="tests.test_app_server" name="test_fit_keeps_the_task_and_the_latest_exchange" time="0.002" /><testcase classname="tests.test_bridge" name="test_bridge_imports_and_works" time="0.000"><skipped type="pytest.skip" message="needs the demo ROM (projects/demo-rom)">/home/claude/work/Function_2_C_Decompiler-main/tests/test_bridge.py:19: needs the demo ROM (projects/demo-rom)</skipped></testcase><testcase classname="tests.test_chd" name="test_bits_and_huffman" time="0.001" /><testcase classname="tests.test_chd" name="test_a_playstation_chd_reads_like_its_disc" time="0.000"><skipped type="pytest.skip" message="needs a PlayStation CHD (the developer's own copy)">/home/claude/work/Function_2_C_Decompiler-main/tests/test_chd.py:19: needs a PlayStation CHD (the developer's own copy)</skipped></testcase><testcase classname="tests.test_claims" name="test_fresh_small_functions_first_and_files_close_to_done_among_equals" time="0.043" /><testcase classname="tests.test_claims" name="test_a_function_just_released_waits_before_the_next_agent_gets_it" time="0.056" /><testcase classname="tests.test_collab" name="test_parse_invite" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:37: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_joining_needs_the_same_rom_and_a_valid_invite" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:43: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_state_carries_work_never_rom_data" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:55: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_split_and_match_from_the_guest_reach_the_host" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:66: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_host_work_reaches_the_guest" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:81: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_guest_edits_go_through_the_host" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:96: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_two_friends_work_together" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:110: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_reconnect_after_the_host_restarts" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:128: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_closing_the_room_locks_guests_out" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:145: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_public_rooms_need_no_invite_code" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:168: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_the_host_lets_people_in_and_can_take_them_out" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:177: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_better_attempts_reach_the_host_without_a_compile_there" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:193: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_a_crowd_in_one_room" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:209: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_collab" name="test_members_stay_in_the_room_when_their_app_restarts" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_collab.py:220: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_ds" name="test_project_rebuilds_the_rom" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ds.py:41: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_ds" name="test_agents_match_functions" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ds.py:55: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_ds" name="test_autopilot_tries_machine_drafts" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ds.py:79: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_ds" name="test_a_trimmed_copy_imports" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ds.py:93: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_ds_init" name="test_a_call_to_code_dsd_found_no_function_for_is_analysed_again" time="0.002" /><testcase classname="tests.test_ds_rom_check" name="test_trimmed_and_padded_copies_are_the_same_game" time="0.000"><skipped type="pytest.skip" message="needs the demo DS ROM (projects/demo-ds)">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ds_rom_check.py:34: needs the demo DS ROM (projects/demo-ds)</skipped></testcase><testcase classname="tests.test_ds_rom_check" name="test_what_differs_is_named" time="0.000"><skipped type="pytest.skip" message="needs the demo DS ROM (projects/demo-ds)">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ds_rom_check.py:47: needs the demo DS ROM (projects/demo-ds)</skipped></testcase><testcase classname="tests.test_dtksplits" name="test_splits_round_trip_and_owner" time="0.000" /><testcase classname="tests.test_dtksplits" name="test_libraries_and_their_files" time="0.001" /><testcase classname="tests.test_dtksplits" name="test_a_new_file_goes_next_to_its_neighbours_with_their_settings" time="0.002" /><testcase classname="tests.test_dtksplits" name="test_a_module_without_a_library_gets_one_like_its_sibling" time="0.002" /><testcase classname="tests.test_dtksplits" name="test_a_program_with_two_sections_of_one_name_gets_unique_names" time="0.002" /><testcase classname="tests.test_dtksplits" name="test_hand_written_code_gets_a_function_hint" time="0.001" /><testcase classname="tests.test_dtksplits" name="test_a_link_failure_tries_the_next_newer_linker" time="0.001" /><testcase classname="tests.test_dtksplits" name="test_hand_written_code_cut_in_two_becomes_one_function" time="0.001" /><testcase classname="tests.test_dtksplits" name="test_a_function_dtk_stops_short_of_is_declared_from_the_exception_table" time="0.002" /><testcase classname="tests.test_dtksplits" name="test_modules_that_need_a_module_the_disc_keeps_compressed_are_left_out_at_once" time="0.002" /><testcase classname="tests.test_endpoints" name="test_the_one_saved_api_becomes_the_first_endpoint" time="0.001" /><testcase classname="tests.test_endpoints" name="test_endpoints_are_added_changed_and_removed" time="0.001" /><testcase classname="tests.test_endpoints" name="test_sessions_spread_across_the_endpoints_within_their_limits" time="0.001" /><testcase classname="tests.test_endpoints" name="test_a_saved_key_never_goes_to_an_address_typed_in" time="0.001" /><testcase classname="tests.test_endpoints" name="test_sessions_are_numbered_per_endpoint" time="0.002" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://127.0.0.1:8080/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://192.168.1.4:11434/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://10.1.2.3/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://172.20.0.5:8000/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://100.101.102.103:8080/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://[fd00::12]:8080/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://gpu-box:8080/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://inference.lan/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://host.docker.internal:1234/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://localhost:1234/v1-True]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[https://api.deepseek.com/v1-False]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[http://172.32.0.1/v1-False]" time="0.001" /><testcase classname="tests.test_endpoints" name="test_local_servers_are_recognised_by_address_or_name[https://8.8.8.8/v1-False]" time="0.001" /><testcase classname="tests.test_export" name="test_export_rebuilds_the_game[n64]" time="0.001"><skipped type="pytest.skip" message="needs the n64 toolchain and binutils-mips">/home/claude/work/Function_2_C_Decompiler-main/tests/test_export.py:79: needs the n64 toolchain and binutils-mips</skipped></testcase><testcase classname="tests.test_export" name="test_export_rebuilds_the_game[psx]" time="0.002"><skipped type="pytest.skip" message="needs the psx toolchain and binutils-mips">/home/claude/work/Function_2_C_Decompiler-main/tests/test_export.py:79: needs the psx toolchain and binutils-mips</skipped></testcase><testcase classname="tests.test_export" name="test_export_rebuilds_the_game[ps2]" time="0.003"><skipped type="pytest.skip" message="needs the ps2 toolchain and binutils-mips">/home/claude/work/Function_2_C_Decompiler-main/tests/test_export.py:79: needs the ps2 toolchain and binutils-mips</skipped></testcase><testcase classname="tests.test_export" name="test_check_records_a_function_written_outside" time="0.001"><skipped type="pytest.skip" message="needs the n64 toolchain and binutils-mips">/home/claude/work/Function_2_C_Decompiler-main/tests/test_export.py:104: needs the n64 toolchain and binutils-mips</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_a_literal_named_and_placed_differently_matches" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:117: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_resubmitting_a_matched_function_is_never_rejected" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:125: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_a_wrong_constant_is_not_a_match" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:131: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_a_reference_by_another_name_matches_with_a_warning" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:144: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_a_stale_match_in_the_database_blocks_nothing" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:150: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_an_edit_that_breaks_the_build_is_undone" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:160: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_a_match_made_with_edit_file_is_a_match_like_any_other" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:175: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_edit_file_forgives_whitespace_and_shows_where_the_text_went" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:186: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_judge" name="test_lines_the_file_already_has_may_come_along" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_judge.py:197: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_fork_link" name="test_the_last_match_of_a_file_links_it_into_the_game" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli, git, ninja">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_link.py:140: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja</skipped></testcase><testcase classname="tests.test_fork_link" name="test_a_linked_file_must_keep_building_the_same_game" time="0.001"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli, git, ninja">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_link.py:155: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja</skipped></testcase><testcase classname="tests.test_fork_link" name="test_nothing_unfinished_is_linked" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli, git, ninja">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_link.py:167: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja</skipped></testcase><testcase classname="tests.test_fork_link" name="test_a_file_whose_data_differs_says_what_and_stays_unlinked" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli, git, ninja">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_link.py:173: needs gcc-2.7.2-kmc, objdiff-cli, git, ninja</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_the_member_gets_the_tree_and_builds_it_with_their_own_copy" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:54: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_joining_needs_the_same_game" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:66: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_state_and_bundles_carry_work_never_the_game" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:76: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_a_members_match_is_confirmed_and_committed_by_the_host" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:86: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_the_hosts_work_reaches_the_member" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:114: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_work_in_progress_survives_following_the_host" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:131: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_the_hosts_version_wins_where_both_changed_the_same_lines" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:156: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_fork_rooms" name="test_reconnecting_keeps_the_place_in_the_tree" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp">/home/claude/work/Function_2_C_Decompiler-main/tests/test_fork_rooms.py:170: needs CodeWarrior for DS (mwccarm, proprietary) and ds-decomp</skipped></testcase><testcase classname="tests.test_forks" name="test_fork_state_after_setup" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:61: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_agent_matches_a_new_function_and_commits" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:72: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_decomp_wtfs_own_tries_leave_no_claim_behind" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:87: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_near_miss_gets_a_diff_and_release_restores_the_best" time="0.367"><error message="failed on setup with &quot;decompnet.forks.project.ForkError: setup step failed: /home/claude/work/Function_2_C_Decompiler-main/.venv/bin/python configure.py&#10;Traceback (most recent call last):&#10;  File &quot;/tmp/pytest-of-root/pytest-0/fork0/work/demo-quest-decomp/configure.py&quot;, line 44, in &lt;module&gt;&#10;    sys.exit(main())&#10;             ^^^^^^&#10;  File &quot;/tmp/pytest-of-root/pytest-0/fork0/work/demo-quest-decomp/configure.py&quot;, line 20, in main&#10;    tc_dir = toolchains.require(tc.id)&#10;             ^^^^^^^^^^^^^^^^^^^^^^^^^&#10;  File &quot;/home/claude/work/Function_2_C_Decompiler-main/src/decompnet/toolchains.py&quot;, line 146, in require&#10;    raise ToolchainError(f&quot;toolchain {tid!r} is not installed: run `decompnet toolchain install {tid}`&quot;)&#10;decompnet.toolchains.ToolchainError: toolchain 'gcc-2.7.2-kmc' is not installed: run `decompnet toolchain install gcc-2.7.2-kmc`&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=&lt;pluggy._tracing.TagTracerSub object at 0x7f4a267772c0&gt;, _basetemp=PosixPath('/tmp/pytest-of-root/pytest-0'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def fork(tmp_path_factory):
+        base = tmp_path_factory.mktemp("fork")
+        upstream = base / "upstream"
+        shutil.copytree(FORK_SRC, upstream)
+        _git(upstream, "init", "-q", "-b", "main")
+        _git(upstream, "add", "-A")
+        _git(upstream, "commit", "-q", "-m", "initial")
+        net = RomNetwork(base / "app.db", base / "work")
+        (base / "work").mkdir()
+        slug = net.forks.clone(str(upstream), name="Demo Quest decomp", platform="n64", log=lambda *_: None)
+        need = net.forks.needs(slug)
+        assert need["kind"] == "manifest" and need["path"] == "baserom.z64"
+        with pytest.raises(NetworkError, match="sha1"):
+            net.forks.setup(slug, b"\0" * 1024, "nope.z64", log=lambda *_: None)
+&gt;       m = net.forks.setup(slug, ROM.read_bytes(), "demo.z64", log=lambda *_: None)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_forks.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/app/forkengine.py:510: in setup
+    fp.setup(cfg.get("version"), log=log)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;decompnet.forks.project.ForkProject object at 0x7f4a21fac290&gt;
+version = None, log = &lt;function fork.&lt;locals&gt;.&lt;lambda&gt; at 0x7f4a263cefc0&gt;
+
+    def setup(self, version: str | None = None, log=print) -&gt; None:
+        self.unpack_disc(version, log=log)
+        for cmd in self.setup_commands(version):
+            ok, tail = self.run(cmd, log=log)
+            if not ok and cmd[0] != "make":  # a Makefile build often fails on purpose until things match
+&gt;               raise ForkError(f"setup step failed: {' '.join(cmd)}\n{tail}")
+E               decompnet.forks.project.ForkError: setup step failed: /home/claude/work/Function_2_C_Decompiler-main/.venv/bin/python configure.py
+E               Traceback (most recent call last):
+E                 File "/tmp/pytest-of-root/pytest-0/fork0/work/demo-quest-decomp/configure.py", line 44, in &lt;module&gt;
+E                   sys.exit(main())
+E                            ^^^^^^
+E                 File "/tmp/pytest-of-root/pytest-0/fork0/work/demo-quest-decomp/configure.py", line 20, in main
+E                   tc_dir = toolchains.require(tc.id)
+E                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E                 File "/home/claude/work/Function_2_C_Decompiler-main/src/decompnet/toolchains.py", line 146, in require
+E                   raise ToolchainError(f"toolchain {tid!r} is not installed: run `decompnet toolchain install {tid}`")
+E               decompnet.toolchains.ToolchainError: toolchain 'gcc-2.7.2-kmc' is not installed: run `decompnet toolchain install gcc-2.7.2-kmc`
+
+src/decompnet/forks/project.py:354: ForkError</error></testcase><testcase classname="tests.test_forks" name="test_guards" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:124: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_read_and_search" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:153: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_function_detail" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:165: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_csource_finds_definitions_and_stubs" time="0.003" /><testcase classname="tests.test_forks" name="test_catalog_normalizes_decomp_dev" time="0.001" /><testcase classname="tests.test_forks" name="test_clone_rejects_odd_sources" time="0.030" /><testcase classname="tests.test_forks" name="test_find_similar" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:199: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_similarity_ranks_copies_first" time="0.001" /><testcase classname="tests.test_forks" name="test_drafts_from_project_assembly" time="0.000"><skipped type="pytest.skip" message="needs m2c">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:215: needs m2c</skipped></testcase><testcase classname="tests.test_forks" name="test_ghidra_drafts_for_a_unit" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:237: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_rewriting_a_matched_function_must_keep_it_matching" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:249: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_a_project_that_reads_an_extracted_disc_gets_its_files_from_the_disc_image" time="0.013" /><testcase classname="tests.test_forks" name="test_a_disc_of_another_version_switches_the_project_or_is_refused" time="0.028" /><testcase classname="tests.test_forks" name="test_a_project_made_from_scratch_builds_with_this_computers_tools" time="0.002" /><testcase classname="tests.test_forks" name="test_a_unit_without_a_compiled_object_is_measured_as_not_matched" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:331: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_two_functions_of_the_same_name_in_one_unit_both_get_a_row" time="0.031" /><testcase classname="tests.test_forks" name="test_a_public_decomp_together" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc, objdiff-cli and git">/home/claude/work/Function_2_C_Decompiler-main/tests/test_forks.py:373: needs gcc-2.7.2-kmc, objdiff-cli and git</skipped></testcase><testcase classname="tests.test_forks" name="test_the_retired_decomp_dev_directory_is_never_asked_for" time="0.009" /><testcase classname="tests.test_forks" name="test_a_projects_own_words_on_ai_come_before_forking" time="0.120" /><testcase classname="tests.test_forks" name="test_c_code_going_into_a_cpp_file_gets_c_linkage" time="0.023" /><testcase classname="tests.test_gba" name="test_import_finds_the_functions" time="0.000"><skipped type="pytest.skip" message="needs agbcc, the Arm GNU toolchain and luvdis">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gba.py:41: needs agbcc, the Arm GNU toolchain and luvdis</skipped></testcase><testcase classname="tests.test_gba" name="test_every_game_function_matches" time="0.000"><skipped type="pytest.skip" message="needs agbcc, the Arm GNU toolchain and luvdis">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gba.py:51: needs agbcc, the Arm GNU toolchain and luvdis</skipped></testcase><testcase classname="tests.test_gba" name="test_drafts_and_look_alikes" time="0.000"><skipped type="pytest.skip" message="needs agbcc, the Arm GNU toolchain and luvdis">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gba.py:79: needs agbcc, the Arm GNU toolchain and luvdis</skipped></testcase><testcase classname="tests.test_gba" name="test_export_rebuilds_the_rom" time="0.000"><skipped type="pytest.skip" message="needs agbcc, the Arm GNU toolchain and luvdis">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gba.py:87: needs agbcc, the Arm GNU toolchain and luvdis</skipped></testcase><testcase classname="tests.test_gba" name="test_luvdis_survives_code_that_pops_more_than_it_pushed" time="0.000"><skipped type="pytest.skip" message="needs agbcc, the Arm GNU toolchain and luvdis">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gba.py:110: needs agbcc, the Arm GNU toolchain and luvdis</skipped></testcase><testcase classname="tests.test_gba" name="test_a_helper_linked_twice_gets_two_names" time="0.000"><skipped type="pytest.skip" message="needs agbcc, the Arm GNU toolchain and luvdis">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gba.py:124: needs agbcc, the Arm GNU toolchain and luvdis</skipped></testcase><testcase classname="tests.test_gc" name="test_project_rebuilds_the_program" time="0.001"><skipped type="pytest.skip" message="needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gc.py:43: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt</skipped></testcase><testcase classname="tests.test_gc" name="test_agents_match_functions" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gc.py:55: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt</skipped></testcase><testcase classname="tests.test_gc" name="test_a_file_is_split_and_its_match_moves_along" time="0.001"><skipped type="pytest.skip" message="needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gc.py:72: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt</skipped></testcase><testcase classname="tests.test_gc" name="test_code_without_a_file_gets_one" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gc.py:94: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt</skipped></testcase><testcase classname="tests.test_gc" name="test_autopilot_matches_from_machine_drafts" time="0.000"><skipped type="pytest.skip" message="needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt">/home/claude/work/Function_2_C_Decompiler-main/tests/test_gc.py:128: needs CodeWarrior (mwcc, proprietary) and the GameCube toolbelt</skipped></testcase><testcase classname="tests.test_handwritten" name="test_runtime_helpers_are_assembly" time="0.000" /><testcase classname="tests.test_handwritten" name="test_compiled_code_is_not" time="0.000" /><testcase classname="tests.test_handwritten" name="test_fingerprints_say_which_code_is_assembly" time="0.000"><skipped type="pytest.skip" message="needs the GameCube binutils">/home/claude/work/Function_2_C_Decompiler-main/tests/test_handwritten.py:37: needs the GameCube binutils</skipped></testcase><testcase classname="tests.test_handwritten" name="test_mips_code_no_compiler_makes" time="0.001" /><testcase classname="tests.test_hostenv" name="test_windows_paths_reach_the_game_from_wsl" time="0.001" /><testcase classname="tests.test_hostenv" name="test_wsl_paths_shown_to_windows" time="0.001" /><testcase classname="tests.test_hostenv" name="test_docker_home_is_the_users_home" time="0.001" /><testcase classname="tests.test_hostenv" name="test_native_changes_nothing" time="0.001" /><testcase classname="tests.test_hostenv" name="test_agent_signin_says_where_to_sign_in" time="0.001" /><testcase classname="tests.test_hostenv" name="test_compiles_when_the_app_runs_from_root" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc">/home/claude/work/Function_2_C_Decompiler-main/tests/test_hostenv.py:70: needs gcc-2.7.2-kmc</skipped></testcase><testcase classname="tests.test_http" name="test_agent_session_over_http" time="1.202"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_agent_session_over_http0')
+
+    @pytest.fixture
+    def server(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        net = Network(tmp_path / "http.db")
+&gt;       import_project(net.store, DEMO, log=lambda *_: None)
+
+tests/test_http.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_http" name="test_tools_require_a_valid_token" time="0.098"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_tools_require_a_valid_tok0')
+
+    @pytest.fixture
+    def server(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        net = Network(tmp_path / "http.db")
+&gt;       import_project(net.store, DEMO, log=lambda *_: None)
+
+tests/test_http.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_n64code" name="test_a_segment_loaded_later_is_found_at_its_address" time="0.200" /><testcase classname="tests.test_n64code" name="test_code_at_an_address_already_taken_is_left_out" time="0.185" /><testcase classname="tests.test_n64code" name="test_nothing_but_data_finds_nothing" time="0.221" /><testcase classname="tests.test_n64code" name="test_packed_code_at_a_tlb_address_is_unpacked_and_placed" time="0.088" /><testcase classname="tests.test_n64code" name="test_yaz0" time="0.001" /><testcase classname="tests.test_names" name="test_names_as_agents_write_them" time="0.026" /><testcase classname="tests.test_names" name="test_a_plain_name_means_the_function_the_agent_works_on" time="0.025" /><testcase classname="tests.test_network" name="test_check_source_blocks_cheats" time="0.001" /><testcase classname="tests.test_network" name="test_every_solution_matches" time="0.092"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_every_solution_matches0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_wrong_attempt_gets_scored_diff" time="0.084"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_wrong_attempt_gets_scored0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_compile_error_and_rejection_are_reported" time="0.083"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_compile_error_and_rejecti0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_claims_are_exclusive_and_scheduler_spreads_work" time="0.091"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_claims_are_exclusive_and_0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_release_hands_off_best_attempt_and_notes" time="0.118"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_release_hands_off_best_at0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_expired_claims_are_reclaimable" time="0.136"><failure message="subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_expired_claims_are_reclai0')
+
+    @needs_host_gcc
+    def test_expired_claims_are_reclaimable(tmp_path):
+        net = Network(tmp_path / "t.db", claim_ttl=-1)  # every claim is born expired
+&gt;       import_project(net.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</failure></testcase><testcase classname="tests.test_network" name="test_context_edits_are_regression_tested" time="0.149"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_context_edits_are_regress0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_scratch_compiles_on_matched_functions_give_no_credit" time="0.086"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_scratch_compiles_on_match0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_auth" time="0.086"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_auth0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_export" time="0.089"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_export0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_projects_need_a_lawful_basis" time="0.026" /><testcase classname="tests.test_network" name="test_status_shows_legal_basis" time="0.095"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_status_shows_legal_basis0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_moderation_tools" time="0.093"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_moderation_tools0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_give_ups_are_recounted_once_without_decomp_wtfs_own_expiries" time="0.028" /><testcase classname="tests.test_network" name="test_every_new_session_starts_with_what_agents_learned" time="0.089"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_every_new_session_starts_0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_network" name="test_big_functions_get_more_compiles_before_the_nudge_to_move_on" time="0.100"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_big_functions_get_more_co0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "test.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_network.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_overlays" name="test_an_overlay_is_placed_at_its_load_address" time="0.005" /><testcase classname="tests.test_overlays" name="test_ps2_elf_overlays_say_where_they_go" time="0.001" /><testcase classname="tests.test_overlays" name="test_overlays_are_split_with_the_program" time="0.000"><skipped type="pytest.skip" message="needs the PlayStation demo (projects/demo-psx)">/home/claude/work/Function_2_C_Decompiler-main/tests/test_overlays.py:45: needs the PlayStation demo (projects/demo-psx)</skipped></testcase><testcase classname="tests.test_overlays" name="test_a_disc_with_an_overlay_imports_both" time="0.000"><skipped type="pytest.skip" message="needs the PlayStation demo (projects/demo-psx)">/home/claude/work/Function_2_C_Decompiler-main/tests/test_overlays.py:91: needs the PlayStation demo (projects/demo-psx)</skipped></testcase><testcase classname="tests.test_period_compilers" name="test_known_solutions_match_on_period_compilers[demo-n64-gcc-2.7.2-kmc-True]" time="0.002"><skipped type="pytest.skip" message="gcc-2.7.2-kmc not installed">/home/claude/work/Function_2_C_Decompiler-main/tests/test_period_compilers.py:22: gcc-2.7.2-kmc not installed</skipped></testcase><testcase classname="tests.test_period_compilers" name="test_known_solutions_match_on_period_compilers[demo-ps2-ee-gcc-2.96-False]" time="0.003"><skipped type="pytest.skip" message="ee-gcc-2.96 not installed">/home/claude/work/Function_2_C_Decompiler-main/tests/test_period_compilers.py:22: ee-gcc-2.96 not installed</skipped></testcase><testcase classname="tests.test_period_compilers" name="test_m2c_drafts_a_starting_point" time="0.001"><skipped type="pytest.skip" message="gcc-2.7.2-kmc or m2c not installed">/home/claude/work/Function_2_C_Decompiler-main/tests/test_period_compilers.py:36: gcc-2.7.2-kmc or m2c not installed</skipped></testcase><testcase classname="tests.test_phase23" name="test_registration_guards" time="0.090"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_registration_guards0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "t.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_phase23.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_phase23" name="test_reputation_gates_header_edits_and_budget" time="0.095"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_reputation_gates_header_e0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "t.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_phase23.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_phase23" name="test_hash_only_project_stores_no_code" time="0.094"><failure message="subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_hash_only_project_stores_0')
+
+    @needs_host_gcc
+    def test_hash_only_project_stores_no_code(tmp_path):
+        proj = tmp_path / "hashdemo"
+        shutil.copytree(DEMO, proj)
+        toml = (proj / "project.toml").read_text().replace('slug = "demo"', 'slug = "hashdemo"')
+        (proj / "project.toml").write_text(toml.replace("[target]", '[target]\nverification = "hash"'))
+        net = Network(tmp_path / "h.db")
+&gt;       import_project(net.store, proj, log=lambda *_: None)
+
+tests/test_phase23.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/tmp/pytest-of-root/pytest-0/test_hash_only_project_stores_0/hashdemo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</failure></testcase><testcase classname="tests.test_phase23" name="test_function_page_has_full_history" time="0.098"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_function_page_has_full_hi0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "t.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_phase23.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_phase23" name="test_donated_compute_round_trip" time="0.000"><skipped type="pytest.skip" message="gcc-2.7.2-kmc not installed">/home/claude/work/Function_2_C_Decompiler-main/tests/test_phase23.py:108: gcc-2.7.2-kmc not installed</skipped></testcase><testcase classname="tests.test_phase23" name="test_zlib_uses_per_unit_headers" time="0.000"><skipped type="pytest.skip" message="run projects/zlib-n64/prepare.py first">/home/claude/work/Function_2_C_Decompiler-main/tests/test_phase23.py:127: run projects/zlib-n64/prepare.py first</skipped></testcase><testcase classname="tests.test_phase23" name="test_upstream_export_commits_with_credit" time="0.094"><error message="failed on setup with &quot;subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.&quot;">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_upstream_export_commits_w0')
+
+    @pytest.fixture
+    def net(tmp_path):
+        if not HOST_GCC:
+            pytest.skip(needs_host_gcc.kwargs["reason"])
+        n = Network(tmp_path / "t.db")
+&gt;       import_project(n.store, DEMO, log=lambda *_: None)
+
+tests/test_phase23.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/decompnet/project.py:138: in import_project
+    subprocess.run(target["build"], cwd=root, check=True)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', ...],)
+kwargs = {'cwd': PosixPath('/home/claude/work/Function_2_C_Decompiler-main/projects/demo')}
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output &amp; stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+&gt;               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['gcc', '-c', '-std=gnu11', '-O2', '-fno-pic', '-fno-asynchronous-unwind-tables', '-fcf-protection=none', '-fno-stack-protector', '-fno-inline', '-fno-tree-vectorize', '-fno-reorder-blocks-and-partition', '-ffunction-sections', '-fno-ident', '-flive-patching=inline-only-static', '-Ioriginal', 'original/game.c', '-o', 'target/game.o']' returned non-zero exit status 1.
+
+/usr/lib/python3.12/subprocess.py:571: CalledProcessError</error></testcase><testcase classname="tests.test_platform" name="test_npm_agents_get_the_whole_prompt" time="0.000"><skipped type="pytest.skip" message="Windows only">/home/claude/work/Function_2_C_Decompiler-main/tests/test_platform.py:37: Windows only</skipped></testcase><testcase classname="tests.test_platform" name="test_agents_connect_through_npm_launchers" time="0.000"><skipped type="pytest.skip" message="Windows only">/home/claude/work/Function_2_C_Decompiler-main/tests/test_platform.py:48: Windows only</skipped></testcase><testcase classname="tests.test_platform" name="test_npm_agents_are_found_by_their_cmd" time="0.000"><skipped type="pytest.skip" message="Windows only">/home/claude/work/Function_2_C_Decompiler-main/tests/test_platform.py:63: Windows only</skipped></testcase><testcase classname="tests.test_platform" name="test_commands_stay_as_they_are_elsewhere" time="0.000" /><testcase classname="tests.test_platform" name="test_stopping_an_agent_stops_what_it_started" time="2.112" /><testcase classname="tests.test_platform" name="test_output_into_a_pipe_is_utf8" time="0.022" /><testcase classname="tests.test_platform" name="test_the_guides_reach_agents_intact" time="0.001" /><testcase classname="tests.test_platform" name="test_https_is_verified_by_windows" time="0.000"><skipped type="pytest.skip" message="Windows only">/home/claude/work/Function_2_C_Decompiler-main/tests/test_platform.py:126: Windows only</skipped></testcase><testcase classname="tests.test_platform" name="test_running_at_log_on_needs_no_administrator" time="0.000"><skipped type="pytest.skip" message="Windows only">/home/claude/work/Function_2_C_Decompiler-main/tests/test_platform.py:135: Windows only</skipped></testcase><testcase classname="tests.test_platform" name="test_builds_find_decomp_wtfs_own_ninja" time="0.017" /><testcase classname="tests.test_platform" name="test_the_checksum_target_is_found_with_either_slash[build/G1E751/ok]" time="0.002" /><testcase classname="tests.test_platform" name="test_the_checksum_target_is_found_with_either_slash[build\\G1E751\\ok]" time="0.002" /><testcase classname="tests.test_ps2" name="test_import" time="0.000"><skipped type="pytest.skip" message="needs ee-gcc-2.96 and binutils-mips to build the PS2 demo">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ps2.py:44: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo</skipped></testcase><testcase classname="tests.test_ps2" name="test_a_removed_game_can_be_imported_again" time="0.000"><skipped type="pytest.skip" message="needs ee-gcc-2.96 and binutils-mips to build the PS2 demo">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ps2.py:52: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo</skipped></testcase><testcase classname="tests.test_ps2" name="test_every_game_function_matches" time="0.000"><skipped type="pytest.skip" message="needs ee-gcc-2.96 and binutils-mips to build the PS2 demo">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ps2.py:70: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo</skipped></testcase><testcase classname="tests.test_ps2" name="test_wrong_code_does_not_match" time="0.000"><skipped type="pytest.skip" message="needs ee-gcc-2.96 and binutils-mips to build the PS2 demo">/home/claude/work/Function_2_C_Decompiler-main/tests/test_ps2.py:94: needs ee-gcc-2.96 and binutils-mips to build the PS2 demo</skipped></testcase><testcase classname="tests.test_psx" name="test_import" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-psx and ld.lld to build the PS1 demo">/home/claude/work/Function_2_C_Decompiler-main/tests/test_psx.py:44: needs gcc-2.7.2-psx and ld.lld to build the PS1 demo</skipped></testcase><testcase classname="tests.test_psx" name="test_every_game_function_matches" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-psx and ld.lld to build the PS1 demo">/home/claude/work/Function_2_C_Decompiler-main/tests/test_psx.py:51: needs gcc-2.7.2-psx and ld.lld to build the PS1 demo</skipped></testcase><testcase classname="tests.test_psx" name="test_wrong_code_does_not_match" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-psx and ld.lld to build the PS1 demo">/home/claude/work/Function_2_C_Decompiler-main/tests/test_psx.py:75: needs gcc-2.7.2-psx and ld.lld to build the PS1 demo</skipped></testcase><testcase classname="tests.test_rom" name="test_header_and_byte_orders" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom.py:70: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_rom" name="test_split_finds_every_function" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom.py:95: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_rom" name="test_original_source_matches_the_rom_byte_for_byte" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom.py:123: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_rom" name="test_a_wrong_function_does_not_match" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom.py:147: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_rom" name="test_unknown_names_are_explained" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom.py:164: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_rom_data" name="test_own_data_in_another_layout_matches" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:138: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_wrong_data_is_caught[change0]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:143: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_wrong_data_is_caught[change1]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:143: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_wrong_data_is_caught[change2]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:143: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_wrong_data_is_caught[change3]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:143: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_wrong_data_is_caught[change4]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:143: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_gba_strings_and_pointer_tables_match" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:210: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_gba_wrong_data_is_caught[change0]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:215: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_gba_wrong_data_is_caught[change1]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:215: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_gba_wrong_data_is_caught[change2]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:215: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_rom_data" name="test_gba_wrong_data_is_caught[change3]" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld">/home/claude/work/Function_2_C_Decompiler-main/tests/test_rom_data.py:215: needs gcc-2.7.2-kmc and ld.lld</skipped></testcase><testcase classname="tests.test_speed" name="test_renames_follow_the_relocations" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:28: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_a_match_matches_its_twins" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:97: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_a_twin_that_didnt_match_isnt_tried_again_until_its_code_changes" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:121: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_hand_written_code_in_a_rom_is_set_aside" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:148: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_an_agents_match_reaches_its_twins_at_once" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:166: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_one_full_pass_at_a_time" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:185: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_assembly_is_left_out" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:205: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_stats_count_a_match_made_meanwhile" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:226: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_a_batch_of_small_functions_in_one_call" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:239: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_turns_not_wasted" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:254: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_speed" name="test_the_permuter_finishes_a_near_miss" time="0.000"><skipped type="pytest.skip" message="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM">/home/claude/work/Function_2_C_Decompiler-main/tests/test_speed.py:268: needs gcc-2.7.2-kmc and ld.lld to build the demo ROM</skipped></testcase><testcase classname="tests.test_toolchains" name="test_registry_is_pinned_and_labelled" time="0.001" /><testcase classname="tests.test_toolchains" name="test_proprietary_toolchains_need_explicit_acceptance" time="0.002" /><testcase classname="tests.test_toolchains" name="test_an_arm_computer_is_told_why_nothing_compiles" time="0.002" /><testcase classname="tests.test_toolchains" name="test_install_verifies_checksums" time="0.020" /><testcase classname="tests.test_toolchains" name="test_install_records_a_manifest" time="0.006" /><testcase classname="tests.test_toolchains" name="test_zst_archives_need_no_zstd_command" time="0.014" /><testcase classname="tests.test_updates" name="test_install_info_round_trip" time="0.003" /><testcase classname="tests.test_updates" name="test_release_update" time="0.002" /><testcase classname="tests.test_updates" name="test_release_update_from_github_when_decomp_wtf_is_unreachable" time="0.002" /><testcase classname="tests.test_updates" name="test_branch_update" time="0.003" /><testcase classname="tests.test_updates" name="test_offline_check_says_why" time="0.002" /><testcase classname="tests.test_updates" name="test_install_runs_uv_then_the_new_setup" time="0.015" /><testcase classname="tests.test_updates" name="test_restart_keeps_port_and_secret" time="0.002" /><testcase classname="tests.test_updates" name="test_update_api" time="0.097" /><testcase classname="tests.test_wsl" name="test_linux_only_compilers_install_and_run_through_wsl" time="0.000"><skipped type="pytest.skip" message="needs Linux and the EE-GCC archive in the local download cache">/home/claude/work/Function_2_C_Decompiler-main/tests/test_wsl.py:42: needs Linux and the EE-GCC archive in the local download cache</skipped></testcase><testcase classname="tests.test_wsl" name="test_without_wsl_the_app_says_how_to_get_it" time="0.000"><skipped type="pytest.skip" message="needs Linux and the EE-GCC archive in the local download cache">/home/claude/work/Function_2_C_Decompiler-main/tests/test_wsl.py:58: needs Linux and the EE-GCC archive in the local download cache</skipped></testcase><testcase classname="tests.test_wsl" name="test_windows_paths_as_wsl_sees_them" time="0.000"><skipped type="pytest.skip" message="needs Linux and the EE-GCC archive in the local download cache">/home/claude/work/Function_2_C_Decompiler-main/tests/test_wsl.py:64: needs Linux and the EE-GCC archive in the local download cache</skipped></testcase><testcase classname="tests.test_wsl" name="test_debian_packages_unpack_without_tar" time="0.000"><skipped type="pytest.skip" message="needs Linux and the EE-GCC archive in the local download cache">/home/claude/work/Function_2_C_Decompiler-main/tests/test_wsl.py:72: needs Linux and the EE-GCC archive in the local download cache</skipped></testcase><testcase classname="tests.test_wsl_windows" name="test_old_compilers_compile_from_a_windows_drive" time="0.000"><skipped type="pytest.skip" message="needs Windows">/home/claude/work/Function_2_C_Decompiler-main/tests/test_wsl_windows.py:27: needs Windows</skipped></testcase><testcase classname="tests.test_wsl_windows" name="test_exported_projects_build_from_a_windows_drive" time="0.001"><skipped type="pytest.skip" message="needs Windows">/home/claude/work/Function_2_C_Decompiler-main/tests/test_wsl_windows.py:33: needs Windows</skipped></testcase></testsuite></testsuites>
