@@ -13,6 +13,19 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.50] - 2026-10-23
+
+**Docs, Tooling.** Status, the final measurements for 0.10.47 to 0.10.49, and the patch set. One small change to a tool, none to the application.
+
+- **Run M** in `maintenance/baseline/`: the maintained code at 0.10.49, measured the same way, **with the browser (`CHROME`) and the real-wheel test (`BUILD_WHEEL=1`) enabled** so those tests run instead of skipping:
+  **700 passed, 0 failed, 52 skipped (752 items)** with every free tool and `bwrap`. Test by test, nothing that passed in upstream's run C or in run L fails; against L, 82 items are new (all pass) and none is
+  gone. The bare-machine CI commands, without those switches and including the wheel build and check: 597 passed, 155 skipped, 0 failed; `actionlint` on both workflows: clean.
+- `maintenance/tools/check_wheel.py` now also requires `decompnet/checksum.py`, `app/backup.py` and `app/autobackup.py`: the server imports them at startup, so a wheel without them would install and then crash.
+- `MAINTENANCE_PLAN.md`: status as of this version. Done from your answers: the provider-aware budget (0.10.47), the new banner (0.10.48), automatic backups (0.10.49). Next, in your order: resume and `--until N%`,
+  then the N64 shiftable export.
+- `maintenance/patches/`: regenerated, 44 patches (0.10.7 to 0.10.50).
+- Nothing for users to do.
+
 ## [0.10.49] - 2026-10-23
 
 **Feature.** Automatic rolling backups (owner's decision): a verified snapshot every day, kept 3 daily, 2 weekly, 1 monthly, each with a checksum, with a restore test every week. (Plan Phase 3, item 6.)
