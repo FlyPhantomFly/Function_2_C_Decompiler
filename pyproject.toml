@@ -1,6 +1,6 @@
 [project]
 name = "decompnet"
-version = "0.10.11"
+version = "0.10.12"
 description = "decomp.wtf (What The Function): your AI agent decompiles games you own into C that compiles to the exact same bytes, with a live view. Runs locally."
 readme = "README.md"
 license = "MIT"
@@ -11,7 +11,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "capstone>=5.0.9",
-    "mcp>=2.3.0",
+    "mcp>=2.3.0,<3",  # the app is built on the 2.x API (mcp.server.mcpserver); a 3.x needs a deliberate port
     "pyelftools>=0.33",
     "splat64[mips]>=0.50.1",
     "spimdisasm>=1.42.4",

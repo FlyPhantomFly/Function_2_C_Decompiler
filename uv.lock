@@ -270,7 +270,7 @@ wheels = [
 
 [[package]]
 name = "decompnet"
-version = "0.10.11"
+version = "0.10.12"
 source = { editable = "." }
 dependencies = [
     { name = "capstone" },
@@ -295,7 +295,7 @@ dev = [
 requires-dist = [
     { name = "capstone", specifier = ">=5.0.9" },
     { name = "httpx", specifier = ">=0.28" },
-    { name = "mcp", specifier = ">=2.3.0" },
+    { name = "mcp", specifier = ">=2.3.0,<3" },
     { name = "ninja", specifier = ">=1.11" },
     { name = "pyelftools", specifier = ">=0.33" },
     { name = "rabbitizer", specifier = ">=1.16.2" },

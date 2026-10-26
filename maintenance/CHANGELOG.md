@@ -13,6 +13,18 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.12] - 2026-10-21
+
+**Dependencies.** `mcp` is bounded to the 2.x API the app is built on. (Plan item 1.5, the bound.)
+
+- `pyproject.toml`: `mcp>=2.3.0` became `mcp>=2.3.0,<3`. The app imports `mcp.server.mcpserver` and `mcp.Client`, which
+  exist only in 2.x; with no ceiling, anything that installs without `uv.lock` could pick up a future 3.x.
+- `uv.lock` regenerated with `uv lock`: the diff is the one specifier line, and `mcp` stays at 2.3.0. `uv lock --check`
+  and `uv run --locked` pass.
+- Tests: `maintenance/tests/test_maint_dependencies.py` (the bound excludes 3.0.0 and includes 2.3.0 to 2.99; the
+  installed `mcp` satisfies it and has the modules the app imports). The bound test failed before the change.
+- Nothing for users to do. Installing from the lock file is unchanged; `uv sync --locked` is still the way (CI will use it).
+
 ## [0.10.11] - 2026-10-21
 
 **Security.** Agent-written C is no longer compiled outside the sandbox unless someone explicitly says so. (Plan item 1.4.)
