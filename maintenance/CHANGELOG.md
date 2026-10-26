@@ -13,6 +13,32 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.18] - 2026-10-21
+
+**Tooling, CI.** A checker for the pinned compiler downloads. (Plan item 1.7.)
+
+- `maintenance/tools/check_toolchains.py`: reads `src/decompnet/toolchains.toml` and (1) enforces the registry's rules
+  (every download is https and has a 64-hex `sha256`), (2) checks every unique URL still exists (HEAD, falling back to a
+  one-byte GET for hosts that refuse HEAD), (3) with `--verify`, downloads each file and compares its sha256 with the
+  pin. Failures are classified: `dns` (this machine can't resolve the host, often only its network), `http` (a dead
+  link), `sha` (the file changed under its pin), `timeout`, `tls`. Exit 1 on any failure.
+- Why: every compiler this app runs comes from a third-party URL. Links rot, and `toolchains.install` accepts an entry
+  with no hash and "pins it on first use", which would install unverified code. `install()` is not changed (it is on the
+  review-first list and all 62 parts are pinned today); instead
+  `maintenance/tests/test_maint_toolchain_check.py::test_every_download_in_the_real_registry_is_https_and_pinned_by_sha256`
+  fails if anyone adds an unpinned or non-https entry.
+- CI: a `toolchain-urls` job (nightly and on demand) runs it, `continue-on-error` until its first run on a runner shows
+  whether hosts such as developer.arm.com answer a build server; delete that line then.
+- Verified against the real registry, from the sandbox: 58 unique downloads in 23 toolchains, **52 resolve (all GitHub),
+  0 rule violations, 0 dead links**; the 6 failures are all `dns`, on `archive.archlinux.org`, `snapshot.debian.org`,
+  `developer.arm.com` and `files.decomp.dev`, which this sandbox cannot reach (run it on your machine to cover them).
+  `--verify` on `gcc-2.7.2-kmc`, `gcc-2.7.2-psx`, `binutils-mips` and `objdiff-cli`: 14 real files downloaded, **all 14
+  sha256 match their pins**. 7 tests, offline (a local HTTP server stands in for the hosts: live, 404, HEAD refused,
+  file changed, unresolvable host, and the exit codes).
+- Not covered: tools installed from a git revision instead of a hashed archive (`m2c`: pinned by a 10-character commit
+  id), and the hosts above until run elsewhere.
+- Nothing for users to do.
+
 ## [0.10.17] - 2026-10-21
 
 **Security.** The app's own links, the team-room page and the Claude Code plugin send people, and agents, to this fork

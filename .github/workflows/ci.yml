@@ -6,6 +6,8 @@ name: CI
 #   sandbox    every push and pull request. Installs bubblewrap and runs the sandbox tests and the tests that compile
 #              agent code inside it. continue-on-error until it has run once on a GitHub runner (see the comment there).
 #   toolchains nightly and on demand. Installs the free compilers and runs the whole suite.
+#   toolchain-urls  nightly and on demand. Checks every pinned compiler download still exists (HEAD), so a dead link is
+#              found by us and not by a user. `--verify` (downloads everything, hundreds of MB) is run by hand.
 # Nothing here has secrets or write access; maintenance/tests/test_maint_ci_workflow.py keeps it that way.
 
 on:
@@ -96,3 +98,17 @@ jobs:
         with:
           name: junit-toolchains
           path: junit.xml
+
+  toolchain-urls:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    # Unverified on a GitHub runner: some hosts (developer.arm.com, Debian's salsa) may answer a build server differently
+    # from a browser. The first scheduled run decides. If it is green, delete the next line so a dead link fails the build.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Every pinned compiler download still exists
+        run: python3 maintenance/tools/check_toolchains.py
