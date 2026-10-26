@@ -26,5 +26,7 @@ together and `tests/test_maint_release_hygiene.py` fails if they drift or the ch
 - `.github/workflows/`: GitHub only reads workflows from there (added by the CI change).
 - Edits to upstream files (for example `src/decompnet/app/updates.py`). Every such edit is listed in its changelog
   entry and reproduced in `patches/`.
+- A dependency in the other direction: upstream's tests import `maintenance/testgates.py` (the shared skip
+  conditions), so the folder cannot simply be deleted without editing those tests.
 - `site/public/install.sh` and `install.ps1` keep `VERSION="0.10.6"`: it names a wheel that has to exist on a server.
   Do not move it until a release is actually published.

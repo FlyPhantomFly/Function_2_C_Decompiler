@@ -13,6 +13,29 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.9] - 2026-10-21
+
+**Test.** On a machine without the optional tools the suite now skips with a reason instead of failing or erroring.
+
+- Measured goal: on a bare fresh clone (no toolchains, no `lld` or `llvm-objcopy`, no zlib source) the suite had
+  2 failures and 1 error after 0.10.8; it now has **0 failed of 284 (143 passed, 141 skipped)**. With every free tool
+  installed it is **231 passed, 53 skipped, 0 failed** (baseline C was 218 passed, 1 failed).
+- New `maintenance/testgates.py`: one function, `demo_rom_problem(toolchain)`, that says what is missing for the demo
+  ROM to be built (the toolchain, `ld.lld`, `llvm-objcopy`, zlib's source) and is used as the skip reason. It replaces
+  the `ld.lld`-only checks in `test_rom`, `test_app_engine`, `test_collab`, `test_speed`, `test_psx` and `test_export`.
+  The demo-ROM build scripts need `llvm-objcopy` and zlib's source, which the old checks never looked at.
+- `test_app_server::test_the_api_agent_stays_within_a_small_local_context` gets the `@needs_demo` mark its neighbours
+  have; `test_forks::test_near_miss_gets_a_diff_and_release_restores_the_best` gets `@needs_tools`;
+  `test_bridge` also requires `gcc-2.7.2-kmc`, not just a leftover ROM file.
+- `test_app_engine`: the "brief contains an m2c draft" assertion applies only when m2c is installed (it used to fail
+  three tests in a row without it), and the autopilot test is skipped without m2c.
+- The autopilot test waits up to 5 minutes instead of 60 s. It returns the moment the autopilot finishes, so fast
+  machines are not slower; it takes about 70 s where it used to time out.
+- Not changed: `test_bridge` and the two `test_overlays` tests still skip on the first run in a clean tree and run on
+  the second (see `baseline/README.md`).
+- Note: upstream's tests now import `maintenance.testgates`, so deleting `maintenance/` breaks them.
+- Nothing for users to do.
+
 ## [0.10.8] - 2026-10-21
 
 **Fix.** A fresh checkout can import the `projects/demo` project.

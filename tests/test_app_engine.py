@@ -8,11 +8,11 @@ import pytest
 from decompnet import toolchains
 from decompnet.app.engine import RomNetwork
 from decompnet.network import NetworkError
+from maintenance.testgates import demo_rom_problem
 
 from .test_rom import built  # noqa: F401  (fixture that builds the demo ROM)
 
-pytestmark = pytest.mark.skipif(toolchains.installed("gcc-2.7.2-kmc") is None or not shutil.which("ld.lld"),
-                                reason="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM")
+pytestmark = pytest.mark.skipif(bool(demo_rom_problem()), reason=demo_rom_problem())
 
 CLAMP = """s32 func_800007D0(s32 v, s32 lo, s32 hi) {
     if (v < lo) {
@@ -72,7 +72,8 @@ def test_split_match_and_rename(net):
     # exit() never returns, so the disassembler ran it into clamp_s32: split them, then match clamp_s32
     assert "split" in net.split_function(agent, "demo-quest-64", "func_800007C4", "0x800007D0")
     brief = net.claim(agent, "demo-quest-64", "func_800007D0")
-    assert "0x800007D0" in brief and "slt " in brief and "m2c" in brief
+    assert "0x800007D0" in brief and "slt " in brief
+    assert toolchains.installed("m2c") is None or "m2c" in brief  # the machine draft is there when m2c is
     out = net.compile_and_diff(agent, "func_800007D0", CLAMP, "demo-quest-64")
     assert out.startswith("✅ MATCH"), out
     out = net.rename_symbol(agent, "demo-quest-64", "func_800007D0", "clamp_s32")
@@ -142,12 +143,13 @@ def test_find_similar_on_the_rom(net):
     assert all(o.startswith(("Functions that look like", "No look-alikes")) for o in outs)
 
 
+@pytest.mark.skipif(toolchains.installed("m2c") is None, reason="needs m2c: the autopilot compiles its drafts")
 def test_autopilot_matches_machine_drafts_for_free(net):
     import time
 
     before = net.overview("demo-quest-64")["matched"]
     net.start_autopilot("demo-quest-64")
-    for _ in range(600):
+    for _ in range(3000):  # up to 5 minutes; it stops as soon as the autopilot is done (about 70 s on the baseline machine)
         if net.autopilot_status("demo-quest-64")["state"] != "running":
             break
         time.sleep(0.1)

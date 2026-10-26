@@ -19,14 +19,14 @@ from decompnet.compiler import CompilerConfig, compile_source
 from decompnet.elfobj import _canonical, list_functions
 from decompnet.rom import match, n64, split
 from decompnet.rom.symbols import Symbol, SymbolTable
+from maintenance.testgates import demo_rom_problem
 
 ROOT = Path(__file__).resolve().parent.parent
 DEMO = ROOT / "projects" / "demo-rom"
 ROM = DEMO / "build" / "demo-quest-64.z64"
 ELF = DEMO / "build" / "demo-quest-64.elf"
 
-pytestmark = pytest.mark.skipif(toolchains.installed("gcc-2.7.2-kmc") is None or not shutil.which("ld.lld"),
-                                reason="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM")
+pytestmark = pytest.mark.skipif(bool(demo_rom_problem()), reason=demo_rom_problem())
 
 
 @pytest.fixture(scope="module")

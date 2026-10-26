@@ -18,6 +18,7 @@ from elftools.elf.elffile import ELFFile
 from decompnet import toolchains
 from decompnet.app.engine import RomNetwork
 from decompnet.forks import csource
+from maintenance.testgates import demo_rom_problem
 
 ROOT = Path(__file__).resolve().parent.parent
 DEMO = ROOT / "projects" / "demo-psx"
@@ -27,8 +28,7 @@ GAME = ROOT / "projects" / "demo-n64" / "original"
 FUNCTIONS = ["clamp_s32", "abs_s32", "player_take_damage", "rng_next", "count_alive_entities", "entity_update_physics",
              "entity_default_hp", "entity_spawn", "add_score", "lerp", "checksum_save", "entity_collides", "game_tick"]
 
-pytestmark = pytest.mark.skipif(toolchains.installed("gcc-2.7.2-psx") is None or not shutil.which("ld.lld"),
-                                reason="needs gcc-2.7.2-psx and ld.lld to build the PS1 demo")
+pytestmark = pytest.mark.skipif(bool(demo_rom_problem("gcc-2.7.2-psx")), reason=demo_rom_problem("gcc-2.7.2-psx"))
 
 
 @pytest.fixture(scope="module")

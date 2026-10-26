@@ -19,10 +19,11 @@ from decompnet.app.twins import Print, apply, renames
 from decompnet.forks import csource
 from decompnet.rom import match
 
+from maintenance.testgates import demo_rom_problem
+
 from .test_export import DEMOS, FUNCTIONS, GAME
 
-pytestmark = pytest.mark.skipif(toolchains.installed("gcc-2.7.2-kmc") is None or not shutil.which("ld.lld"),
-                                reason="needs gcc-2.7.2-kmc and ld.lld to build the demo ROM")
+pytestmark = pytest.mark.skipif(bool(demo_rom_problem()), reason=demo_rom_problem())
 
 
 def test_renames_follow_the_relocations():

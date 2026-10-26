@@ -12,11 +12,12 @@ from decompnet.app import collab
 from decompnet.app.engine import RomNetwork
 from decompnet.network import NetworkError
 
+from maintenance.testgates import demo_rom_problem
+
 from .test_app_engine import CLAMP, DAMAGE
 from .test_rom import built  # noqa: F401
 
-pytestmark = pytest.mark.skipif(toolchains.installed("gcc-2.7.2-kmc") is None or not shutil.which("ld.lld"),
-                                reason="needs gcc-2.7.2-kmc")
+pytestmark = pytest.mark.skipif(bool(demo_rom_problem()), reason=demo_rom_problem())
 
 
 @pytest.fixture(scope="module")

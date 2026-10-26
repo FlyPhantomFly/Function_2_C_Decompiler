@@ -17,6 +17,7 @@ from elftools.elf.elffile import ELFFile
 from decompnet import toolchains
 from decompnet.app.engine import RomNetwork
 from decompnet.forks import csource
+from maintenance.testgates import demo_rom_problem
 
 ROOT = Path(__file__).resolve().parent.parent
 GAME = ROOT / "projects" / "demo-n64" / "original"
@@ -34,8 +35,7 @@ DEMOS = {
 
 def _ready(platform: str) -> bool:
     _, _, tc, _ = DEMOS[platform]
-    return (toolchains.installed(tc) is not None and toolchains.installed("binutils-mips") is not None
-            and shutil.which("ld.lld") is not None)
+    return toolchains.installed("binutils-mips") is not None and not demo_rom_problem(tc)
 
 
 def _decompile(tmp: Path, platform: str):
