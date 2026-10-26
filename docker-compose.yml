@@ -9,7 +9,7 @@ services:
     init: true
     environment:
       DECOMP_PORT: "6464"
-      DECOMP_SOURCE: release        # or branch:<name> to follow a branch on GitHub
+      DECOMP_SOURCE: branch:main    # this fork has no published release: install its main branch from GitHub on first start
     ports:
       - "127.0.0.1:6464:6464"
     volumes:

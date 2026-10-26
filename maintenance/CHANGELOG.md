@@ -13,6 +13,39 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.15] - 2026-10-21
+
+**Security.** The installers install this fork's code or nothing; the README no longer tells anyone to run upstream's.
+(Plan item 1.1, the installers and the install instructions.)
+
+- Before: the README's install commands (`curl ... decomp.wtf/install.sh | bash`, and the same from upstream's GitHub)
+  ran upstream's installer, which, piped from curl, fetched upstream's wheel from the decomp.wtf website (falling back
+  to upstream's GitHub tag); `--source branch:<name>` installed *upstream's* branch; `dev.sh` and `dev.ps1` piped
+  upstream's installer into a shell; `install.ps1` downloaded scripts from decomp.wtf and ran them as root inside WSL;
+  `docker-compose.yml` installed the `release` (upstream's) on first start. Even run from a checkout, `install.sh`
+  recorded `--repo i12bp8/decomp.wtf`.
+- `site/public/install.sh`: `REPO` is this fork's. The `release` source now refuses (this fork publishes no release and
+  has no download site) with instructions, unless the user names a package with `DECOMP_WHEEL`. Run from a checkout it
+  installs that checkout, as before, and fetches no code. `dev.sh` runs this fork's installer from this fork's
+  GitHub. Messages no longer tell Linux users to run a PowerShell command from decomp.wtf.
+- `install.ps1`, `dev.ps1`: refuse at the top, before any network call, saying why. Windows is not supported by this
+  fork yet (plan: frozen). `docker-compose.yml`: `DECOMP_SOURCE: branch:main`, which installs this fork's main branch
+  from GitHub on first start.
+- `README.md`: a fork notice above upstream's own notice (kept as its author wrote it, including the request to use
+  this only on games you own); the Install section is clone-and-run with the bubblewrap requirement; issue links, the
+  Claude Code plugin line and the server and branch-testing instructions point at this fork. The two links left to
+  upstream are credits to its repository.
+- Verified: 14 tests in `maintenance/tests/test_maint_installers.py`, which run the real `install.sh` and `dev.sh` with
+  recording stand-ins for `curl`, `uv` and `decomp` and assert on every call (12 failed before the change). The two
+  PowerShell scripts were parsed with a real PowerShell 7.6.6 (downloaded and its sha256 checked against Microsoft's
+  published file) and executed: both exit 1 at the guard; the parser was shown to reject a broken file. **The documented
+  command was run for real** from a clone, with an isolated `HOME`: exit 0, installed `decompnet 0.10.14`, compilers
+  downloaded from their pinned GitHub release URLs, `install.json` records this fork's repo, no proprietary license
+  accepted.
+- Not verified: the Docker route (no Docker here; checked by reading). Not changed: the marketing site under `site/`,
+  the legacy hosted-network layer, and the many `decomp.wtf` names in app text (the staged rebrand, plan item 1.1).
+- Users: install with the commands in the README. `curl ... | bash` no longer installs anything.
+
 ## [0.10.14] - 2026-10-21
 
 **Docs.** Attribution and package metadata. (Plan item 1.3.)

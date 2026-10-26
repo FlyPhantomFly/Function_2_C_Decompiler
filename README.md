@@ -1,3 +1,14 @@
+## About this fork
+
+This is a maintained fork of [decomp.wtf](https://github.com/i12bp8/decomp.wtf) (MIT, by Sam Wolfs), maintained by
+PhantomThreads. It is not affiliated with upstream, and its installers and updater fetch nothing from upstream's website
+or repository. What was changed, and why, is in [`maintenance/CHANGELOG.md`](maintenance/CHANGELOG.md).
+
+The notice below is upstream's author's, kept as he wrote it. What it asks of users still applies here: only use this on
+games you own, don't share the game code it produces, and respect the rules of the projects you work with.
+
+---
+
 ## This project is discontinued
 
 I've decided to stop working on decomp.wtf and archive it.
@@ -13,7 +24,7 @@ Thanks to everyone who tried it, reported bugs and sent fixes.
 ---
 
 <p align="center">
-  <a href="https://decomp.wtf">
+  <a href="https://github.com/FlyPhantomFly/Function_2_C_Decompiler">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.png">
       <img alt="decomp.wtf: What the function? Your AI agent decompiles games you own into C that compiles to the exact same bytes." src=".github/assets/banner-light.png">
@@ -22,7 +33,7 @@ Thanks to everyone who tried it, reported bugs and sent fixes.
 </p>
 
 <p align="center">
-  <a href="https://decomp.wtf"><b>Website</b></a>
+  <a href="https://github.com/FlyPhantomFly/Function_2_C_Decompiler"><b>Repository</b></a>
   &nbsp;·&nbsp;
   <a href="#install"><b>Install</b></a>
   &nbsp;·&nbsp;
@@ -47,7 +58,7 @@ Thanks to everyone who tried it, reported bugs and sent fixes.
 <p align="center">
   <img alt="decomp.wtf at work: agents claim functions, their compile attempts drop to score 0, and the map of the game turns green." src=".github/assets/demo.webp" width="900">
   <br>
-  <sub>The simulation from <a href="https://decomp.wtf">decomp.wtf</a>, on the demo ROM that ships with the app.</sub>
+  <sub>The simulation from <a href="https://github.com/i12bp8/decomp.wtf">upstream decomp.wtf</a>, on the demo ROM that ships with the app.</sub>
 </p>
 
 <br>
@@ -71,32 +82,28 @@ Everything runs on your computer. No account, no telemetry, nothing uploaded.
 
 ## Install
 
-decomp.wtf runs on **Linux**, and on **Windows** (supported, still unstable). The compilers it runs are Linux
-programs, so on Windows it runs in its own small Linux (a WSL 2 distribution called `decomp-wtf`), set up by the
-same script as on Linux. macOS isn't supported.
+This fork installs from a clone: it has no release downloads and no download site. It runs on **Linux** (x86-64); the
+compilers it runs are Linux programs. macOS isn't supported, and neither is Windows yet (upstream's Windows installer is
+switched off here, because it downloads and runs code from upstream's website). On Windows, use WSL 2 and follow the
+Linux steps in a Linux shell there.
 
 **Linux**
 
 ```
-curl -fsSL https://decomp.wtf/install.sh | bash
+git clone https://github.com/FlyPhantomFly/Function_2_C_Decompiler
+cd Function_2_C_Decompiler
+bash site/public/install.sh
 ```
 
-Can't reach decomp.wtf from your network? The same installer from GitHub (it then installs the release from GitHub
-too):
+Run from the clone, the installer installs *that* checkout with [uv](https://docs.astral.sh/uv/) (it asks before
+installing uv itself), downloads the free, checksum-verified compilers and opens the app. Agent-written C is compiled
+only inside [bubblewrap](https://github.com/containers/bubblewrap): install it first (`sudo apt install bubblewrap` on
+Debian, Ubuntu and Parrot) or compiling is refused.
 
-```
-curl -fsSL https://raw.githubusercontent.com/i12bp8/decomp.wtf/main/site/public/install.sh | bash
-```
+To work on the code without installing it: `uv sync --locked`, then `uv run decomp`.
 
-**Windows** (PowerShell; new and still unstable: problems are worth an [issue](https://github.com/i12bp8/decomp.wtf/issues))
-
-```
-irm https://decomp.wtf/install.ps1 | iex
-```
-
-It turns on WSL 2 if it isn't yet (Windows asks for permission once, and may want a restart), makes decomp.wtf's
-Linux from Debian's official WSL image and installs everything in it. You get a `decomp` command, a Start menu entry
-and a desktop shortcut. Your projects are at `\\wsl.localhost\decomp-wtf\home\decomp\Decomp`.
+**Updating:** `git pull`, then run `bash site/public/install.sh` again (or `uv sync --locked` when you run from the
+clone). The app checks only this repository for updates.
 
 One line sets up everything: [uv](https://docs.astral.sh/uv/), the app, the period compilers (pinned and
 checksum-verified) and the m2c draft decompiler. It then opens decomp.wtf in your browser. After that, start it any
@@ -129,7 +136,7 @@ when needed; you can also add it yourself (`claude mcp add decomp -- decomp mcp`
 
 | Agent | Install it as a package instead |
 | :-- | :-- |
-| **Claude Code** | `/plugin marketplace add i12bp8/decomp.wtf`, then `/plugin install decomp-wtf@decomp-wtf` (adds a "decompile" skill) |
+| **Claude Code** | `/plugin marketplace add FlyPhantomFly/Function_2_C_Decompiler`, then `/plugin install decomp-wtf@decomp-wtf` (adds a "decompile" skill) |
 | **Codex, Antigravity CLI, opencode** | `decomp connect codex`, `decomp connect antigravity`, `decomp connect opencode` |
 
 ## How it works
@@ -282,7 +289,7 @@ website: the people who decompile together host their room and decide who's in.
 **On a server** (or any always-on machine):
 
 ```
-curl -fsSL https://decomp.wtf/install.sh | bash
+git clone https://github.com/FlyPhantomFly/Function_2_C_Decompiler && cd Function_2_C_Decompiler && bash site/public/install.sh
 decomp host mygame.z64 --own-copy --address http://my-server:6481 --service
 ```
 
@@ -328,7 +335,7 @@ full decomp you can port and mod:
 
 **Beta: PlayStation, PlayStation 2, Game Boy Advance and DS.** They work end to end and are tested on homemade
 games, much less on real ones so far. Expect rough edges, and please
-[report](https://github.com/i12bp8/decomp.wtf/issues) what you hit: the app's error panel copies everything an issue
+[report](https://github.com/FlyPhantomFly/Function_2_C_Decompiler/issues) what you hit: the app's error panel copies everything an issue
 needs. Public decomps of any platform run in their own project's build, so their status is the project's.
 
 **From scratch.** splat and spimdisasm split MIPS games, decomp-toolkit analyses GameCube and Wii programs inside a
@@ -361,7 +368,7 @@ browser as usual, and the results are byte-identical to Linux. macOS isn't suppo
 
 **When something goes wrong.** A failed import stays on screen with the reason and what happened, and **Copy for a
 bug report** puts the version, the error and the log on your clipboard for an
-[issue](https://github.com/i12bp8/decomp.wtf/issues). The full log is `.decomp/logs/decomp.log` in your projects folder
+[issue](https://github.com/FlyPhantomFly/Function_2_C_Decompiler/issues). The full log is `.decomp/logs/decomp.log` in your projects folder
 (`~/Decomp`), also at **The full log** in that panel.
 
 ## Development
@@ -398,14 +405,12 @@ and the installed app then follows the branch on GitHub (every new commit pushed
 app: one click installs it).
 
 ```
-git clone -b <branch> https://github.com/i12bp8/decomp.wtf && cd decomp.wtf
-powershell -ExecutionPolicy Bypass -File site\public\install.ps1      # Windows
-bash site/public/install.sh                                           # Linux
+git clone -b <branch> https://github.com/FlyPhantomFly/Function_2_C_Decompiler && cd Function_2_C_Decompiler
+bash site/public/install.sh
 ```
 
-Without a checkout: `$env:DECOMP_BRANCH = "<branch>"; irm https://raw.githubusercontent.com/i12bp8/decomp.wtf/<branch>/site/public/install.ps1 | iex`
-on Windows, `curl -fsSL https://raw.githubusercontent.com/i12bp8/decomp.wtf/<branch>/site/public/install.sh | DECOMP_BRANCH=<branch> bash`
-on Linux. `decomp update` (or the app's Settings) installs the newest commit by hand.
+Without a checkout: `curl -fsSL https://raw.githubusercontent.com/FlyPhantomFly/Function_2_C_Decompiler/<branch>/site/public/dev.sh | DECOMP_BRANCH=<branch> bash`
+(runs that branch's own installer from this repository). `decomp update` (or the app's Settings) installs the newest commit by hand.
 
 </details>
 

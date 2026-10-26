@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# decomp.wtf installer for Linux (Windows: install.ps1, in PowerShell). macOS isn't supported.
+# decomp.wtf installer for Linux. macOS isn't supported, and this fork has no Windows installer yet.
 #
-#   curl -fsSL https://decomp.wtf/install.sh | bash
-#   (can't reach decomp.wtf? the same from GitHub:
-#    curl -fsSL https://raw.githubusercontent.com/i12bp8/decomp.wtf/main/site/public/install.sh | bash)
+#   git clone https://github.com/FlyPhantomFly/Function_2_C_Decompiler
+#   cd Function_2_C_Decompiler && bash site/public/install.sh
+#
+# Run from a checkout, this installs that checkout. This fork has no published release and no download site, so it
+# never fetches a release: piped from curl there is nothing to install, and it says so. (Upstream's installer fetched
+# its wheel from the decomp.wtf website; that is upstream's code, not this fork's.)
 #
 # decomp.wtf installs on this computer, with uv:
 #   1. installs uv, Astral's Python tool manager, if you don't have it (asks first)
@@ -16,15 +19,16 @@
 #
 # Options:
 #   --no-start          install only
-#   --source <what>     where decomp.wtf comes from: "release" (default), "branch:<name>" (a branch on GitHub, for
-#                       testing; its updates follow that branch) or a folder with decomp.wtf's source. Run from a
-#                       git checkout, the checkout is used (and updates follow its branch).
-# The same through the environment: DECOMP_SOURCE=..., DECOMP_BRANCH=<name>.
+#   --source <what>     where decomp.wtf comes from: "release" (this fork publishes none, so it needs
+#                       DECOMP_WHEEL=<a package you name>), "branch:<name>" (a branch of this fork on GitHub; its
+#                       updates follow that branch) or a folder with decomp.wtf's source. Run from a git checkout,
+#                       the checkout is used (and updates follow its branch).
+# The same through the environment: DECOMP_SOURCE=..., DECOMP_BRANCH=<name>, DECOMP_WHEEL=<url>.
 # On a server, decomp.wtf also runs in Docker: docker-compose.yml in the repository.
 set -euo pipefail
 
 VERSION="0.10.6"
-REPO="i12bp8/decomp.wtf"
+REPO="FlyPhantomFly/Function_2_C_Decompiler"
 START=1
 SOURCE="${DECOMP_SOURCE:-}"
 [ -z "$SOURCE" ] && [ -n "${DECOMP_BRANCH:-}" ] && SOURCE="branch:${DECOMP_BRANCH}"
@@ -70,7 +74,7 @@ OS="$(uname -s)"
 case "$OS" in
   Linux) ;;
   Darwin) fail "macOS isn't supported: decomp.wtf runs on Linux and on Windows (in WSL 2), on x86-64 PCs (the games' compilers are x86 programs). On an Intel Mac, an x86-64 Linux virtual machine works too." ;;
-  *) fail "this installer is for Linux; on Windows run in PowerShell: irm https://decomp.wtf/install.ps1 | iex" ;;
+  *) fail "this installer is for Linux. This fork has no Windows installer yet: use WSL 2 and run it from a Linux shell there." ;;
 esac
 case "$(uname -m)" in
   x86_64|amd64) ;;
@@ -82,8 +86,9 @@ command -v curl >/dev/null || fail "curl is required"
 # CHANNEL/BRANCH/COMMIT are remembered (decomp install-info): the app's updates come from the same place.
 CHANNEL=release BRANCH="" COMMIT="" SPEC="" SRC_DIR=""
 case "$SOURCE" in
-  release)
-    SPEC="decompnet @ ${DECOMP_WHEEL:-https://decomp.wtf/dl/decompnet-${VERSION}-py3-none-any.whl}" ;;
+  release)  # this fork publishes no release, so there is nothing to fetch unless the user names a package themselves
+    [ -n "${DECOMP_WHEEL:-}" ] || fail "this fork has no published release yet, so there is nothing to download. Clone https://github.com/$REPO and run site/public/install.sh from the checkout (it installs that checkout), or use --source branch:<name> to install a branch from GitHub."
+    SPEC="decompnet @ ${DECOMP_WHEEL}" ;;
   branch:*)
     CHANNEL=branch BRANCH="${SOURCE#branch:}"
     [ -n "$BRANCH" ] || fail "--source branch:<name> needs a branch name" ;;
@@ -135,14 +140,8 @@ if [ -n "$SRC_DIR" ]; then
 elif [ "$CHANNEL" = branch ]; then
   resolve_branch
   step "installing decomp.wtf from the $BRANCH branch${COMMIT:+ @ ${COMMIT:0:7}}"
-else
-  WHEEL="${DECOMP_WHEEL:-https://decomp.wtf/dl/decompnet-${VERSION}-py3-none-any.whl}"
-  if [ -z "${DECOMP_WHEEL:-}" ] && ! curl -fsSLI --max-time 15 -o /dev/null "$WHEEL" 2>/dev/null; then
-    # decomp.wtf blocked or down (a network filter, an outage): the same release, from GitHub
-    step "decomp.wtf's download can't be reached from here: installing ${VERSION} from GitHub instead"
-    SPEC="decompnet @ https://github.com/$REPO/archive/refs/tags/v${VERSION}.tar.gz"
-  fi
-  step "installing decomp.wtf ${VERSION}"
+else  # a package the user named with DECOMP_WHEEL (the release case above refuses without one)
+  step "installing decomp.wtf from $DECOMP_WHEEL"
 fi
 uv tool install --force --quiet --python 3.12 "$SPEC"
 [ -n "${TMP_SRC:-}" ] && rm -rf "$TMP_SRC"

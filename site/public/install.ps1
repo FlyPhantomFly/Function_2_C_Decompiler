@@ -18,6 +18,10 @@
 # Everything runs in its own block: `irm | iex` runs a script in your PowerShell session, and its settings shouldn't
 # stay behind there.
 & {
+# This fork has no Windows installer yet. This script is upstream's: it downloads decomp.wtf's own scripts and release from
+# the decomp.wtf website and runs them (as root, inside WSL), and that is upstream's code, not this fork's. So it refuses,
+# before it does anything. (maintenance/tests/test_maint_installers.py keeps it that way.)
+throw "This Windows installer is upstream's: it downloads and runs code from decomp.wtf, not from this fork, so it is switched off. Windows isn't supported by this fork yet. Use WSL 2 and, in a Linux shell there, clone https://github.com/FlyPhantomFly/Function_2_C_Decompiler and run: bash site/public/install.sh"
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"  # Windows PowerShell downloads many times slower while drawing a progress bar
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
