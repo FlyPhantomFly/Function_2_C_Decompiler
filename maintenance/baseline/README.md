@@ -1,10 +1,10 @@
 # Phase 0 baseline (upstream 0.10.6 code, measured for the 0.10.7 release)
 
 Runs A to C below were made against the untouched upstream tree (git tag `upstream-0.10.6`), so they say what the code
-did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31) and H (0.10.34) are the maintained code, for comparison. The raw pytest output and
+did *before* any change by us. Runs D (0.10.18), E (0.10.22), F (0.10.29), G (0.10.31), H (0.10.34) and I (0.10.39) are the maintained code, for comparison. The raw pytest output and
 JUnit XML for each run are in `raw/` exactly as captured (they contain the sandbox's absolute paths).
 
-## The eight runs
+## The nine runs
 
 | Run | State of the machine | Result (269 test items) | Summary |
 | --- | --- | --- | --- |
@@ -16,6 +16,7 @@ JUnit XML for each run are in `raw/` exactly as captured (they contain the sandb
 | **F** | The maintained code at 0.10.29, same machine | **429 passed, 0 failed, 52 skipped** (481 items) | [summary-F.md](summary-F.md) |
 | **G** | The maintained code at 0.10.31, same machine | **453 passed, 0 failed, 52 skipped** (505 items) | [summary-G.md](summary-G.md) |
 | **H** | The maintained code at 0.10.34, same machine | **482 passed, 0 failed, 52 skipped** (534 items) | [summary-H.md](summary-H.md) |
+| **I** | The maintained code at 0.10.39, same machine | **530 passed, 0 failed, 53 skipped** (583 items) | [summary-I.md](summary-I.md) |
 
 Test machine: Ubuntu 24.04 container, Python 3.12.3, uv 0.11.7, gcc 13.3, bubblewrap 0.9.0 (it does create a sandbox
 in that container), lld and llvm 18.1.3. Toolchains installed through the project's own installer
@@ -85,6 +86,11 @@ CI commands on the same code: 359 passed, 146 skipped, 0 failed.
 
 534 items against 505: 29 new (the naming tests; all pass), none gone. **Nothing that passed in G, or in upstream's run C, fails in H.** The bare-machine
 CI commands on the same code: 388 passed, 146 skipped, 0 failed.
+
+## Run I against run H
+
+583 items against 534: 49 new, none gone. **Nothing that passed in H, or in upstream's run C, fails in I.** The one new item that does not pass is
+the screenshot-tool test, which needs `CHROME=<a browser>` and is skipped without it. The bare-machine CI commands on the same code: 436 passed, 147 skipped, 0 failed.
 
 ## What the 50 skips in run C need
 

@@ -13,6 +13,19 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.40] - 2026-10-22
+
+**Docs.** Status, the final measurements for this pass, and the patch set. No change to the application.
+
+- **Run I** in `maintenance/baseline/`: the maintained code at 0.10.39, measured the same way: **530 passed, 0 failed, 53 skipped
+  (583 items)** with every free tool and `bwrap`. Test by test, nothing that passed in upstream's run C or in run H fails; against H, 49 items are
+  new and none is gone. All but one of the new ones pass; the one that does not is the screenshot-tool test that needs `CHROME=<a browser>`
+  (it passed when a browser was supplied, in 0.10.37). The bare-machine CI commands: 436 passed, 147 skipped, 0 failed; `actionlint` on the workflow: clean.
+- `MAINTENANCE_PLAN.md`: status as of this version. Phase 3 item 1 says how far it got (retries done, the cost cap done for providers that report a
+  cost, the eval harness not started) and what is left for you to decide (per-agent prices).
+- `maintenance/patches/`: regenerated, 34 patches (0.10.7 to 0.10.40).
+- Nothing for users to do.
+
 ## [0.10.39] - 2026-10-22
 
 **Fix.** The project budget can now stop the built-in API agent, and does so in the middle of a session. (Plan Phase 3, item 1, second half:
