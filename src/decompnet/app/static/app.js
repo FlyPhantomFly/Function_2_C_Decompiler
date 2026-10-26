@@ -2539,7 +2539,9 @@ async function showSettingsPage() {
   $("setComputer").innerHTML = `
     <div class="field"><span>Appearance</span><div class="seg" id="themeSeg">${[["", "System"], ["light", "Light"], ["dark", "Dark"]].map(([k, l]) => `<button type="button" data-theme="${k}" class="${theme === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
     <div class="field"><span>Start with this computer (keeps team rooms open, resumes agents)</span><div class="row" id="svcRow2"><span class="muted small">Checking…</span></div></div>
-    <div class="field"><span>Projects live in</span>${cmdBox(st.home)}</div>`;
+    <div class="field"><span>Projects live in</span>${cmdBox(st.home)}</div>
+    <label class="check"><input type="checkbox" id="autoBackupSet" ${st.settings.auto_backup !== false ? "checked" : ""}><span><b>Back up your work every day</b>: keeps 3 daily, 2 weekly and 1 monthly backup, each with a checksum, and once a week checks that the newest one really restores. Your API keys are not in it.</span></label>
+    <div class="field"><span>Backups</span><div class="row"><span class="muted small grow" id="backupText">${backupLine(st.backups)}</span><button class="ghost small-btn" id="backupNow" type="button">Back up now</button></div></div>`;
   const where = { wsl: " (in its own WSL 2 Linux)", docker: " (in Docker)" }[st.runtime] || "";
   const inst = st.install || {};
   const from = inst.channel === "branch" ? `the ${esc(inst.branch)} branch @ <code>${esc((inst.commit || "?").slice(0, 7))}</code>` : "releases on Function_2_C_Decompiler";
@@ -2569,6 +2571,28 @@ async function showSettingsPage() {
   $("perSession").onchange = () => save({ per_session: Number($("perSession").value) }, "Saved.");
   $("autopilotSet").onchange = () => save({ autopilot: $("autopilotSet").checked }, "Saved.");
   $("budgetSet").onchange = () => save({ budget_usd: Number($("budgetSet").value) || 0 }, "Budget saved.");
+  $("autoBackupSet").onchange = () => save({ auto_backup: $("autoBackupSet").checked }, $("autoBackupSet").checked ? "Backing up every day." : "Automatic backups are off.");
+  $("backupNow").onclick = async () => {
+    const btn = $("backupNow");
+    btn.disabled = true;
+    try {
+      const r = await api("/api/backup", { method: "POST", body: {} });
+      S.st.backups = r.backups;
+      $("backupText").innerHTML = backupLine(r.backups);
+      toast(r.skipped ? esc(r.skipped) : "Backed up.", r.skipped ? "err" : undefined);
+    } catch (e) { toast(esc(e.message), "err"); }
+    btn.disabled = false;
+  };
+}
+
+// what the automatic backups look like to a person: how many, the last, and whether the last restore test passed (a failure is shown in the open)
+function backupLine(b) {
+  if (!b) return "";
+  const when = (iso) => new Date(iso).toLocaleString();
+  if (!b.count) return b.skipped ? `Skipped: ${esc(b.skipped)}` : "No backup yet.";
+  const t = b.last_test;
+  const test = t ? (t.ok ? `Restore test passed ${when(t.at)}` : `<b style="color:var(--miss)">Restore test FAILED ${when(t.at)}: ${esc(t.detail)}</b>`) : "Restore test not run yet";
+  return `${b.count} backup${b.count !== 1 ? "s" : ""} (${(b.bytes / 1e6).toFixed(1)} MB) in ${esc(b.folder)}. Last: ${when(b.last.at)}. ${test}.${b.skipped ? ` Skipped: ${esc(b.skipped)}.` : ""}${b.error ? ` Error: ${esc(b.error)}.` : ""}`;
 }
 
 /* ------------------------------------------------------------------ updates (app/updates.py)

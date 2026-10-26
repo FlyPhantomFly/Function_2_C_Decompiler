@@ -122,7 +122,7 @@ def test_opening_again_changes_no_data_and_makes_no_second_backup(upstream_db):
     backups = sorted(p.name for p in upstream_db.parent.iterdir() if ".bak" in p.name)
     Store(upstream_db).conn.close()
     assert dump(upstream_db) == first
-    assert sorted(p.name for p in upstream_db.parent.iterdir() if ".bak" in p.name) == backups == ["decomp.db.bak-v0"]
+    assert sorted(p.name for p in upstream_db.parent.iterdir() if ".bak" in p.name) == backups == ["decomp.db.bak-v0", "decomp.db.bak-v0.sha256"]  # the copy and, since 0.10.49, its checksum
 
 
 def test_an_existing_backup_is_never_overwritten(upstream_db):

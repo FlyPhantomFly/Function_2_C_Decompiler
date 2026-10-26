@@ -13,6 +13,33 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.49] - 2026-10-23
+
+**Feature.** Automatic rolling backups (owner's decision): a verified snapshot every day, kept 3 daily, 2 weekly, 1 monthly, each with a checksum, with a restore test every week. (Plan Phase 3, item 6.)
+
+- **What runs.** A thread started with the app (`app/autobackup.py`) wakes 45 seconds after start and then hourly; once the newest backup is a day old it takes a snapshot with the same verified, WAL-safe routine
+  as `decomp backup` into `<home>/backups/auto/decomp-auto-YYYYMMDD-HHMMSS.sqlite`, writes `<file>.sha256` beside it in the format `sha256sum --check` reads, records what it held, and prunes. Switch it off in
+  Settings, or with `DECOMP_NO_AUTO_BACKUP=1`. **Back up now** in Settings (or `decomp backup`) works whether it is on or off.
+- **The retention rule, exactly** (my reading of "3 daily, 2 weekly, 1 monthly"; it is one small function, `plan_retention`, if you meant otherwise): keep the newest backup of each of the 3 most recent days that have one; of each of
+  the 2 most recent ISO weeks before this week that have one; and of the most recent calendar month before this month that has one. At most six are kept however long the app has run; with few backups all are kept; the
+  newest is never deleted. Checked against explicit histories, including the turn of an ISO year (2027-01-03 is a Sunday that still belongs to week 53 of 2026), and against a simulation of 60 days of daily pruning, which ends
+  with exactly the six backups the rule gives for the whole history.
+- **The restore test.** Right after the first backup and then weekly, it restores the newest backup into a scratch folder and checks it three ways: the checksum, SQLite's integrity check, and that the project, function and match counts
+  equal what was recorded when the backup was made (not the live database's, which has moved on). A failure is shown in red in Settings and logged, and the backup that failed is **kept as evidence**, never deleted.
+- **It will not fill the disk** (it needs about twice the database's size free, and says so when it skips), and **touches only files it named**: a stray `my-notes.txt` in its folder, and your manual backups, are untouched
+  (tested through 60 simulated days).
+- **Before a migration:** that copy already existed (0.10.31, `decomp.db.bak-v<N>`); it now has a checksum too. It is separate and not pruned. **`decomp restore` and `backup.restore` now refuse any backup whose `.sha256`
+  says it changed**, and say why; a backup with no checksum (a manual one) restores as before. `decomp backup --status` prints what the app shows.
+- **Checked on the real thing:** with no test switch, the app made its first backup **46 seconds after starting** (700 KB), `sha256sum --check` said OK, the weekly test had already run and passed ("restored 1 project,
+  95 functions (0 matched), as recorded; integrity ok"), and Settings shows the toggle, the status line and the button (screenshot looked at).
+- Tests: 28 in `test_maint_autobackup.py`, 7 in `test_maint_autobackup_app.py` (the state, the CSRF-guarded route, the setting, one clear error not a traceback, the thread stopping with the app). **Ten breakages**,
+  one at a time, each turn a test red: the retention counting the current week, a pruner that deletes files it did not name, a restore test that skips the checksum or the comparison, no disk guard, a backup due every hour, the
+  thread not stopping, the route skipping its guard, the setting ignored, the status missing. Three mistakes in my own tests, found and fixed: one expected no `status.json`, one asserted nothing at all (`... or len(ours) == 6`),
+  and one **would have started failing by itself after October 25th** because it mixed a fixed clock with the real one.
+- **What this does not protect against:** the backups are on the same disk as the database. They protect against a bug, a bad migration, an accidental deletion or a corrupted database, not against losing the disk.
+  Copy `~/Decomp/backups/` somewhere else now and then. They also cost disk: up to six times the database's size, plus the pre-migration copy. API keys and settings are not in them (they are in `settings.json`).
+- Nothing for users to do: it is on by default.
+
 ## [0.10.48] - 2026-10-22
 
 **Docs, Tooling.** A new README banner, designed for this project (owner's decision), from a source that can be edited. Nothing under `src/` changed.

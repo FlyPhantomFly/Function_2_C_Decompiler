@@ -254,7 +254,7 @@ GameCube and Wii projects (dtk-template) Function_2_C_Decompiler takes care of t
 | **Drafts** | m2c for MIPS, PowerPC and ARM; optional Ghidra for x86, AArch64 and everything else. |
 | **Agent toolkit** | A data inspector, a call graph, splitting merged functions, and guides for MIPS, PowerPC, ARM, x86, AArch64, IDO, GCC, Metrowerks, agbcc, PSY-Q, C++ and objdiff. |
 | **Decompile together** | A team of any size, each with their own copy and agents: one host, public or private rooms, hosted by you (home PC or server, `decomp host`). Only the work is shared, never the game. |
-| **Back up your work** | `decomp backup` saves a verified snapshot of your project work, safe while the app is running; `decomp restore` brings it back (stop the app first; what it replaces is kept). Your API keys and game files are not in it. |
+| **Back up your work** | A verified backup every day by itself (3 daily, 2 weekly, 1 monthly, each with a checksum, and a weekly check that it really restores), or `decomp backup` any time; `decomp restore` brings one back (stop the app first; what it replaces is kept). Your API keys and game files are not in it. |
 | **Rebuildable export** | A decomp project that rebuilds your game byte for byte, ready for ports and mods and for any other tool or agent. |
 | **Every major disc format** | ROMs, PlayStation discs, GameCube and Wii discs (ISO, GCM, RVZ, WIA, WBFS, CISO, GCZ) and program files, streamed from disk. |
 

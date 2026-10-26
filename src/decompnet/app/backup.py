@@ -23,6 +23,7 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
+from .. import checksum
 from ..store import SCHEMA_VERSION
 
 
@@ -83,6 +84,12 @@ def verify(path: Path) -> int:
     return version
 
 
+def check_sidecar(path: Path) -> None:
+    """Refuse a backup whose `.sha256` beside it says the file has changed since it was written. No sidecar (a manual backup) is fine."""
+    if checksum.check(Path(path)) is False:
+        raise BackupError(f"{path} does not match its checksum ({checksum.sidecar(path).name}): the file changed after it was made, or the checksum file is wrong. Not using it.")
+
+
 def describe(path: Path) -> dict:
     """What a database holds, for the one-line summary."""
     with closing(_read_only(path)) as con:
@@ -133,6 +140,7 @@ def restore(backup_file: Path, db: Path, *, running: bool, now: datetime.datetim
     if running:
         raise BackupError("Function_2_C_Decompiler is running: stop it first (decomp stop). Replacing its database underneath it would corrupt it.")
     backup_file, db = Path(backup_file), Path(db)
+    check_sidecar(backup_file)
     db.parent.mkdir(parents=True, exist_ok=True)
     staged = db.with_name(db.name + ".restoring")
     kept: Path | None = None

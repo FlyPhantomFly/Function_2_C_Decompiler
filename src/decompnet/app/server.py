@@ -33,7 +33,7 @@ from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse, Re
 from .. import __version__, hostenv, toolchains
 from ..network import NetworkError
 from ..rom.n64 import RomError
-from . import agents, chat, collab, connect, tools, updates
+from . import agents, autobackup, backup, chat, collab, connect, tools, updates
 from .engine import COMPILERS, MW_VERSIONS, PLATFORM_STATUS, SHORT_NAMES, TOOLS, RomNetwork
 
 COOKIE = "decomp_live"
@@ -214,7 +214,7 @@ class Settings:
         return {"endpoints": eps, "api": eps[0] if eps else {},
                 "per_session": self.data.get("per_session", agents.PER_SESSION), "last_project": self.data.get("last_project"),
                 "autopilot": self.data.get("autopilot", True), "budget_usd": self.data.get("budget_usd") or 0,
-                "auto_update": bool(self.data.get("auto_update")), "check_updates": self.data.get("check_updates", True) is not False,
+                "auto_update": bool(self.data.get("auto_update")), "auto_backup": self.data.get("auto_backup", True) is not False, "check_updates": self.data.get("check_updates", True) is not False,
                 "launcher": _launcher(self.data.get("launcher") or {}), "recent_models": self.data.get("recent_models") or {}}
 
 
@@ -279,6 +279,9 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
     jobs = Jobs(home / "logs" / "decomp.log")
     settings = Settings(home / "settings.json")
     manager.budget = lambda: float(settings.data.get("budget_usd") or 0)
+    # a verified snapshot of the project database every day (3 daily, 2 weekly, 1 monthly, with checksums and a weekly restore test)
+    auto = autobackup.AutoBackup(home.parent, home / "decomp.db",
+                                 enabled=lambda: settings.data.get("auto_backup", True) is not False and autobackup.enabled_by_environment())
 
     def remember(running: list[dict]) -> None:
         settings.data["running_agents"] = running
@@ -419,7 +422,7 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
                 "log_file": hostenv.shown_path(home / "logs" / "decomp.log"),
                 "projects": projects, "toolchains": tcs, "agents": agents.detect(),
                 "api_presets": agents.API_PRESETS, "settings": settings.public(), "mcp_url": mcp_url,
-                "platform_status": PLATFORM_STATUS,
+                "platform_status": PLATFORM_STATUS, "backups": auto.status(),
                 "codewarrior": {"installed": toolchains.installed("mwcc") is not None,
                                 "ds_installed": toolchains.installed("mwccarm") is not None, **MW_VERSIONS}}
 
@@ -959,6 +962,8 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
             settings.data["budget_usd"] = max(0.0, float(data["budget_usd"] or 0))
         if "auto_update" in data:
             settings.data["auto_update"] = bool(data["auto_update"])
+        if "auto_backup" in data:
+            settings.data["auto_backup"] = bool(data["auto_backup"])
         if "check_updates" in data:
             settings.data["check_updates"] = bool(data["check_updates"])
         settings.save()
@@ -1001,6 +1006,17 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
             except (ValueError, OSError):
                 pass
             time.sleep(300)
+
+    @mcp.custom_route("/api/backup", methods=["POST"])
+    async def api_backup(request: Request) -> Response:
+        """Take a backup now (the daily one runs by itself), whether or not the automatic backups are switched on."""
+        if (bad := guard(request, write=True)):
+            return bad
+        try:
+            made = await call(auto.backup_now)
+        except (backup.BackupError, OSError) as e:
+            return fail(e)
+        return JSONResponse({"ok": True, "skipped": made.get("skipped"), "backups": auto.status()})
 
     @mcp.custom_route("/api/quit", methods=["POST"])
     async def api_quit(request: Request) -> Response:
@@ -1255,6 +1271,13 @@ def build(net: RomNetwork, home: Path, port: int, secret: str):
         manager.on_stop()
     updater = updates.Updater(before_restart, port, secret)
     threading.Thread(target=watch_updates, daemon=True, name="updates").start()
+    auto.start()
+    prior_stop = manager.on_stop
+
+    def stop_everything() -> None:
+        prior_stop()
+        auto.stop()
+    manager.on_stop = stop_everything
 
     security = TransportSecuritySettings(enable_dns_rebinding_protection=True, allowed_hosts=sorted(allowed_hosts),
                                          allowed_origins=[f"http://{h}" for h in sorted(allowed_hosts)])

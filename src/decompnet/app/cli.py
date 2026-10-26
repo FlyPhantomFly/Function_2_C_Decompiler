@@ -319,6 +319,15 @@ def backup_cmd(args) -> int:
     from . import backup
 
     home = home_dir()
+    if args.status:
+        from . import autobackup
+
+        try:
+            setting = json.loads((home / ".decomp" / "settings.json").read_text(encoding="utf-8")).get("auto_backup", True) is not False
+        except (OSError, ValueError):
+            setting = True
+        print("\n".join(autobackup.status_lines(autobackup.AutoBackup(home, home / ".decomp" / "decomp.db").status(), setting)))
+        return 0
     dest = Path(args.dest).expanduser() if args.dest else backup.default_destination(home)
     try:
         info = backup.snapshot(home / ".decomp" / "decomp.db", dest, force=args.force)
@@ -337,6 +346,7 @@ def restore_cmd(args) -> int:
     home = home_dir()
     db, source = home / ".decomp" / "decomp.db", Path(args.file).expanduser()
     try:
+        backup.check_sidecar(source)
         backup.verify(source)
         info = backup.describe(source)
         if not args.yes:
@@ -529,6 +539,7 @@ def main(argv: list[str] | None = None) -> int:
     bk = sub.add_parser("backup", help="save a snapshot of your project work (safe while the app runs)")
     bk.add_argument("dest", nargs="?", help="a file, or a folder to put a timestamped file in (default: <home>/backups/)")
     bk.add_argument("--force", action="store_true", help="replace the destination if it already exists")
+    bk.add_argument("--status", action="store_true", help="show the automatic backups instead: how many, the last one, the last restore test")
     rs = sub.add_parser("restore", help="replace your project work with a backup (stop the app first; your current work is kept)")
     rs.add_argument("file", help="a backup made by `decomp backup`")
     rs.add_argument("--yes", action="store_true", help="do it (without this, only say what would happen)")

@@ -8,6 +8,8 @@ import threading
 from contextlib import closing, contextmanager
 from pathlib import Path
 
+from . import checksum
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS agents(
   id INTEGER PRIMARY KEY, name TEXT UNIQUE NOT NULL, owner TEXT, token_hash TEXT UNIQUE NOT NULL,
@@ -100,6 +102,7 @@ def _backup(conn: sqlite3.Connection, path: Path, version: int) -> Path | None:
     try:
         _copy_database(conn, part)
         part.replace(dest)
+        checksum.write(dest)  # a sidecar in `sha256sum` format: whether the copy is still what was written, when you need it
     except BaseException:
         part.unlink(missing_ok=True)
         raise
