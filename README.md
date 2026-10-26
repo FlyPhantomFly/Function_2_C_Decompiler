@@ -429,6 +429,7 @@ was made.
 ## License
 
 [MIT](LICENSE) © 2026 Sam Wolfs
+                 2026 PhantomThreads 
 
 <br>
 
