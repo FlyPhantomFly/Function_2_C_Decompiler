@@ -5,6 +5,10 @@ function entered past its own push, or a guess that isn't a function) takes that
 then writes outside the list: "IndexError: list assignment index out of range" ended the whole disassembly of
 Spyro: Attack of the Rhynocs. A push there now stores nothing, as a load from there already reads "unknown".
 
+The fix rewrites luvdis's source, so it is only right for the luvdis it was written for (the commit pinned in toolchains.toml).
+Anything else is refused with a message, instead of going on with the bug still in: `patched` insists on finding the code to
+replace exactly once.
+
 Standard library only: this runs in luvdis's environment, not decomp.wtf's.
 """
 
@@ -23,13 +27,23 @@ SAFE_PUSH = """                        if self.sp >= len(self.stack):
 """
 
 
+def patched(source: str) -> str:
+    """luvdis/analyze.py with the stack fix applied, or an exit with the reason when the code to fix is not there once."""
+    found = source.count(PUSH)
+    if found != 1:
+        sys.exit(f"luvdis_run: expected the stack code it fixes exactly once in luvdis/analyze.py, found it {found} times. "
+                 "This is not the luvdis commit decomp.wtf pins (toolchains.toml), or luvdis has fixed the bug itself: "
+                 "update luvdis_run.py together with that pin.")
+    return source.replace(PUSH, SAFE_PUSH, 1)
+
+
 def main() -> int:
     spec = importlib.util.find_spec("luvdis.analyze")
     with open(spec.origin, encoding="utf-8") as f:
         source = f.read()
     module = importlib.util.module_from_spec(spec)
     sys.modules["luvdis.analyze"] = module
-    exec(compile(source.replace(PUSH, SAFE_PUSH, 1), spec.origin, "exec"), module.__dict__)
+    exec(compile(patched(source), spec.origin, "exec"), module.__dict__)
     from luvdis.__main__ import main as luvdis
 
     return luvdis(prog_name="luvdis")

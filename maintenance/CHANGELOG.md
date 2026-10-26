@@ -13,6 +13,33 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.27] - 2026-10-21
+
+**Fix.** The luvdis stack fix refuses a luvdis it was not written for, instead of silently doing nothing. (Plan Phase 2:
+`luvdis_run.py`.) Touches only `src/decompnet/rom/luvdis_run.py`.
+
+- The problem: the GBA disassembler is run through a script that rewrites a piece of luvdis's source (`source.replace(PUSH,
+  SAFE_PUSH, 1)`) to fix a stack emulation bug. If luvdis's code were ever different, the replace changed nothing and the
+  script went on with the unpatched program. **Shown by hand against a luvdis that lacks the code: it printed "LUVDIS RAN,
+  UNPATCHED" and exited 0**, so the crash it exists to prevent would have returned without any sign that the fix was missing.
+- The fix: `patched(source)` insists on finding the code to replace exactly once. Otherwise it exits 1 with "expected the stack
+  code it fixes exactly once in luvdis/analyze.py, found it N times. This is not the luvdis commit decomp.wtf pins
+  (toolchains.toml), or luvdis has fixed the bug itself: update luvdis_run.py together with that pin." The GBA importer already
+  shows the end of a luvdis failure to the user, so the message is seen.
+- The plan also said to pin the luvdis version. It already was: a full 40-character commit in `toolchains.toml`
+  (`ec3a4e3e...`), and a test now checks it stays one.
+- Found while testing: the docstring understates the bug. With the original code a stack pointer of `-1` does not raise, because
+  Python's negative indexing **silently overwrites the last word of the stack**; only below `-len(stack)` does it raise
+  `IndexError`. So the fix is a correctness fix, not only a crash fix. A test pins both behaviors.
+- Verified: 16 tests in `maintenance/tests/test_maint_luvdis_patch.py` (5 failed before): against the **real pinned luvdis**
+  (installed with `decomp toolchain install luvdis`) the code to fix occurs exactly once and the patched source compiles;
+  the three kinds of mismatch (absent, already fixed, twice) are refused; the script run end to end against a different luvdis
+  stops with exit 1 and does not run luvdis; the patched luvdis starts from the script in its own environment; and the
+  replacement code does what its docstring says for every stack pointer below zero, and is identical to the original for a normal push.
+- Not verified: a full disassembly of a real GBA ROM, which needs `agbcc` and the Arm GNU toolchain to build one (hosts this
+  sandbox cannot reach). Run `tests/test_gba.py` on your machine.
+- Nothing for users to do.
+
 ## [0.10.26] - 2026-10-21
 
 **Security.** What the app writes into other people's projects points at this fork, not at upstream's website. Closes the
