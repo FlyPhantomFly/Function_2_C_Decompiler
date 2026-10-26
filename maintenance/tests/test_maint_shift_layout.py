@@ -69,6 +69,21 @@ def elf_symbols(path: Path) -> dict[str, int]:
         return {s.name: s["st_value"] for s in ELFFile(f).get_section_by_name(".symtab").iter_symbols() if s.name}
 
 
+def code_listings(root: Path, build: dict, syms: dict[str, int]):
+    """(name, file, how far it moved) for every file of code in the tree: the functions, and the assembled pieces of code that are not functions (the start-up stub). A checker that only
+    looked at the function list would skip exactly the code that reads the linker's segment symbols."""
+    for fn in build["functions"]:
+        yield fn["name"], root / fn["asm"], syms[fn["name"]] - fn["vram"]
+    for piece in build["assembly"]:
+        src = piece["src"]
+        if src.startswith(("asm/data/", "asm/bin/")) or src == "asm/header.s":
+            continue
+        text = (root / src).read_text(encoding="utf-8")
+        label, first = re.search(r"^\s*glabel\s+(\S+)", text, re.M), next((INSN.match(line) for line in text.splitlines() if INSN.match(line)), None)
+        if label and first:
+            yield label.group(1), root / src, syms[label.group(1)] - int(first.group(2), 16)
+
+
 def check_moved_rom(root: Path, old: bytes, new: bytes) -> list[str]:
     """Every word of every function and of the data, old against new. Equal is fine; different must be exactly the relocation of a named symbol. Returns what it could not explain."""
     build = json.loads((root / "build.json").read_text(encoding="utf-8"))
@@ -76,16 +91,16 @@ def check_moved_rom(root: Path, old: bytes, new: bytes) -> list[str]:
     problems: list[str] = []
     seen = 0  # a checker that looks at nothing reports nothing: count what it looked at, and fail if that is not everything
     word = lambda rom, at: int.from_bytes(rom[at:at + 4], "big")  # noqa: E731
-    for fn in build["functions"]:
-        delta = syms[fn["name"]] - fn["vram"]
-        for line in (root / fn["asm"]).read_text(encoding="utf-8").splitlines():
+    listings = list(code_listings(root, build, syms))
+    for name, path, delta in listings:
+        for line in path.read_text(encoding="utf-8").splitlines():
             m = INSN.match(line)
             if not m:
                 continue
             rom, vram, w, mnem, ops = int(m.group(1), 16), int(m.group(2), 16), int(m.group(3), 16), m.group(4), m.group(5)
             seen += 1
             if word(old, rom) != w:
-                problems.append(f"{fn['name']} {vram:#x}: the listing does not match the original ROM")
+                problems.append(f"{name} {vram:#x}: the listing does not match the original ROM")
                 continue
             got = word(new, rom + delta)
             # a reference must hold where its symbol is NOW, which is not the same as "the word did not change": a call left at its old value is the very bug this must catch
@@ -98,7 +113,7 @@ def check_moved_rom(root: Path, old: bytes, new: bytes) -> list[str]:
             else:
                 want = w  # not a reference: it must be exactly what it was
             if want != got:
-                problems.append(f"{fn['name']} {vram:#x} {mnem} {ops}: {w:#010x} became {got:#010x}, expected {'(no explanation)' if want is None else f'{want:#010x}'}")
+                problems.append(f"{name} {vram:#x} {mnem} {ops}: {w:#010x} became {got:#010x}, expected {'(no explanation)' if want is None else f'{want:#010x}'}")
     for path in sorted((root / "asm" / "data").glob("**/*.s")):
         if "bss" in path.name:
             continue
@@ -117,7 +132,7 @@ def check_moved_rom(root: Path, old: bytes, new: bytes) -> list[str]:
             want = syms.get(operand) if re.fullmatch(r"[A-Za-z_]\w*", operand) else w
             if want is None or got != want:
                 problems.append(f"{path.name} {rom:#x} .word {operand}: {w:#010x} became {got:#010x}, expected {'?' if want is None else f'{want:#010x}'}")
-    covered = sum(1 for fn in build["functions"] for line in (root / fn["asm"]).read_text(encoding="utf-8").splitlines() if INSN.match(line))
+    covered = sum(1 for _, path, _ in listings for line in path.read_text(encoding="utf-8").splitlines() if INSN.match(line))
     if seen == 0 or seen != covered:
         problems.append(f"the checker looked at {seen} instructions of {covered}")
     grown = len(new) - len(old)
@@ -250,6 +265,29 @@ def test_a_function_written_in_c_is_built_the_same_way_in_the_shifting_layout(de
     assert done.returncode == 0 and "identical to the original" in done.stdout, done.stdout + done.stderr
     code, line = run_build(demo)
     assert code == 0 and line.startswith("identical: ") and "(1 of 96 functions in C)" in line, line
+
+
+@needs_demo
+def test_the_start_up_stub_is_checked_too_and_a_stale_reference_in_it_is_caught(demo):
+    """The first instructions the console runs read the linker's segment symbols (where the bss starts and ends) and the address of `main`. They are not in the function list, so a checker
+    that only walked functions would never look at them; one stale value there sends the game to the wrong place at boot."""
+    old = (demo / "baserom.z64").read_bytes()
+    shifted(demo)
+    path = demo / GROW
+    path.write_text(path.read_text(encoding="utf-8").rstrip("\n") + "\n" + "    nop\n" * 4, encoding="utf-8")
+    assert run_build(demo)[0] == 0
+    good = (demo / "build" / "game.z64").read_bytes()
+    syms = elf_symbols(demo / "build" / "game.elf")
+    names = [name for name, _, _ in code_listings(demo, json.loads((demo / "build.json").read_text()), syms)]
+    assert "entrypoint" in names and len(names) == 97  # the 96 functions and the stub
+    assert good[0x1004:0x1008] != old[0x1004:0x1008]  # `addiu $t0, $t0, %lo(main_BSS_START)`: the bss start moved by 16, so this word changed
+    assert check_moved_rom(demo, old, good) == []
+    stale = bytearray(good)
+    stale[0x1004:0x1008] = old[0x1004:0x1008]  # the stub still loads the OLD bss start
+    assert any(p.startswith("entrypoint") and "main_BSS_START" in p for p in check_moved_rom(demo, old, bytes(stale)))
+    wrong_main = bytearray(good)
+    wrong_main[0x102C:0x1030] = old[0x102C:0x1030]  # `addiu $t2, $t2, %lo(main)`: the address it jumps to, left where `main` used to be
+    assert any(p.startswith("entrypoint") and "main" in p for p in check_moved_rom(demo, old, bytes(wrong_main)))
 
 
 @needs_demo

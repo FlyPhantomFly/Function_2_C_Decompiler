@@ -56,7 +56,9 @@ that keep data of their own. After a link that differs from the original (a tree
 (only the 6102/7101 family, which the demo ROM is, is supported).
 
 On the demo: an unchanged tree rebuilds the **identical** ROM in the shifting layout (also with a function written in C); growing the first function by 16 bytes grows the ROM by exactly 16, and an independent checker that reads the old ROM, the new ROM, the linker's symbol table and the assembly listing
-accounts for **all 8,084 instructions** of the 96 functions (each call, jump and address load must hold where its symbol now is, and every other word must be unchanged) and for every data word after the code; the header checksums are valid. Growing by one instruction moves everything by exactly four bytes.
+accounts for **all 8,108 instructions** (the 96 functions and the start-up stub, which reads the linker's segment symbols and the address of `main`) (each call, jump and address load must hold where its symbol now is, and every other word must be unchanged) and for every data word after the code; the header checksums are valid. Growing by one instruction moves everything by exactly four bytes.
+
+**Pointers into data and bss are not handled, and cannot be verified on the demo:** it has none (its only data word that looks like an address and points outside the program is a constant), so there is no real instance to rebuild and check, and code written without one would be unverified code. They need a real game.
 
 **What the demo cannot tell you:** its functions are packed back to back, with no padding at all. The rule for padding (rebuilt as alignment where the original was aligned, otherwise as a count of bytes) is tested only on hand-computed cases and on the original-size rule, never on a game that has padding, and the C-function case is
 tested for one function with no data of its own. **A tree changed on purpose cannot be compared with the original**, so the build can only say what moved, not that it is right: what stands between you and a silently wrong ROM is the refusal above, and the tests that an unchanged tree is identical.

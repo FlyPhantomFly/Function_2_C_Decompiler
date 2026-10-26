@@ -19,6 +19,7 @@ python3 maintenance/tools/bump_version.py --check        # do the three version 
 python3 maintenance/tools/check_toolchains.py            # does every pinned compiler download still exist? (--verify: hash them)
 CHROME=/path/to/chromium python3 maintenance/tools/screenshot_ui.py   # after any GUI change: look at maintenance/baseline/ui/*.png
 uv run python maintenance/tools/eval_agent.py --oracle                # the eval harness checking itself (exit 1 = the harness is broken)
+CHROME=... uv run --with pillow --with numpy python maintenance/tools/repaint_demo_title.py   # repaint the README animation's title bar (see maintenance/assets/README.md)
 decomp shift-audit PROJECT_OR_SOURCE_FOLDER                           # what an exported N64 tree pins to absolute addresses (SHIFTABLE_EXPORT.md)
 decomp shift-prep PROJECT_OR_SOURCE_FOLDER [--apply]                   # make its jump tables symbolic; previews unless --apply; the tree must still rebuild identical
 decomp shift-prep PROJECT_OR_SOURCE_FOLDER --layout                    # a layout in which code can grow (refused unless the references are ready); an unchanged tree must still say `identical`

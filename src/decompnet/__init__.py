@@ -2,7 +2,7 @@
 
 import sys
 
-__version__ = "0.11.3"
+__version__ = "0.11.4"
 
 # Where this build of Function_2_C_Decompiler comes from and is installed from, and the project it is a maintained fork of. What the app
 # writes into other people's projects (READMEs, build scripts) links the first; the second is a credit.

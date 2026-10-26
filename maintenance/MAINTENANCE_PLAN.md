@@ -4,12 +4,12 @@ Companion to `ARCHITECTURE.md`. Ordered by risk first, then value. Each item has
 
 **What is done, and in which version, is recorded in `CHANGELOG.md`; that file is authoritative.** This document says what to do and why.
 
-## Status as of 0.11.3
+## Status as of 0.11.4
 
 | Item | State | Version | What is left |
 | --- | --- | --- | --- |
 | Phase 0 (0.1 to 0.5) | done | 0.10.7 | Re-run on your machine for the PS2, GBA, DS, GameCube and Windows rows (the sandbox could not reach four download hosts). |
-| 1.1 name, repo, domain | **done, with named exceptions** | 0.10.10, .14, .15, .17, .26, .34 | Decided: the product is `Function_2_C_Decompiler`, the repo `FlyPhantomFly/Function_2_C_Decompiler`. Done: updater, installers, README, app links, plugin and its agent skill, package metadata, generated export files, and **the product name wherever a person reads it** (0.10.34). Kept on purpose: the identifiers existing projects depend on (ARCHITECTURE section 12). **Open:** the README banner is new (0.10.48), but `.github/assets/demo.webp`, an animated recording, still shows the old name in its title bar and needs re-recording; the demo ROMs' embedded credit; the PowerShell installers (frozen). The sidebar layout was checked in a real browser (0.10.37). |
+| 1.1 name, repo, domain | **done, with named exceptions** | 0.10.10, .14, .15, .17, .26, .34 | Decided: the product is `Function_2_C_Decompiler`, the repo `FlyPhantomFly/Function_2_C_Decompiler`. Done: updater, installers, README, app links, plugin and its agent skill, package metadata, generated export files, and **the product name wherever a person reads it** (0.10.34). Kept on purpose: the identifiers existing projects depend on (ARCHITECTURE section 12). **Open:** the README banner is new (0.10.48) and the animated demo's title bar was repainted (0.11.4); the demo ROMs' embedded credit; the PowerShell installers (frozen). The sidebar layout was checked in a real browser (0.10.37). |
 | 1.2 updater | done | 0.10.10, .16 | It points at this fork's repository (not switched off); `auto_update` stays off; never offers a downgrade. Installs from GitHub archives over HTTPS with no signature (Phase 4). |
 | 1.3 license | done | 0.10.14 | No separate `NOTICE` file; the README credits upstream. |
 | 1.4 sandbox | done | 0.10.11 | A `bwrap` that is installed but cannot create a namespace fails each compile with its own error; not probed in advance. |

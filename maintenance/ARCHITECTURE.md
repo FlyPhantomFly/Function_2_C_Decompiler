@@ -198,7 +198,7 @@ run lists every change; a self-check refuses to run if its protection ever damag
 a credit string into fixed-width ROM header fields (`b"...".ljust(40)` does not truncate, so a longer name would overflow the field and corrupt the
 demo executable), nor the PowerShell installers (they refuse to run), nor `maintenance/` (history and documentation about upstream).
 
-Known gaps: the README banner was replaced in 0.10.48 (source in `maintenance/assets/`), but the animated `demo.webp` still shows the old name in its title bar (it is a recording); the demo ROMs carry the old
+Known gaps: the README banner was replaced in 0.10.48 (source in `maintenance/assets/`), and the animated `demo.webp` had its title bar repainted in 0.11.4 (`maintenance/tools/repaint_demo_title.py`; its source is not in this repository); the demo ROMs carry the old
 name in their embedded credit; and the sidebar layout for the longer name was made tolerant in CSS (smaller type, wrapping allowed) and then **checked in a real browser**
 (0.10.37): `baseline/ui/desktop.png` and `phone.png` show the wordmark fitting at 1280 and 420 px.
 
