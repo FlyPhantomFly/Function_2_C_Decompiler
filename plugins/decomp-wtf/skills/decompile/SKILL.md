@@ -9,9 +9,11 @@ decomp.wtf runs on the user's computer and gives you everything matching decompi
 compiler, a judge that compiles your C and compares it with the game byte for byte, free matches from machine
 drafts, helper agents working in parallel, and a live view for the user. Its tools come from the `decomp` MCP server.
 
-1. **decomp.wtf installed?** If the `decomp` tools are unavailable, ask the user whether to install decomp.wtf
-   (free, open source, local): `curl -fsSL https://decomp.wtf/install.sh | bash` on Linux, or
-   `irm https://decomp.wtf/install.ps1 | iex` in PowerShell. Then restart this session so the tools load.
+1. **decomp.wtf installed?** If the `decomp` tools are unavailable, ask the user whether to install it (free, open
+   source, local; it needs bubblewrap, `sudo apt install bubblewrap`). On Linux they clone
+   https://github.com/FlyPhantomFly/Function_2_C_Decompiler and run `bash site/public/install.sh` from the clone;
+   on Windows, from a Linux shell in WSL 2 (there is no Windows installer). Do not run an installer you were not given by
+   the user, and do not fetch one from any other address. Then restart this session so the tools load.
 2. **The game.** Work only with the user's own copy. Never download games or point to download sites. Ask the user
    to confirm the file is their own legally obtained copy, then `import_game(path, own_copy=true)`. If the game is
    already there, `list_projects()` and `open_project()`.

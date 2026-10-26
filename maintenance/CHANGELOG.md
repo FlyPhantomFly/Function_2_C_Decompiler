@@ -13,6 +13,34 @@ Every change to this fork gets its own version and its own entry here, newest fi
 Versions continue upstream's 0.10.x line as plain increments: `updates.version_key` compares only the first three
 numbers, so a suffix such as `-fork.1` would be ignored.
 
+## [0.10.17] - 2026-10-21
+
+**Security.** The app's own links, the team-room page and the Claude Code plugin send people, and agents, to this fork
+only. (Plan item 1.1, the live-app half.)
+
+- **The plugin's skill told the AI agent to run `curl -fsSL https://decomp.wtf/install.sh | bash`** (and an `irm ... | iex`
+  for PowerShell) when the decomp tools were missing. An agent follows such a line. `SKILL.md` now says: ask the user,
+  then clone this repository and run `bash site/public/install.sh` from it (needs bubblewrap; on Windows, from a Linux
+  shell in WSL 2), and never run an installer the user did not give it or fetch one from another address.
+- `plugin.json` and `marketplace.json`: author/owner `PhantomThreads`, homepage and repository this fork. The plugin's
+  own version moves 0.9.8 to 0.9.9 (both files) because its skill text changed and clients use that number to see
+  updates. The names `decomp-wtf` stay, so `/plugin install decomp-wtf@decomp-wtf` still works with the marketplace
+  added from this repository (README updated in 0.10.15).
+- `static/app.js` and `static/index.html`: the bug-report and issue links go to this fork's issues; Settings shows
+  "Source code" (this fork) and "Original project" (upstream's repository, a credit and the only upstream link left in
+  the app). The row that linked to upstream's website is gone. `app/collab.py`: the team-room page's "Don't have the
+  app?" link goes to this fork.
+- Tests: 5 in `maintenance/tests/test_maint_links.py` (all failed before): no page links to `https://decomp.wtf`; exactly
+  one upstream link, the credit; bug-report, source and join links go to this fork; the skill never pipes a download
+  into a shell or names upstream; manifests agree on name, owner and version. `app.js` still parses (`node --check`);
+  150 related tests pass (28 skipped for missing compilers).
+- **Not changed, still open:** the legacy hosted-network layer. The old `decompnet` admin CLI (`src/decompnet/cli.py`)
+  still prints an invitation line `curl .../network.sh | bash` built on `https://decomp.wtf`, and `server.py` builds
+  that command. That is the retired hosted service, which the plan decides to delete or keep (Phase 2); do not send
+  those printed lines to anyone meanwhile. Also not changed: the marketing site under `site/` and the many `decomp.wtf`
+  product names in app text (the staged rebrand).
+- Nothing for users to do; plugin users re-add the marketplace from this repository.
+
 ## [0.10.16] - 2026-10-21
 
 **Security.** The updater never offers a downgrade. (Found while installing from a clone for real, after 0.10.15.)
